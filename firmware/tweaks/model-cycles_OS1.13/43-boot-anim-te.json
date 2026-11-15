@@ -7,10 +7,6 @@
   "80 images de 20 ms, puis l'image finale tenue 60 images (2.8 s en tout, 1.0 s de plus que l'original), puis la même fin.",
   "Le corps de la tâche d'animation d'origine (0x40053a6c) est réécrit à sa place : 904 o sur 1032. Aucune place libre utilisée. Généré par tools/gen_boot_anim.py, notes/39."
  ],
- "conflicts": [
-  "boot-anim",
-  "boot-anim-mfc"
- ],
  "device": "Model:Cycles",
  "os": "1.13",
  "section": 3,

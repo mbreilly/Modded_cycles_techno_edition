@@ -11,13 +11,6 @@
  "device": "Model:Cycles",
  "os": "1.13",
  "section": 3,
- "conflicts": [
-  "model-tg",
-  "model-tg-st",
-  "track-filter",
-  "track-filter-polivoks",
-  "track-filter-polivoks-lite"
- ],
  "symbols": {
   "tf_post": "0x4014ab5c",
   "tf_knob": "0x401625bc",

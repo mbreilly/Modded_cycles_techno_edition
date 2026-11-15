@@ -33,7 +33,7 @@ juce_add_plugin(ModelCyclesCC
     PLUGIN_MANUFACTURER_CODE Mrly
     PLUGIN_CODE Mfkc
     PRODUCT_NAME "Modded Cycles Techno Edition"
-    BUNDLE_ID "com.mreilly.moddedfkingcycles"
+    BUNDLE_ID "com.mreilly.moddedcyclestechnoedition"
     FORMATS ${FORMATS}
     IS_SYNTH TRUE
     NEEDS_MIDI_INPUT TRUE

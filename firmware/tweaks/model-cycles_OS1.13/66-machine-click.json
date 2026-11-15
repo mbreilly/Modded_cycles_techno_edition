@@ -19,10 +19,6 @@
   "sidechain",
   "track-select"
  ],
- "conflicts": [
-  "model-tg",
-  "model-tg-st"
- ],
  "symbols": {
   "mc_cfg_tail": "0x4018f994",
   "mc_ctor": "0x4018f9ba",

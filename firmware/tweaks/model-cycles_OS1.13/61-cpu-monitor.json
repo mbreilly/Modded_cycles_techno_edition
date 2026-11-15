@@ -11,10 +11,6 @@
  "device": "Model:Cycles",
  "os": "1.13",
  "section": 3,
- "conflicts": [
-  "model-tg",
-  "model-tg-st"
- ],
  "symbols": {
   "cm_isr": "0x40152d38",
   "cm_out": "0x40152d4e",
