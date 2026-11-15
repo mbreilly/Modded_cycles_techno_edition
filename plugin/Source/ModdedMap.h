@@ -9,7 +9,7 @@ namespace modded
 struct Knob { const char* name; int defaultValue; int max; const char* values; };
 struct Machine { const char* name; Knob knobs[4]; const char* extras[4]; const char* extraValues[4]; };
 
-constexpr int numMachines = 25;
+constexpr int numMachines = 26;
 
 // values: list labels separated by '|', or "" for a plain 0-127 knob
 inline const Machine machines[numMachines] = {
@@ -38,6 +38,7 @@ inline const Machine machines[numMachines] = {
     { "GRANULAR", { { "Position", 0, 127, "" }, { "Size", 64, 127, "" }, { "Density", 64, 127, "" }, { "Spray", 0, 127, "" } }, { "Spread", "Window", "Scan", "Reverse" }, { "", "", "", "" } },
     { "WAVETABLE", { { "Position", 0, 127, "" }, { "Warp", 0, 127, "" }, { "Env", 0, 127, "" }, { "Env Speed", 64, 127, "" } }, { "Sub", "Detune", "Crush", "Drive" }, { "", "", "", "" } },
     { "EMPTY", { { "Unused", 0, 127, "" }, { "Unused", 0, 127, "" }, { "Unused", 0, 127, "" }, { "Unused", 0, 127, "" } }, { "", "", "", "" }, { "", "", "", "" } },
+    { "MIDI", { { "CC A", 64, 127, "" }, { "CC B", 64, 127, "" }, { "CC C", 64, 127, "" }, { "CC D", 64, 127, "" } }, { "CC A Number", "CC B Number", "CC C Number", "CC D Number" }, { "74|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80|81|82|83|84|85|86|87|88|89|90|91|92|93|94|95|96|97|98|99|100|101|102|103|104|105|106|107|108|109|110|111|112|113|114|115|116|117|118|119|OFF|OFF|OFF|OFF|OFF|OFF|OFF|OFF", "71|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80|81|82|83|84|85|86|87|88|89|90|91|92|93|94|95|96|97|98|99|100|101|102|103|104|105|106|107|108|109|110|111|112|113|114|115|116|117|118|119|OFF|OFF|OFF|OFF|OFF|OFF|OFF|OFF", "1|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80|81|82|83|84|85|86|87|88|89|90|91|92|93|94|95|96|97|98|99|100|101|102|103|104|105|106|107|108|109|110|111|112|113|114|115|116|117|118|119|OFF|OFF|OFF|OFF|OFF|OFF|OFF|OFF", "10|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80|81|82|83|84|85|86|87|88|89|90|91|92|93|94|95|96|97|98|99|100|101|102|103|104|105|106|107|108|109|110|111|112|113|114|115|116|117|118|119|OFF|OFF|OFF|OFF|OFF|OFF|OFF|OFF" } },
 };
 
 constexpr int knobCc[4] = { 16, 17, 18, 19 };
@@ -89,4 +90,9 @@ inline constexpr int kTrackSelectCC = 119;
 // then NRPN 1:kGetDoneNrpnLsb = 0.
 inline constexpr int kGetNrpnLsb = 57;
 inline constexpr int kGetDoneNrpnLsb = 58;
+
+// MIDI machine (firmware notes/113): it sends COLOR, SHAPE, SWEEP, CONTOUR as CCs on the track's channel.
+// CC number = its extra (CC 20-23), 0 = kMidiMachineCc, 120-127 = not sent. The plug-in ignores those CCs
+// coming back from the device on that channel, so they are not taken as filter or pan moves.
+inline constexpr int kMidiMachineCc[4] = { 74, 71, 1, 10 };
 } // namespace modded
