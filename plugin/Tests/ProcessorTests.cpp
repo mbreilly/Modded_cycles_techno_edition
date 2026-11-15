@@ -120,6 +120,7 @@ int main (int argc, char** argv)
         setParam (p, "t1_x1", 0);
         setParam (p, "t1_machine", (float) cycles::emptyMachine());
         CHECK (! p.isMidiMachineCc (ch, 74));
+        runBlock (p); // the machine and extra changes went out to the device: not part of the next check
     }
 
     // 3. FX on the FX channel
