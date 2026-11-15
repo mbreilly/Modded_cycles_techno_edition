@@ -31,6 +31,7 @@ manages the CPU) is **[docs/Modded-Cycles-Techno-Edition-Manual.pdf](docs/Modded
 - [Samples](#samples)
 - [MIDI](#midi)
 - [The plug-in](#the-plug-in)
+- [Bugs and features](#bugs-and-features)
 - [Credits](#credits) and [licenses](#licenses)
 
 ## Build the firmware
@@ -233,6 +234,14 @@ libglu1-mesa-dev mesa-common-dev`.)
 Each mod is a table of byte changes, each carrying the original bytes it replaces, so the build refuses any file that
 is not the official OS 1.13. The added machines are compiled code stored compressed in the mods. The MAIN OS SHA-256
 of the result is checked before anything is written.
+
+## Bugs and features
+
+If something doesn't work as described, please [open an issue](https://github.com/mbreilly/Modded_cycles_techno_edition/issues)
+with what you did and what happened, and I'll do my best to fix it. I'm keeping this edition focused, though, so I
+won't be taking feature requests. The good news is that everything is open source: the toolchain, the machines and
+the plug-in are all here, with a manual on how the firmware is built. If you want something different, you're very
+welcome to fork it and make your own version. I'd love to hear what you come up with!
 
 ## Credits
 

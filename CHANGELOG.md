@@ -15,3 +15,8 @@ First public release.
 - Samples sent with Elektron Transfer for SAMPLER, GRANULAR and WAVETABLE.
 - The Modded Cycles Techno Edition plug-in (VST3 / AU / standalone) for macOS, Windows and Linux.
 - An owner's manual in PDF: `docs/Modded-Cycles-Techno-Edition-Manual.pdf`.
+
+**Bugs and features.** If something doesn't work as described, please open an issue on GitHub with what you did and
+what happened, and I'll do my best to fix it. I'm keeping this edition focused, though, so I won't be taking feature
+requests. Everything is open source, so if you want something different, you're very welcome to fork it and make your
+own version. I'd love to hear what you come up with!
