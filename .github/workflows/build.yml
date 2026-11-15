@@ -14,11 +14,25 @@ on:
         description: "Publish a release with this tag (e.g. v1.0-beta), created on the commit being built"
         required: false
         default: ""
+      delete_release:
+        description: "Delete the release with this tag, and its tag (e.g. an outdated beta)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
 
 jobs:
+  delete-release:
+    if: inputs.delete_release != ''
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Delete the release and its tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.delete_release }}
+        run: gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag
+
   plugin:
     strategy:
       fail-fast: false
