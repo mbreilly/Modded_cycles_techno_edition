@@ -65,12 +65,13 @@ writes nothing.
 Back up your projects and samples with Elektron Transfer first.
 
 **Over USB (simplest):** open [Elektron Transfer](https://www.elektron.se/support-downloads/transfer), connect the
-Cycles, and drop `modded-cycles-techno-edition.syx` on it, as for an official OS update.
+Cycles, and drop `modded-cycles-techno-edition.syx` on it, as for an official OS update. The Cycles restarts by itself
+after 1–3 minutes; do not switch it off before.
 
 **Over MIDI (startup menu):** connect a MIDI interface's MIDI OUT to the Cycles' MIDI IN. Power off, hold `FUNC`,
 power on, release, press `TRIG 4` (OS UPGRADE): the screen shows READY TO RECEIVE. Send the `.syx` to the
-interface's port with any SysEx tool. Do not switch off during the update (about 5–7 minutes); the Cycles restarts
-by itself.
+interface's port with any SysEx tool. Do not switch off during the update: sending over MIDI takes a few
+minutes, then the Cycles restarts by itself within 1–3 minutes.
 
 At power-on the new firmware shows a short logo animation and *modded cycles / techno edition*.
 

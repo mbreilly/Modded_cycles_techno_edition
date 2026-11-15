@@ -10,3 +10,6 @@ python3 -c "from weasyprint import HTML; HTML('docs/manual/manual.html').write_p
 
 It uses the Inter font when it is installed and falls back to a sans-serif font otherwise.
 The plug-in screenshots in `img/` show the Modded Cycles Techno Edition plug-in window.
+
+After an edit, also run `python3 tools/make_web_manual.py`: it writes `index.html`, the browsable manual of the
+website (CI checks it is up to date).
