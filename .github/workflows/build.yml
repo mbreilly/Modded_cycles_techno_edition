@@ -88,7 +88,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check the patcher
-        run: python3 -m py_compile firmware/patch.py firmware/tools/build.py firmware/tools/aplib_grow.py && python3 firmware/tools/build.py --list
+        run: python3 -m py_compile firmware/patch.py firmware/tools/build.py firmware/tools/aplib_grow.py && python3 firmware/tools/build.py --list && python3 tools/make_web_data.py --check
       - name: Pack
         run: |
           mkdir -p dist

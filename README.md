@@ -35,6 +35,12 @@ manages the CPU) is **[docs/Modded-Cycles-Techno-Edition-Manual.pdf](docs/Modded
 
 ## Build the firmware
 
+**Easiest: in your browser.** Open the [web builder](https://mbreilly.github.io/Modded_cycles_techno_edition/), drop
+Elektron's official `model-cycles_OS1.13.syx` on it and download `modded-cycles-techno-edition.syx`. Everything runs on
+your computer; nothing is uploaded. It gives exactly the same file as the patcher below.
+
+**Or with Python:**
+
 You need **Python 3.8 or later** (nothing else) and the official Model:Cycles OS 1.13 file.
 
 1. Download `model-cycles_OS1.13.syx` from [elektron.se](https://www.elektron.se/support-downloads/modelcycles)
