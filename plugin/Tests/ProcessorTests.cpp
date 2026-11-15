@@ -78,7 +78,7 @@ int main (int argc, char** argv)
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
-        CHECK (modded::numMachines == 25 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
+        CHECK (modded::numMachines == 26 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
         CHECK (cycles::dialText (def ("shape"), 2, 9) == "HT"); // 909 Voice
         CHECK (cycles::dialText (def ("shape"), 9, 9) == "SD"); // the 909 snare
         CHECK (juce::String (modded::machines[7].knobs[3].name) == "Accent" && juce::String (modded::machines[7].extras[0]) == "Drift"); // 808BD
@@ -87,6 +87,10 @@ int main (int argc, char** argv)
         CHECK (cycles::dialText (def ("shape"), 0, 18) == "0.25" && cycles::dialText (def ("shape"), 127, 18) == "7");
         // a new plugin starts with EMPTY on every track, like a new kit on the modded firmware
         CHECK (cycles::emptyMachine() == 24 && juce::String (modded::machines[24].name) == "EMPTY");
+        // MIDI machine (26): extras name the CC numbers, 0 = the default, 120-127 = OFF
+        CHECK (juce::String (modded::machines[25].name) == "MIDI");
+        CHECK (cycles::dialText (def ("x1"), 0, 25) == "74" && cycles::dialText (def ("x1"), 20, 25) == "20"
+               && cycles::dialText (def ("x1"), 120, 25) == "OFF" && cycles::dialText (def ("x3"), 0, 25) == "1");
         for (auto& info : cycles::allParams())
             if (info.def->key == "machine") CHECK (info.defaultValue == 24);
     }
@@ -105,6 +109,19 @@ int main (int argc, char** argv)
     CHECK (out.size() == 2 && out[0].ch == 2 && out[0].cc == 70 && out[0].val == 4);
     CHECK (out.size() == 2 && out[1].cc == 94 && out[1].val == 127);
     CHECK (p.apvts.getParameter ("t1_pan")->getText (p.apvts.getParameter ("t1_pan")->convertTo0to1 (60), 8) == "L4");
+    {   // MIDI machine: its CCs on the track's channel are for the other instrument, not this track's filter or pan
+        const int ch = p.getChannel (0);
+        CHECK (! p.isMidiMachineCc (ch, 74));
+        setParam (p, "t1_machine", 25);
+        CHECK (p.isMidiMachineCc (ch, 74) && p.isMidiMachineCc (ch, 71) && p.isMidiMachineCc (ch, 1) && p.isMidiMachineCc (ch, 10));
+        CHECK (! p.isMidiMachineCc (ch, 24) && ! p.isMidiMachineCc (ch % 16 + 1, 74));
+        setParam (p, "t1_x1", 30);
+        CHECK (p.isMidiMachineCc (ch, 30) && ! p.isMidiMachineCc (ch, 74));
+        setParam (p, "t1_x1", 0);
+        setParam (p, "t1_machine", (float) cycles::emptyMachine());
+        CHECK (! p.isMidiMachineCc (ch, 74));
+        runBlock (p); // the machine and extra changes went out to the device: not part of the next check
+    }
 
     // 3. FX on the FX channel
     setParam (p, "fx_rsize", 10);

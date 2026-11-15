@@ -1,10 +1,19 @@
 # Changelog
 
-## v1.1 (in progress)
+## v1.2 (in progress)
 
 - **Your own DX sounds:** the web builder and the patcher (`--dx-bank`) can put a DX7 32-voice bank in place of the
   DX machine's 32 built-in sounds. The built-in sounds are also available as a DX7 bank,
   `docs/dx/modded-cycles-dx-bank.syx`, to edit in Dexed. Without a bank the firmware is unchanged.
+
+## v1.1
+
+- **MIDI machine** (26, after EMPTY): makes no sound; the track plays another instrument over MIDI OUT and USB. Each
+  trig sends its note on the track's channel; PITCH transposes it, DECAY sets the gate length, and COLOR / SHAPE /
+  SWEEP / CONTOUR send four CCs (74 / 71 / 1 / 10 by default, any CC or OFF on the knob layer), on knob turns and on
+  p-locked trigs.
+- The plug-in knows the MIDI machine and its CC numbers, and ignores those CCs coming back from the Cycles.
+- Manual: second edition, with the MIDI machine.
 
 ## v1.0
 

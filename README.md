@@ -3,9 +3,9 @@
 A free, modded firmware for the **Elektron Model:Cycles** (OS 1.13), with a companion plug-in (VST3 / AU /
 standalone) for Mac, Windows and Linux.
 
-- **25 machines**: Elektron's six, plus 19 added ones: classic drum machines (909, 808, 606), a rumble kick, modal
+- **26 machines**: Elektron's six, plus 20 added ones: classic drum machines (909, 808, 606), a rumble kick, modal
   metal, an additive drum voice, acid and growl basses, Braids, virtual-analog, cross-mod, 6-operator FM, a pad, and
-  a sampler, granular and wavetable engine that play your own samples.
+  a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your other gear.
 - **A filter and an insert effect on every track**, a sidechain, a master DJ EQ, 6-channel USB audio, an LFO
   polarity switch, a CPU monitor and CPU budget, and quality-of-life changes to the screens.
 - **The plug-in** shows every knob of every machine, follows the track and machine you pick on the Cycles, reads the
@@ -137,6 +137,7 @@ SETTINGS › Mods for the stock behaviour).
 | 23 | GRANULAR | Granular playback of your sample |
 | 24 | WAVETABLE | Your sample as a wavetable |
 | 25 | EMPTY | Silence at almost no CPU; a new project starts with EMPTY on all six tracks |
+| 26 | MIDI | No sound: the track plays another instrument over MIDI, with transpose, gate length and four CCs |
 
 Every knob of every machine, with its defaults, is in **[docs/MACHINES.md](docs/MACHINES.md)**.
 
@@ -212,6 +213,11 @@ Every parameter is reachable by MIDI (enable Receive CC/NRPN in SETTINGS › MID
 20–23, filter on CC 74 / 71 / 24 / 25 / 26, insert effect on CC 27 / 28, and NRPNs on the FX channel for USB Out,
 the sidechain, LFO polarity, the master EQ, sample and project selection, and a "send me everything" request. The
 complete list is [plugin/midi-map.json](plugin/midi-map.json); the stock Model:Cycles CCs are unchanged.
+
+**The MIDI machine** (26) turns a track into a sequencer track for another instrument: each trig sends its note on
+the track's channel (turn the track's MIDI out on: FUNC + TRK, TRACK SETUP › MOUT), PITCH transposes it, DECAY sets
+the gate (0 = the trig's length) and COLOR / SHAPE / SWEEP / CONTOUR send CC 74 / 71 / 1 / 10, or the CC numbers set
+on the knob layer (120–127 = OFF). Details in [docs/MACHINES.md](docs/MACHINES.md#26--midi).
 
 ## The plug-in
 

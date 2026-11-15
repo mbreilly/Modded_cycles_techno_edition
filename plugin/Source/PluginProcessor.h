@@ -164,6 +164,7 @@ public:
     std::atomic<int> projectSerial { 0 };    // bumped when the list or the current project changes
     std::atomic<bool> projectLoading { false }; // a load asked by the plugin, until the device reports its slot
     static bool isSampleMachine (int machine);
+    bool isMidiMachineCc (int channel, int cc) const;
     void handleDeviceMessageForTests (const juce::MidiMessage& m) { onDeviceMessage (m); }
 
     /** Added to the audio delay reported to the DAW, to line the device's audio up with the grid. */
