@@ -621,6 +621,10 @@ function syntaktVersion(ap, syntaktRaw) {
  * morceaux (ap.pack : [adresse, taille], tools/build.py payload_image ; hors des morceaux, tout doit être à zéro),
  * ou compressée (ap.compress === "aplib" : aplibPack). */
 function buildPayload(ap, syntaktRaw, mainOs) {
+  return payloadImage(ap, payloadRuntimeOf(ap, syntaktRaw, mainOs));
+}
+
+function payloadRuntimeOf(ap, syntaktRaw, mainOs) {
   let img = null;                               // section 7 du Syntakt, si le tweak en copie des morceaux
   if (ap.syntakt) {
     if (!syntaktRaw) throw new Error("fichier Syntakt_OS1.42.syx requis");
@@ -629,7 +633,10 @@ function buildPayload(ap, syntaktRaw, mainOs) {
     img = syntaktSection(syntaktRaw, ap.syntakt.section);
     if (hex(sha256(img)) !== ap.syntakt.section_sha256) throw new Error("section 7 du Syntakt inattendue");
   }
-  const out = payloadRuntime(ap, img, mainOs);
+  return payloadRuntime(ap, img, mainOs);
+}
+
+function payloadImage(ap, out) {
   if (ap.compress) {
     if (ap.compress !== "aplib") throw new Error(`charge utile : compression ${ap.compress} inconnue`);
     return aplibPack(out);
@@ -665,9 +672,133 @@ function payloadRuntime(ap, img, mainOs) {
   return out;
 }
 
+// ===========================================================================
+// DX7 banks for the DX machine: firmware/tools/dx7bank.py, the same conversion byte for byte
+// (tools/check_dx7bank.py checks it on every value). A DX7 32-voice bank (.syx) becomes the 32 patches of the DX
+// machine (struct dx_patch, 272 bytes, big-endian) and their 3-letter names, written over the built-in bank in the
+// machines' payload before it is compressed.
+// ===========================================================================
+const DX_ATT = [808233, 800069, 791905, 783741, 775577, 767413, 759249, 751085, 742921, 734757, 726593, 718429, 710265, 702101, 693937, 685774, 677610, 669446, 661282, 653118, 644954, 636790, 628626, 620462, 612298, 604134, 595970, 587806, 579642, 571478, 563314, 555150, 546986, 538822, 530658, 522494, 514330, 506166, 498002, 489838, 481674, 473510, 465346, 457182, 449018, 440854, 432690, 424526, 416362, 408199, 400035, 391871, 383707, 375543, 367379, 359215, 351051, 342887, 334723, 326559, 318395, 310231, 302067, 293903, 285739, 277575, 269411, 261247, 253083, 244919, 236755, 228591, 220427, 212263, 204099, 195935, 187771, 179607, 171443, 163279, 155115, 146951, 138787, 130624, 122460, 114296, 106132, 97968, 89804, 81640, 73476, 65312, 57148, 48984, 40820, 32656, 24492, 16328, 8164, 0];
+const DX_SPEED = [23, 26, 28, 31, 34, 37, 41, 44, 49, 54, 59, 64, 71, 77, 85, 93, 102, 112, 123, 135, 148, 162, 178, 195, 214, 235, 258, 283, 310, 340, 373, 409, 449, 492, 540, 592, 649, 712, 781, 857, 939, 1030, 1130, 1240, 1360, 1491, 1636, 1794, 1968, 2158, 2367, 2597, 2848, 3124, 3426, 3758, 4122, 4521, 4959, 5439, 5965, 6543, 7176, 7871, 8633, 9469, 10386, 11392, 12495, 13705, 15031, 16487, 18083, 19834, 21755, 23861, 26171, 28705, 31485, 34533, 37877, 41544, 45567, 49979, 54818, 60126, 65947, 72333, 79336, 87018, 95444, 104685, 114821, 125939, 138133, 151507, 166177, 182267, 199915, 219272];
+const DX_VOICES = 32, DX_VOICE_LEN = 128, DX_BANK_LEN = 4096, DX_PATCH_LEN = 272, DX_NAME_LEN = 4;
+const DX_BUILTIN_SHA256 = "d8dac092c02ba76b41a959d2aee1192c66d48a709e3d98dd8d6d368e6904e1af";
+const DX_BUILTIN_HEAD = "00000004000000020000000000000000";
+const DX_BUILTIN_NAMES = ("BEL TUB GNG ANV CLG PIP SHD CHN BAS SUB RBS GRW SAW SQR BRS STB HRN ORG PAD DRN HIT KIK SNR " +
+                          "HAT CYM TOM ZAP SIR NOI SCR BLD VOX").split(" ");
+const DX_C4_HZ = 261.6255653005986;
+
+function roundHalfEven(x) {                      // Python's round()
+  const f = Math.floor(x), d = x - f;
+  if (d > 0.5) return f + 1;
+  if (d < 0.5) return f;
+  return f % 2 === 0 ? f : f + 1;
+}
+
+function dx7Find(raw) {
+  if (raw.length === DX_BANK_LEN) return { data: raw, warn: null };
+  for (let i = 0; i < raw.length - 5; i++) {
+    if (raw[i] === 0xf0 && raw[i + 1] === 0x43 && (raw[i + 2] & 0xf0) === 0 && raw[i + 3] === 9) {
+      const data = raw.subarray(i + 6, i + 6 + DX_BANK_LEN);
+      if (data.length < DX_BANK_LEN) break;
+      if (raw[i + 4] !== 0x20 || raw[i + 5] !== 0x00) throw new Error("this DX7 bank header has an unexpected size");
+      let sum = 0;
+      for (const b of data) sum += b;
+      const cs = raw.length > i + 6 + DX_BANK_LEN ? raw[i + 6 + DX_BANK_LEN] : null;
+      const warn = cs === null || cs !== ((-sum) & 0x7f)
+        ? "the bank's checksum does not match (common in banks found online); its voices are used anyway" : null;
+      return { data, warn };
+    }
+  }
+  if (raw.length >= 6 && raw[0] === 0xf0 && raw[1] === 0x43 && raw[3] === 0)
+    throw new Error("this is a single DX7 voice; the DX machine needs a 32-voice bank (.syx of about 4 KB)");
+  throw new Error("this is not a DX7 32-voice bank (.syx, 4104 bytes, starting F0 43 0n 09 20 00)");
+}
+
+function dx7Alnum(name) { return name.toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+
+function dx7ShortNames(names) {                  // dx7bank.py short_names
+  const full = names.map(dx7Alnum);
+  let out = full.map((s, i) => s ? s.slice(0, 3) : String(i + 1).padStart(2, "0"));
+  for (const alt of [(s) => s.slice(0, 2) + s[s.length - 1], (s) => s[0] + s.slice(-2)]) {
+    const dup = new Set(out.filter((x) => out.filter((y) => y === x).length > 1));
+    out = out.map((o, i) => dup.has(o) && full[i].length > 3 ? alt(full[i]) : o);
+  }
+  return out;
+}
+
+function dx7VoiceName(v) {
+  let s = "";
+  for (let i = 118; i < 128; i++) s += v[i] >= 32 && v[i] < 127 ? String.fromCharCode(v[i]) : " ";
+  return s.replace(/\s+$/, "");
+}
+
+function dx7OpPitch(op, transpose) {
+  const mode = op[15] & 1, coarse = (op[15] >> 1) & 31, fine = Math.min(op[16], 99), det = Math.min((op[12] >> 3) & 15, 14);
+  if (mode) {
+    const hz = Math.pow(10, (coarse & 3) + fine / 100);
+    return roundHalfEven(12 * Math.log2(hz / DX_C4_HZ) * 65536);
+  }
+  const ratio = (coarse === 0 ? 0.5 : coarse) * (1 + fine / 100);
+  return roundHalfEven((12 * Math.log2(ratio) + (det - 7) / 100) * 65536) + (transpose - 24) * 65536;
+}
+
+function dx7ConvertVoice(raw) {
+  const v = raw.map((b) => b & 0x7f), out = new Uint8Array(DX_PATCH_LEN), dv = new DataView(out.buffer);
+  const words = [v[110] & 31, v[111] & 7], transpose = Math.min(v[117], 48);
+  for (let k = 0; k < 6; k++) {                  // our op[0] = operator 1; the DX7 stores operator 6 first
+    const op = v.subarray((5 - k) * 17, (6 - k) * 17);
+    words.push(dx7OpPitch(op, transpose), DX_ATT[Math.min(op[14], 99)]);
+    for (let j = 0; j < 4; j++) words.push(DX_SPEED[Math.min(op[j], 99)]);
+    for (let j = 0; j < 4; j++) words.push(DX_ATT[Math.min(op[4 + j], 99)]);
+    words.push((op[13] >> 2) & 7);
+  }
+  words.forEach((w, i) => dv.setInt32(4 * i, w, false));
+  return out;
+}
+
+/* DX7 bank .syx -> { bank (32 x 272 bytes), table (32 x 4 bytes of names), names, shorts, warn } */
+function dx7Bank(raw) {
+  const { data, warn } = dx7Find(raw);
+  const voices = [];
+  for (let i = 0; i < DX_VOICES; i++) voices.push(Uint8Array.from(data.subarray(i * DX_VOICE_LEN, (i + 1) * DX_VOICE_LEN)));
+  const names = voices.map(dx7VoiceName), shorts = dx7ShortNames(names);
+  const bank = concat(...voices.map(dx7ConvertVoice));
+  const table = new Uint8Array(DX_VOICES * DX_NAME_LEN);
+  shorts.forEach((s, i) => { for (let j = 0; j < s.length; j++) table[i * DX_NAME_LEN + j] = s.charCodeAt(j); });
+  return { bank, table, names, shorts, warn };
+}
+
+function dx7BuiltinNames() {
+  const t = new Uint8Array(DX_VOICES * DX_NAME_LEN);
+  DX_BUILTIN_NAMES.forEach((s, i) => { for (let j = 0; j < s.length; j++) t[i * DX_NAME_LEN + j] = s.charCodeAt(j); });
+  return t;
+}
+
+/* Offsets of the built-in bank and of its names in a runtime payload, or null if it does not hold them. */
+function dx7Locate(rt) {
+  const head = fromHex(DX_BUILTIN_HEAD), names = dx7BuiltinNames(), size = DX_PATCH_LEN * DX_VOICES;
+  const bank = [], nm = [];
+  for (let at = indexOfSub(rt, head, 0); at >= 0; at = indexOfSub(rt, head, at + 1))
+    if (at + size <= rt.length && hex(sha256(rt.subarray(at, at + size))) === DX_BUILTIN_SHA256) bank.push(at);
+  for (let at = indexOfSub(rt, names, 0); at >= 0; at = indexOfSub(rt, names, at + 1)) nm.push(at);
+  if (!bank.length && !nm.length) return null;
+  if (bank.length !== 1 || nm.length !== 1)
+    throw new Error("the DX machine's built-in bank was not found exactly once in this firmware's payload");
+  return [bank[0], nm[0]];
+}
+
+function dx7Apply(rt, loc, conv) {
+  const out = Uint8Array.from(rt);
+  out.set(conv.bank, loc[0]);
+  out.set(conv.table, loc[1]);
+  return out;
+}
+
 /* Construit le .syx modifie.
  * raw = Uint8Array du .syx officiel ; device = device.json ; chosen = [tweak] ;
- * opts = { expectMainOsSha, refMods, force, syntakt } ; syntakt = Uint8Array du Syntakt_OS1.42.syx, exigé par un tweak
+ * opts = { expectMainOsSha, refMods, force, syntakt, dxBank } ; dxBank = Uint8Array d'une banque DX7 de 32 voix (.syx) :
+ * ses voix remplacent la banque de la machine DX (dx7Bank), après la vérification d'expectMainOsSha sur le build
+ * d'origine ; syntakt = Uint8Array du Syntakt_OS1.42.syx, exigé par un tweak
  * « append » qui en copie des morceaux (ap.syntakt) ; Model-TG n'en a pas besoin. refMods = REF_MODS de app.js
  * (notes/49) : l'empreinte des ecritures (w) et de la charge utile (p) de chaque tweak, comparees ici ; un tweak
  * dont l'empreinte differe est refuse. modsChecked : chaque tweak choisi avait son empreinte, et elle correspond.
@@ -693,19 +824,34 @@ function build(raw, device, chosen, opts = {}) {
   const { data: patched, dirty } = applyWrites(mainOs, chosen);
   const caves = checkCaves(mainOs, chosen, opts.force, dirty, patched, device.cave_refs_ok);
   const apps = chosen.filter((t) => t.append);       // l'un après l'autre : Model-TG, puis nos moteurs
-  let full = patched, fullDirty = dirty;
+  const dx = opts.dxBank ? dx7Bank(opts.dxBank) : null;
+  let full = patched, fullDirty = dirty, dxFound = 0;
+  const custom = [];
   for (const t of apps) {
     const ap = t.append;
     if (BASE + full.length !== parseInt(ap.at, 16)) throw new Error("l'image ne finit pas où le tweak l'attend");
-    const payload = buildPayload(ap, opts.syntakt, mainOs);
+    const rt = payloadRuntimeOf(ap, opts.syntakt, mainOs);
+    const payload = payloadImage(ap, rt);
     if (refOf(t) && hex(sha256(payload)) !== refOf(t).p) throw new Error(`${t.id} : charge utile differente de la reference`);
     full = concat(full, payload);
     fullDirty = concat(fullDirty, new Uint8Array(payload.length).fill(1));
+    if (dx) {
+      const loc = dx7Locate(rt);
+      if (loc) dxFound++;
+      custom.push(loc ? payloadImage(ap, dx7Apply(rt, loc, dx)) : payload);
+    }
   }
   if (BASE + full.length > END_LIMIT) throw new Error("OS agrandi au-delà de 0x40200000");
-  const patchedSha = hex(sha256(full));
-  if (opts.expectMainOsSha && patchedSha !== opts.expectMainOsSha)
-    throw new Error(`MAIN OS patche ${patchedSha}, attendu ${opts.expectMainOsSha}`);
+  const stockSha = hex(sha256(full));
+  if (opts.expectMainOsSha && stockSha !== opts.expectMainOsSha)
+    throw new Error(`MAIN OS patche ${stockSha}, attendu ${opts.expectMainOsSha}`);
+  if (dx) {
+    if (dxFound !== 1) throw new Error("the DX machine is not in these mods (or more than once)");
+    full = concat(patched, ...custom);
+    fullDirty = concat(dirty, new Uint8Array(full.length - patched.length).fill(1));
+    if (BASE + full.length > END_LIMIT) throw new Error("OS agrandi au-delà de 0x40200000");
+  }
+  const patchedSha = dx ? hex(sha256(full)) : stockSha;
 
   const newS3 = aplibRepack(full, ops, fullDirty, patched.length);
   if (apps.length && !eq(aplibDepack(newS3).data, full)) throw new Error("recompression de l'OS agrandi : relecture différente");
@@ -721,7 +867,8 @@ function build(raw, device, chosen, opts = {}) {
   const outStream = buildStream(blob, BYTES_PER_MSG);
   const outRaw = wrap(outStream, product, start_seq);
   return { raw: outRaw, mainOsSha: patchedSha, patchedBytes: fullDirty.reduce((a, b) => a + b, 0),
-           caves, modsChecked, product, name };
+           caves, modsChecked, product, name, stockMainOsSha: stockSha,
+           dx: dx && { names: dx.names, shorts: dx.shorts, warn: dx.warn } };
 }
 
 /* Cross-flash (tools/crossflash.py) : le MAIN OS de guestRaw dans le conteneur de hostRaw.
@@ -883,7 +1030,7 @@ function samplesBack(cycRaw, smpRaw) {
 // ---- Export node / navigateur ---------------------------------------------
 const API = { sha256, hmacSha256, writesBytes, unwrap, wrap, aplibDepack, aplibRepack, aplibPack, parseContainer, findKey,
               rebuildContainer, buildStream, contentChecksum, applyWrites, checkConflicts, checkCaves,
-              build, crossflash, cyclesForSamples, modsForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
+              build, dx7Bank, crossflash, cyclesForSamples, modsForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
               hex, fromHex, PRODUCTS, BASE };
 if (typeof module !== "undefined" && module.exports) module.exports = API;
 if (typeof window !== "undefined") window.MCBuilder = API;

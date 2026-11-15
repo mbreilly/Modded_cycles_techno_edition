@@ -1,4 +1,5 @@
 *.syx
+!docs/dx/modded-cycles-dx-bank.syx
 *.zip
 build/
 __pycache__/

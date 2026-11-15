@@ -43,6 +43,16 @@
   .note { color: var(--mute); font-size: 14px; }
   .warn { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; color: var(--mute); font-size: 14px; }
   .hash { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--mute); overflow-wrap: anywhere; }
+  details.dx { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+  details.dx summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details.dx summary span { color: var(--mute); font-weight: 400; }
+  .dxrow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; }
+  .btn2 { display: inline-block; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: #1a1e23;
+          color: var(--ink); font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.2; cursor: pointer; }
+  .btn2:hover { border-color: var(--accent); }
+  .btn2[hidden] { display: none; }
+  .btn2 input { display: none; }
+  .dxnames { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--mute); overflow-wrap: anywhere; }
   footer { margin-top: 36px; color: var(--mute); font-size: 13px; }
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; }
   .links a { display: inline-block; padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel);
@@ -80,6 +90,20 @@
       <strong>Drop model-cycles_OS1.13.syx here</strong>
       <span>or click to choose it</span>
     </label>
+    <details class="dx" id="dxbox">
+      <summary>Optional: your own DX sounds <span>(a DX7 bank)</span></summary>
+      <p class="note">The DX machine (20) plays 32 sounds of its own on COLOR. Choose a DX7 32-voice bank
+      (<code>.syx</code>, about 4 KB, from a DX7, Dexed or a bank you downloaded) and its 32 voices take their place;
+      the screen shows the first three letters of each name. To change the bank later, build and flash again.
+      Start from <a href="dx/modded-cycles-dx-bank.syx" download>the built-in sounds as a DX7 bank</a> to edit them in Dexed.
+      Choose the bank before or after dropping the OS file.</p>
+      <div class="dxrow">
+        <label class="btn2">Choose a DX7 bank (.syx)<input type="file" id="dxfile" accept=".syx"></label>
+        <button class="btn2" id="dxclear" type="button" hidden>Use the built-in sounds</button>
+        <span class="note" id="dxname">Built-in sounds</span>
+      </div>
+      <div class="dxnames" id="dxnames"></div>
+    </details>
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <a class="btn" id="save" hidden download="modded-cycles-techno-edition.syx">Download modded-cycles-techno-edition.syx</a>
     <div class="hash" id="hash"></div>
@@ -90,7 +114,7 @@
     <ol>
       <li>Back up your projects and samples with Elektron Transfer.</li>
       <li>Open Elektron Transfer, connect the Model:Cycles over USB and drop
-      <code>modded-cycles-techno-edition.syx</code> on it, as for an official OS update.</li>
+      <code>modded-cycles-techno-edition.syx</code> (or <code>…-dx.syx</code> with your DX bank) on it, as for an official OS update.</li>
       <li>Wait until the Cycles restarts by itself (1–3 minutes). Do not switch it off during the update.</li>
     </ol>
     <p class="note">To go back, send Elektron's official OS 1.13 file the same way. Before that, set any track using an
@@ -118,7 +142,8 @@
   const R = window.MCTE_RELEASE, B = window.MCBuilder;
   const $ = (id) => document.getElementById(id);
   const drop = $("drop"), input = $("file"), status = $("status"), save = $("save"), hashEl = $("hash");
-  let url = null;
+  const dxfile = $("dxfile"), dxclear = $("dxclear"), dxname = $("dxname"), dxnames = $("dxnames");
+  let url = null, osFile = null, dxBank = null, dxFileName = "";
 
   function say(text, kind) { status.textContent = text; status.className = "status " + (kind || ""); }
 
@@ -128,7 +153,24 @@
     return Array.from(new Uint8Array(d), (b) => b.toString(16).padStart(2, "0")).join("");
   }
 
+  async function pickBank(file) {
+    dxBank = null; dxFileName = ""; dxnames.textContent = ""; dxclear.hidden = true; dxname.textContent = "Built-in sounds";
+    if (file) {
+      const raw = new Uint8Array(await file.arrayBuffer());
+      try {
+        const b = B.dx7Bank(raw);
+        dxBank = raw; dxFileName = file.name; dxclear.hidden = false;
+        dxname.textContent = file.name + (b.warn ? " (" + b.warn + ")" : "");
+        dxnames.textContent = "COLOR 0–31: " + b.shorts.join(" ");
+      } catch (e) {
+        dxname.textContent = file.name + ": " + String(e && e.message || e);
+      }
+    }
+    if (osFile) handle(osFile);
+  }
+
   async function handle(file) {
+    osFile = file;
     save.hidden = true; hashEl.textContent = "";
     if (url) { URL.revokeObjectURL(url); url = null; }
     if (!file) return;
@@ -143,12 +185,18 @@
     }
     await new Promise((r) => setTimeout(r, 30));   // let the message paint
     try {
-      const out = B.build(raw, R.device, R.mods, { expectMainOsSha: R.expectMainOs });
+      const out = B.build(raw, R.device, R.mods, { expectMainOsSha: R.expectMainOs, dxBank: dxBank || undefined });
       const blob = new Blob([out.raw], { type: "application/octet-stream" });
+      const name = dxBank ? R.output.replace(/\.syx$/, "-dx.syx") : R.output;
       url = URL.createObjectURL(blob);
-      save.href = url; save.download = R.output; save.hidden = false;
-      say("Done. The result matches the reference build byte for byte.", "ok");
-      hashEl.textContent = "Patched MAIN OS SHA-256: " + out.mainOsSha;
+      save.href = url; save.download = name; save.textContent = "Download " + name; save.hidden = false;
+      if (dxBank) {
+        say("Done. The build matches the reference byte for byte, then the DX sounds of " + dxFileName + " went in.", "ok");
+        hashEl.textContent = "Patched MAIN OS SHA-256 (with your DX bank): " + out.mainOsSha;
+      } else {
+        say("Done. The result matches the reference build byte for byte.", "ok");
+        hashEl.textContent = "Patched MAIN OS SHA-256: " + out.mainOsSha;
+      }
     } catch (e) {
       const m = String(e && e.message || e);
       let why = "Building failed: " + m;
@@ -160,6 +208,8 @@
   }
 
   input.addEventListener("change", () => handle(input.files[0]));
+  dxfile.addEventListener("change", () => { pickBank(dxfile.files[0]); });
+  dxclear.addEventListener("click", () => { dxfile.value = ""; pickBank(null); });
   ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", (e) => { const f = e.dataTransfer.files[0]; if (f) handle(f); });

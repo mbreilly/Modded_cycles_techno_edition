@@ -228,6 +228,9 @@ Six-operator FM like a DX7: the 32 classic algorithms, per-operator envelopes, f
 | Layer + COLOR | Vel Sens | 0 |
 | Layer + SHAPE | Detune | 0 |
 
+**Your own sounds:** build the firmware with a DX7 32-voice bank and its voices replace the 32 built-in sounds on
+COLOR (shown by the first three letters of their names). See [Your own DX sounds](../README.md#your-own-dx-sounds-optional).
+
 ## 21 · ATMOS
 
 A dark pad: a 4-note chord of detuned saw pairs under a low-pass that drifts slowly, with its own plate tail. DECAY is the release (127 = hold). GATE on = a drone that plays by itself while the sequencer runs (STOP releases it, PLAY starts it again).
