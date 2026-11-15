@@ -214,6 +214,32 @@ bool CyclesProcessor::isSampleMachine (int machine)
     return n == "SAMPLER" || n == "GRANULAR" || n == "WAVETABLE";
 }
 
+// MIDI machine (firmware notes/113): on a track playing it, COLOR..CONTOUR go out as CCs on the track's channel, to
+// another instrument. Their numbers: the track's extras, 0 = kMidiMachineCc, 120-127 = not sent. True if CC cc on
+// channel (1-16) is one of them, so it is not taken as a filter or pan move of that track.
+bool CyclesProcessor::isMidiMachineCc (int channel, int cc) const
+{
+    static const int midi = []
+    {
+        for (int i = 0; i < modded::numMachines; ++i)
+            if (juce::String (modded::machines[i].name) == "MIDI") return i;
+        return -1;
+    }();
+    if (midi < 0 || cc >= 120) return false;
+    for (int t = 0; t < numTracks; ++t)
+    {
+        if (getChannel (t) != channel) continue;
+        const juce::String tr ("t" + juce::String (t + 1) + "_");
+        if ((int) apvts.getRawParameterValue (tr + "machine")->load() != midi) continue;
+        for (int k = 0; k < 4; ++k)
+        {
+            const int x = (int) apvts.getRawParameterValue (tr + "x" + juce::String (k + 1))->load();
+            if ((x == 0 ? modded::kMidiMachineCc[k] : x) == cc) return true;
+        }
+    }
+    return false;
+}
+
 // NRPN on the FX channel (firmware notes/93): 1:59 = hash bits 31..18, 1:60 = bits 17..4 (14-bit values), then
 // 1:61 = bits 3..0 << 3 | track, top 7 bits only (CC 6): the firmware acts on it as soon as CC 6 arrives.
 void CyclesProcessor::pickSample (int track, juce::uint32 hash)
@@ -567,6 +593,9 @@ void CyclesProcessor::timerCallback()
             }
             continue;
         }
+
+        // The MIDI machine's own CCs, for the other instrument: not a knob of this plug-in (a GET's answer is)
+        if (! fromHost && ! getting && isMidiMachineCc (MidiQueue::channelOf (msg), MidiQueue::ccOf (msg))) continue;
 
         const int index = lookup[(size_t) MidiQueue::channelOf (msg) - 1][(size_t) MidiQueue::ccOf (msg)];
         if (index < 0) continue;

@@ -1,6 +1,6 @@
 # Machines
 
-Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–25 are added.
+Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–26 are added.
 
 Main knobs are the usual COLOR / SHAPE / SWEEP / CONTOUR (MIDI CC 16–19). **Extras** are played on the knob layer:
 double-tap PUNCH (LED blinks) and PITCH / DECAY / COLOR / SHAPE become Extra 1–4 (CC 20–23, NRPN 1:40–1:43). Holding
@@ -292,3 +292,27 @@ Turns the track's sample into a wavetable: frames of 2,048 samples, one period p
 
 Silence at almost no CPU. A new project puts EMPTY on all six tracks, so you start with the whole CPU budget free.
 
+## 26 · MIDI
+
+Makes no sound: the track plays another instrument over MIDI OUT and USB. Each trig sends its note with the trig's
+velocity on the track's MIDI channel; MIDI adds a transpose, a gate length and four CCs. Turn the track's MIDI out on
+(FUNC + TRK opens TRACK SETUP: MOUT) and give the track a channel in SETTINGS › MIDI CONFIG › CHANNELS; PORT CONFIG ›
+Output To picks MIDI, USB or both.
+
+| Knob | Parameter | Default |
+|---|---|---|
+| PITCH | Transpose, one semitone per step | 0 |
+| DECAY | Gate: 0 = the trig's length (LEN), 1–127 = DECAY / 8 steps | 0 |
+| COLOR | CC A (CC 74) | 64 |
+| SHAPE | CC B (CC 71) | 64 |
+| SWEEP | CC C (CC 1) | 64 |
+| CONTOUR | CC D (CC 10) | 64 |
+| Layer + PITCH | CC A Number | 0 = 74 |
+| Layer + DECAY | CC B Number | 0 = 71 |
+| Layer + COLOR | CC C Number | 0 = 1 |
+| Layer + SHAPE | CC D Number | 0 = 10 |
+
+CC numbers: 0 = the default shown, 1–119 = that CC, 120–127 = OFF (not sent). A CC goes out when its value changes:
+when you turn the knob (sequencer stopped too), and just before a note whose trig p-locks it. Picking the machine or
+loading a project sends nothing until a knob moves. PUNCH, GATE, the filter, the insert FX, sends and level do nothing
+here. The plug-in does not take these CCs as the track's filter or pan.
