@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.3 (not released yet)
+
+Bug fixes in the machines, the sound otherwise unchanged:
+
+- **909**: the hand clap with DECAY above the middle got shorter instead of longer; same jump on the clap's CONTOUR,
+  the toms' CONTOUR and the Tail extra. They now keep growing to the end of the knob.
+- **METL2**: SHAPE (Bright) above about 98 turned the hit into full-scale noise. It now keeps getting brighter.
+- **VACF**: the Detune extra now reaches +40 cents, as the manual says (it stopped at +20).
+- **RUMBL**: with Rumble Level and Tail Pitch turned up, the tail could hum very quietly for ever and keep using CPU.
+  It now dies away.
+
 ## v1.2
 
 - **Your own DX sounds:** the web builder and the patcher (`--dx-bank`) can put a DX7 32-voice bank in place of the
