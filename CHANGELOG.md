@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- **Model:Samples**: the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
+  both official OS 1.13 files, to send through its startup menu over MIDI IN (or with Transfer while it still runs
+  its own OS). Same packing as Modded-Cycles' (original flasher by RDS (AIM), integrated by DaftMaple), same bytes.
+  Tested on a real Model:Samples through the startup menu over MIDI; Elektron Transfer is not verified yet.
+
 ## v1.1
 
 - **MIDI machine** (26, after EMPTY): makes no sound; the track plays another instrument over MIDI OUT and USB. Each

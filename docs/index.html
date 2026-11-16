@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modded Cycles Techno Edition · Firmware builder</title>
-<meta name="description" content="Build the Modded Cycles Techno Edition firmware for the Elektron Model:Cycles in your browser, from your own official OS 1.13 file.">
+<meta name="description" content="Build the Modded Cycles Techno Edition firmware for the Elektron Model:Cycles or Model:Samples in your browser, from your own official OS 1.13 files.">
 <style>
   :root {
     --bg: #1d2127; --panel: #262b33; --line: #363d47; --ink: #eceae6; --mute: #9aa1aa;
@@ -49,12 +49,22 @@
              color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 600; }
   .links a:hover { border-color: var(--accent); color: var(--accent); }
   .links a.sc { color: var(--accent); }
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  .seg label { flex: 1 1 200px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; cursor: pointer;
+               font-size: 14px; font-weight: 600; }
+  .seg label span { display: block; color: var(--mute); font-weight: 400; font-size: 13px; }
+  .seg label:has(input:checked) { border-color: var(--accent); background: rgba(232,163,61,.08); }
+  .seg input { accent-color: var(--accent); margin: 0 6px 0 0; }
+  .need { list-style: none; padding: 0; margin: 14px 0 0; font-size: 14px; }
+  .need li::before { content: "○ "; color: var(--mute); }
+  .need li.have::before { content: "✓ "; color: var(--ok); }
+  [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="logo" aria-hidden="true"><i></i><i class="a"></i><i></i><i></i></div>
-  <div class="kicker">Firmware builder · Model:Cycles OS 1.13</div>
+  <div class="kicker">Firmware builder · Model:Cycles or Model:Samples · OS 1.13</div>
   <h1>Modded Cycles Techno Edition</h1>
   <p class="lede">Build the modded firmware right here in your browser, from your own copy of Elektron's official
   OS file. Nothing is uploaded anywhere: the file never leaves your computer.</p>
@@ -67,19 +77,35 @@
   </nav>
 
   <div class="card">
-    <h2><span class="n">1</span>Get the official OS</h2>
+    <h2><span class="n">1</span>Pick your machine and get the official OS</h2>
+    <div class="seg" role="radiogroup" aria-label="Your machine">
+      <label><input type="radio" name="machine" value="cycles" checked>Model:Cycles</label>
+      <label><input type="radio" name="machine" value="samples">Model:Samples</label>
+    </div>
     <p class="note" style="margin:0">Download <b>Model:Cycles OS 1.13</b> from
     <a href="https://www.elektron.se/support-downloads/modelcycles" rel="noopener">elektron.se</a>
-    (Support › Downloads) and unzip it if needed. You need the file <code>model-cycles_OS1.13.syx</code>.</p>
+    (Support › Downloads) and unzip it if needed. You need the file <code>model-cycles_OS1.13.syx</code><span
+    class="smp-only" hidden>, and also <b>Model:Samples OS 1.13</b> from
+    <a href="https://www.elektron.se/support-downloads/modelsamples" rel="noopener">elektron.se</a>:
+    <code>model-samples_OS1.13.syx</code></span>.</p>
+    <p class="warn smp-only" hidden style="margin:14px 0 0">On a Model:Samples the same Modded Cycles firmware is
+    installed (the Model:Samples becomes a Model:Cycles with these mods), packed inside the Samples' own firmware: its
+    bootloader, startup menu and signature stay Elektron's. Tested on a real Model:Samples through its startup menu
+    over MIDI; installing with Elektron Transfer is not verified yet. Only for a real Model:Samples, not a Model:Cycles
+    running the Samples OS.</p>
   </div>
 
   <div class="card">
     <h2><span class="n">2</span>Build the modded firmware</h2>
     <label class="drop" id="drop">
-      <input type="file" id="file" accept=".syx">
-      <strong>Drop model-cycles_OS1.13.syx here</strong>
-      <span>or click to choose it</span>
+      <input type="file" id="file" accept=".syx" multiple>
+      <strong id="drop-title">Drop model-cycles_OS1.13.syx here</strong>
+      <span id="drop-sub">or click to choose it</span>
     </label>
+    <ul class="need smp-only" hidden>
+      <li id="need-cyc">model-cycles_OS1.13.syx</li>
+      <li id="need-smp">model-samples_OS1.13.syx</li>
+    </ul>
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <a class="btn" id="save" hidden download="modded-cycles-techno-edition.syx">Download modded-cycles-techno-edition.syx</a>
     <div class="hash" id="hash"></div>
@@ -87,14 +113,33 @@
 
   <div class="card">
     <h2><span class="n">3</span>Install it</h2>
-    <ol>
+    <ol class="cyc-only">
       <li>Back up your projects and samples with Elektron Transfer.</li>
       <li>Open Elektron Transfer, connect the Model:Cycles over USB and drop
       <code>modded-cycles-techno-edition.syx</code> on it, as for an official OS update.</li>
       <li>Wait until the Cycles restarts by itself (1–3 minutes). Do not switch it off during the update.</li>
     </ol>
-    <p class="note">To go back, send Elektron's official OS 1.13 file the same way. Before that, set any track using an
+    <ol class="smp-only" hidden>
+      <li>Back up your projects and samples with Elektron Transfer.</li>
+      <li>Send <code>modded-cycles-techno-edition_model-samples.syx</code> to the Model:Samples in one of two ways:
+        <ul>
+          <li><b>Startup menu over MIDI</b> (tested; works whatever OS the Samples runs, so also for a newer version later):
+          connect a MIDI interface's MIDI OUT to the Samples' MIDI IN. Power off, hold <code>FUNC</code>, power on,
+          release, press <code>TRIG 4</code> (OS UPGRADE): the screen shows READY TO RECEIVE. Send the file to the
+          interface's port with any SysEx tool.</li>
+          <li><b>Elektron Transfer over USB</b> (<b>not verified yet</b>), only while the Samples still runs its own
+          Model:Samples OS: connect it and drop the file on Transfer, as for an official OS update. If anything goes
+          wrong, the startup menu above brings it back.</li>
+        </ul></li>
+      <li>Wait until the Samples restarts by itself (1–3 minutes after the transfer). Do not switch it off during the
+      update.</li>
+    </ol>
+    <p class="note cyc-only">To go back, send Elektron's official OS 1.13 file the same way. Before that, set any track using an
     added machine (7–25) back to one of the six original machines, so your projects open cleanly on the stock OS.</p>
+    <p class="note smp-only" hidden>Once installed, install newer versions through the startup menu (Transfer
+    refuses them). To go back to the Model:Samples OS, send the official <code>model-samples_OS1.13.syx</code> through
+    the startup menu the same way. Before that, set any track using an added machine back to one of the six original
+    machines.</p>
   </div>
 
   <p class="warn"><b>Unofficial firmware.</b> Tested in emulation against the Model:Cycles' own code and played on
@@ -118,7 +163,10 @@
   const R = window.MCTE_RELEASE, B = window.MCBuilder;
   const $ = (id) => document.getElementById(id);
   const drop = $("drop"), input = $("file"), status = $("status"), save = $("save"), hashEl = $("hash");
-  let url = null;
+  const SAMPLES_SHA = "e11859b68deb7e5e3fe86ab32581212093849c4be5d3950add011eac398a2ce8";   // model-samples_OS1.13.syx
+  const OUTPUT = { "cycles": R ? R.output : "modded-cycles-techno-edition.syx",
+                   "samples": "modded-cycles-techno-edition_model-samples.syx" };
+  let url = null, machine = "cycles", files = { cycles: null, samples: null };
 
   function say(text, kind) { status.textContent = text; status.className = "status " + (kind || ""); }
 
@@ -128,13 +176,58 @@
     return Array.from(new Uint8Array(d), (b) => b.toString(16).padStart(2, "0")).join("");
   }
 
-  async function handle(file) {
+  function reset() {
     save.hidden = true; hashEl.textContent = "";
     if (url) { URL.revokeObjectURL(url); url = null; }
-    if (!file) return;
+  }
+
+  function showMachine() {
+    const smp = machine !== "cycles";
+    document.querySelectorAll(".smp-only").forEach((el) => { el.hidden = !smp; });
+    document.querySelectorAll(".cyc-only").forEach((el) => { el.hidden = smp; });
+    $("drop-title").textContent = smp ? "Drop model-cycles_OS1.13.syx and model-samples_OS1.13.syx here"
+                                      : "Drop model-cycles_OS1.13.syx here";
+    $("drop-sub").textContent = smp ? "together or one after the other, or click to choose them" : "or click to choose it";
+    $("need-cyc").classList.toggle("have", !!files.cycles);
+    $("need-smp").classList.toggle("have", !!files.samples);
+    save.textContent = "Download " + OUTPUT[machine];
+  }
+
+  async function take(list) {
+    reset();
     if (!B || !R) { say("The builder did not load. Reload the page.", "bad"); return; }
-    say("Reading " + file.name + "…", "work");
-    const raw = new Uint8Array(await file.arrayBuffer());
+    for (const file of list) {
+      const raw = new Uint8Array(await file.arrayBuffer());
+      let product = null;
+      try { product = B.unwrap(raw).product; } catch (e) { /* not a firmware */ }
+      if (product === 0x0f) {
+        if (B.hex(B.sha256(raw)) !== SAMPLES_SHA) {
+          say(file.name + " is not Elektron's official Model:Samples OS 1.13 file. Use the official download.", "bad");
+          return;
+        }
+        files.samples = { name: file.name, raw };
+      } else if (product === 0x11) {
+        files.cycles = { name: file.name, raw };
+      } else {
+        say(file.name + " does not look like a Model:Cycles or Model:Samples firmware .syx file.", "bad");
+        return;
+      }
+    }
+    showMachine();
+    run();
+  }
+
+  async function run() {
+    reset();
+    const smp = machine !== "cycles";
+    if (!files.cycles) {
+      if (files.samples && smp) say("Model:Samples OS recognised. Now add model-cycles_OS1.13.syx.", "work");
+      else if (files.samples) say("For a Model:Cycles, only model-cycles_OS1.13.syx is needed. Add it.", "work");
+      else say("", "");
+      return;
+    }
+    if (smp && !files.samples) { say("Model:Cycles OS added. Now add model-samples_OS1.13.syx.", "work"); return; }
+    const file = files.cycles, raw = file.raw;
     const fileSha = await sha256Hex(raw);
     if (fileSha && fileSha !== R.device.stock_syx_sha256) {
       say("Checking " + file.name + " (it is not byte-for-byte the official download, so checking its OS)…", "work");
@@ -143,12 +236,18 @@
     }
     await new Promise((r) => setTimeout(r, 30));   // let the message paint
     try {
-      const out = B.build(raw, R.device, R.mods, { expectMainOsSha: R.expectMainOs });
+      let out = B.build(raw, R.device, R.mods, { expectMainOsSha: R.expectMainOs });
+      let done = "Done. The result matches the reference build byte for byte.";
+      if (smp) {
+        const p = B.modsForSamples(out.raw, raw, files.samples.raw, "samples");
+        out = { raw: p.raw, mainOsSha: p.mainOsSha };
+        done = "Done. The modded OS matches the reference build byte for byte, packed for the Model:Samples and read back.";
+      }
       const blob = new Blob([out.raw], { type: "application/octet-stream" });
       url = URL.createObjectURL(blob);
-      save.href = url; save.download = R.output; save.hidden = false;
-      say("Done. The result matches the reference build byte for byte.", "ok");
-      hashEl.textContent = "Patched MAIN OS SHA-256: " + out.mainOsSha;
+      save.href = url; save.download = OUTPUT[machine]; save.hidden = false;
+      say(done, "ok");
+      hashEl.textContent = (smp ? "Installed MAIN OS SHA-256: " : "Patched MAIN OS SHA-256: ") + out.mainOsSha;
     } catch (e) {
       const m = String(e && e.message || e);
       let why = "Building failed: " + m;
@@ -159,10 +258,15 @@
     }
   }
 
-  input.addEventListener("change", () => handle(input.files[0]));
+  document.querySelectorAll('input[name="machine"]').forEach((r) => r.addEventListener("change", () => {
+    machine = r.value; showMachine(); run();
+  }));
+  machine = (document.querySelector('input[name="machine"]:checked') || { value: "cycles" }).value;  // restored on reload
+  showMachine();
+  input.addEventListener("change", () => { take(Array.from(input.files)); input.value = ""; });
   ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
-  drop.addEventListener("drop", (e) => { const f = e.dataTransfer.files[0]; if (f) handle(f); });
+  drop.addEventListener("drop", (e) => { const f = Array.from(e.dataTransfer.files); if (f.length) take(f); });
 })();
 </script>
 </body>
