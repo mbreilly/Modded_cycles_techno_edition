@@ -260,8 +260,8 @@ libglu1-mesa-dev mesa-common-dev`.)
 ## How the firmware is built
 
 `firmware/patch.py` runs `firmware/tools/build.py` with the list of mods in `firmware/tweaks/model-cycles_OS1.13/`.
-Each mod is a table of byte changes, each carrying the original bytes it replaces, so the build refuses any file that
-is not the official OS 1.13. The added machines are compiled code stored compressed in the mods. The MAIN OS SHA-256
+Each mod is a table of byte changes, each carrying a fingerprint (length and SHA-256) of the original bytes it replaces,
+so the build refuses any file that is not the official OS 1.13; no byte of Elektron's firmware is in this repository. The added machines are compiled code stored compressed in the mods. The MAIN OS SHA-256
 of the result is checked before anything is written. With `--dx-bank`, that check is made on the build with the
 built-in DX sounds; then `firmware/tools/dx7bank.py` converts the DX7 bank and writes it over the DX machine's built-in
 bank (and its names), which it first finds and checks byte for byte, before the machines are compressed. The web

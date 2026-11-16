@@ -1086,8 +1086,8 @@ processor's limited time is shared between them.</p>
 changes only the <b>main OS</b>. The bootloader, the updater and the startup menu are byte for byte Elektron's, which is
 why the official OS can always be flashed back.</p>
 <ul>
-<li>Every change is a small table of byte writes, and each write carries the original bytes it replaces. The patcher
-refuses any file whose bytes do not match, so it only ever works on the official OS 1.13, never on a modified file.</li>
+<li>Every change is a small table of byte writes, and each write carries a fingerprint (length and SHA-256) of the
+original bytes it replaces, never the bytes themselves. The patcher refuses any file whose bytes do not match, so it only ever works on the official OS 1.13, never on a modified file.</li>
 <li>After the writes, the patcher repacks and re-signs the OS the way the Cycles expects (with drumkilla's MIT-licensed
 mtlib toolkit, itself based on Marcel Bierling's elektron-firmware-tool) and checks the SHA-256 of the result against the
 value published with the release.</li>
