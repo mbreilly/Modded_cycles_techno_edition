@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.3 (not released yet)
+## v1.3
 
 Bug fixes in the machines, the sound otherwise unchanged:
 
