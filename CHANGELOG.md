@@ -11,6 +11,10 @@ Bug fixes in the machines, the sound otherwise unchanged:
 - **RUMBL**: with Rumble Level and Tail Pitch turned up, the tail could hum very quietly for ever and keep using CPU.
   It now dies away.
 
+Patcher and web builder: the mod files no longer carry any bytes of Elektron's firmware. Each change used to hold the
+few original bytes it replaces, to check your file before writing; it now holds their length and SHA-256 instead. The
+firmware you get is byte for byte the same.
+
 ## v1.2
 
 - **Your own DX sounds:** the web builder and the patcher (`--dx-bank`) can put a DX7 32-voice bank in place of the

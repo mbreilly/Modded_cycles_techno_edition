@@ -24,62 +24,74 @@
  "writes": [
   {
    "off": 373958,
-   "old": "4ebafaec508f",
+   "old_len": 6,
+   "old_sha256": "7cb5c8970fd29fc7f1fb9d78bf5ccf2997921a6a2a5a518853ca9ffde634ffca",
    "new": "4eb9401679fc"
   },
   {
    "off": 374322,
-   "old": "4eb94008f1f0",
+   "old_len": 6,
+   "old_sha256": "6c29c4c51f8fff529a58fd19947f394d28716555de34495b386cc31fad6e9096",
    "new": "4eb9401679d8"
   },
   {
    "off": 705504,
-   "old": "40190184",
+   "old_len": 4,
+   "old_sha256": "9c6ff052d322ad0fbb2a0717b9ad9cbd361f8004fbc68aa6dbd69bc75f87df18",
    "new": "4014b364"
   },
   {
    "off": 725282,
-   "old": "401698d0",
+   "old_len": 4,
+   "old_sha256": "f56435618e1c6e075f4c30da5f1ba513179340e329990359a25f53cf5f5ba920",
    "new": "4014a550"
   },
   {
    "off": 727134,
-   "old": "401688b4",
+   "old_len": 4,
+   "old_sha256": "c2a64d26cee89441cbed002cae00dbe5a54ebc5ed8676fef975e0c7726210c7c",
    "new": "4014a550"
   },
   {
    "off": 728428,
-   "old": "40167aa8",
+   "old_len": 4,
+   "old_sha256": "ee325b831ef69d91b712820b866876700aaec9fc492b2aa84542e12fb5fa028b",
    "new": "4014a550"
   },
   {
    "off": 728458,
-   "old": "401679d8",
+   "old_len": 4,
+   "old_sha256": "1b0ee0864d3e7519206ba0c2c14efabd16ed006820ca0db318601037938cb32b",
    "new": "4014b4e4"
   },
   {
    "off": 1471960,
-   "old": "ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffffffc0ffff",
+   "old_len": 78,
+   "old_sha256": "ebdf94f88497933d7093d1bf9511e0994bbcda9cac2f5331f730c85a2bd0fd0e",
    "new": "2f2f000c2f2f000c2f2f000c4eb94008f1f04fef000c2f2f00044eb9401698d0588f4e752f2f00082f2f00084eb94005b3b4508f4a0067102f002f2f000c4eb940190184588f201f205f508f4ed0"
   },
   {
    "off": 1472168,
-   "old": "ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0",
+   "old_len": 96,
+   "old_sha256": "b6e188d1efca9bd09f6d0fa25b462d912b36e92a29bd24d2a66c3f1c80740e53",
    "new": "207c404e9b8020102f020c804d4f445366281439404e9b8f4878000f487800042f084eb940167ae84fef000cb5804a0057c071004480241f4e75428060f800002f02745a222f000c206f0008d1c152811010d0821400b2af001066ec241f4e75"
   },
   {
    "off": 1475764,
-   "old": "ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffff",
+   "old_len": 94,
+   "old_sha256": "0c86dc4759b44de9afe81441cc3ed2b9a997be7fd1911f54ff555de64ab42b86",
    "new": "4eb940167aa84a806652203c4d4f445323c0404e9b80700113c0404e9b84420013c0404e9b8513c0404e9b8613c0404e9b8713c0404e9b8813c0404e9b8913c0404e9b8a13c0404e9b8b13c0404e9b8c13c0404e9b8d13c0404e9b8e4e75"
   },
   {
    "off": 1479888,
-   "old": "ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0ffffffe0",
+   "old_len": 92,
+   "old_sha256": "08429bc30d17e266a56d0e7bac9ed40e7eb6916f03aad667d0e14d3730a8c4ba",
    "new": "2f0a2f02246f000c240a4eb940167aa8068200000028323c53433541002872011541002a4a806730203c404e9b862f00486a002b4eb94019021848780009487800022f024eb940167ae84fef001415400031241f245f4e75428060d2"
   },
   {
    "off": 1637764,
-   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+   "old_len": 186,
+   "old_sha256": "a4124e324fd98b1b0c07e427a930602e81ef6d1ea1638f7f0ebde86ec894f5b0",
    "new": "4feffff0725348d71c04246f001447f940167ae849f9401688b471aa0028b280666c71aa00297243b280666271aa002a53804a806658142a00314878000948780002486a00284e934fef000c71807582b082663a4e9445ea002b2f0a2f3c404e9b864eb9401902184878000f487800042f3c404e9b804e9313c0404e9b8f4cef1c0400144fef00244ef9401856484e9495ca60c6206f000842804a88671843f008001211226f0004d3c0128152807206b28066e64e75420160ea"
   }
  ]
