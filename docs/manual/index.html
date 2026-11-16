@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.1 · Model:Cycles OS 1.13 · Second edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.2 · Model:Cycles OS 1.13 · Third edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -169,6 +169,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c1-what">What is in this firmware</a></li>
     <li class="s"><a href="#c1-conv">Conventions</a></li>
     <li class="s"><a href="#c1-build">Building the firmware</a></li>
+    <li class="s"><a href="#c1-dx">Your own DX sounds</a></li>
     <li class="s"><a href="#c1-safe">Installing, and getting back to the official OS</a></li>
     <li class="c"><a href="#ch2"><span class="cn">2</span>Quick reference</a></li>
     <li class="s"><a href="#c2-combos">Every button combination</a></li>
@@ -234,7 +235,7 @@ table.mlist { page-break-inside: avoid; }
 <main class="manual"><p class="web-intro">The owner's manual for Modded Cycles Techno Edition 1.0 (first edition, November 2026), by <a href="https://soundcloud.com/m_reilly">m_reilly</a>. Also as a <a href="../Modded-Cycles-Techno-Edition-Manual.pdf">PDF</a>.</p>
 <!-- 1 -->
 <h1 class="ch" id="ch1"><span class="chn">CHAPTER 1</span><span class="tt">Introduction</span></h1>
-<p class="lede">Modded Cycles Techno Edition 1.1 turns the Model:Cycles into a 26-machine instrument: 19 new voices next to
+<p class="lede">Modded Cycles Techno Edition 1.2 turns the Model:Cycles into a 26-machine instrument: 19 new voices next to
 Elektron's six, from circuit-modelled 909, 808 and 606 drums to acid and FM basses, pads and a sampler, with a filter and
 an insert effect on every track, four extra parameters per machine, a sidechain, a master EQ, switchable 6-channel USB
 audio, a MIDI machine that plays your other gear from the sequencer, and a plug-in that brings it all into your DAW.</p>
@@ -287,6 +288,23 @@ computer and gives exactly the same file as the patcher below.</p>
 <p>The patcher checks that your file is the official one, applies the mods, checks the result against its expected
 fingerprint and writes <b>modded-cycles-techno-edition.syx</b> next to your file. If anything does not match, it stops and
 writes nothing.</p>
+</div>
+<div class="box" id="c1-dx">
+<h4>Optional: your own DX sounds (a DX7 bank)</h4>
+<p>The DX machine (20) plays 32 sounds of its own on COLOR. You can swap them for any <b>DX7 32-voice bank</b> (a
+<b>.syx</b> of about 4 KB, from a DX7, from Dexed, or a bank you downloaded) when you build the firmware. In the web
+builder, open <b>Optional: your own DX sounds</b> and choose the bank, before or after dropping the OS file. With the
+patcher, add the bank to the command: <code>python3 patch.py path/to/model-cycles_OS1.13.syx --dx-bank my-bank.syx</code>.</p>
+<p>The firmware is first built and checked as usual, then the bank goes in; the file is called
+<b>modded-cycles-techno-edition-dx.syx</b>. COLOR 0–31 picks the bank's voices 1–32 and the screen shows the first three
+letters of each name (BRASS 1 and BRASS 2 become BR1 and BR2). To change banks, build and flash again: projects keep the
+COLOR value, so they play whatever voice is in that slot. To edit the built-in sounds, start from
+<b>modded-cycles-dx-bank.syx</b> (in the repository's <b>docs/dx</b> folder, or linked from the web builder), the 32
+built-in sounds as a DX7 bank.</p>
+<p>The DX machine takes from each voice its algorithm, feedback, each operator's frequency, level, envelope and
+velocity sensitivity, and the voice's transpose. It leaves out keyboard scaling, the pitch envelope, the LFO, and plays
+fixed-frequency operators as if you played C4. A voice sounds close to a real DX7, not identical: SHAPE (Bright) and
+SWEEP (Env Time) tame one that is too bright or too fast. The plug-in keeps showing the built-in names for COLOR.</p>
 </div>
 
 <h2 id="c1-safe">Installing, and getting back to the official OS</h2>
@@ -659,7 +677,7 @@ exactly as described in the Model:Cycles manual. They have no extras; the per-tr
 <h3><span class="num">20</span> DX <span class="cat">Synth</span></h3>
 <p class="intro">Six-operator FM like a DX7: the 32 classic algorithms, per-operator envelopes, feedback, and a bank of 32 dark sounds of its own (no Yamaha patches). C4 at PITCH 64. DECAY, PUNCH and GATE: the OS amp envelope; the end of the note releases the operator envelopes.</p>
 <table class="knobs"><thead><tr><th>Control</th><th>Parameter</th><th>Default</th><th>What it does</th></tr></thead>
-<tbody><tr><td class="k">COLOR</td><td class="p">Patch</td><td class="d">0</td><td>One of 32 sounds, shown by name. Metal: BEL TUB GNG ANV CLG PIP SHD CHN · basses: BAS SUB RBS GRW · leads: SAW SQR · brass: BRS STB HRN · keys and pads: ORG PAD DRN · drums: HIT KIK SNR HAT CYM TOM · noise and FX: ZAP SIR NOI SCR BLD VOX.</td></tr><tr><td class="k">SHAPE</td><td class="p">Bright</td><td class="d">64</td><td>Level of the modulators, −18 to +18 dB around the patch. Reads −64 to +63 on the screen, 0 = as the patch.</td></tr><tr><td class="k">SWEEP</td><td class="p">Env Time</td><td class="d">64</td><td>Every envelope ×4 faster (−64) to ×4 slower (+63); reads −64 to +63 on the screen, 0 = as the patch.</td></tr><tr><td class="k">CONTOUR</td><td class="p">Algo</td><td class="d">0</td><td>PAT = the patch&#x27;s own algorithm, A1–A32 = DX7 algorithms 1–32.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + PITCH</td><td class="p">Feedback <span class="scr">FB</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up adds up to 7 steps of operator feedback.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + DECAY</td><td class="p">Op6 Ratio <span class="scr">OP6R</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up sweeps operator 6 from ½ to 32× the note, continuously.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + COLOR</td><td class="p">Vel Sens <span class="scr">VELS</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up makes soft notes darker (the modulators follow velocity).</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + SHAPE</td><td class="p">Detune <span class="scr">DET</span></td><td class="d">0</td><td>0 = none; up spreads the six operators by up to ±24 cents.</td></tr></tbody></table>
+<tbody><tr><td class="k">COLOR</td><td class="p">Patch</td><td class="d">0</td><td>One of 32 sounds, shown by name. Metal: BEL TUB GNG ANV CLG PIP SHD CHN · basses: BAS SUB RBS GRW · leads: SAW SQR · brass: BRS STB HRN · keys and pads: ORG PAD DRN · drums: HIT KIK SNR HAT CYM TOM · noise and FX: ZAP SIR NOI SCR BLD VOX. Or the 32 voices of a DX7 bank you build in (see <a href="#c1-dx">Your own DX sounds</a>).</td></tr><tr><td class="k">SHAPE</td><td class="p">Bright</td><td class="d">64</td><td>Level of the modulators, −18 to +18 dB around the patch. Reads −64 to +63 on the screen, 0 = as the patch.</td></tr><tr><td class="k">SWEEP</td><td class="p">Env Time</td><td class="d">64</td><td>Every envelope ×4 faster (−64) to ×4 slower (+63); reads −64 to +63 on the screen, 0 = as the patch.</td></tr><tr><td class="k">CONTOUR</td><td class="p">Algo</td><td class="d">0</td><td>PAT = the patch&#x27;s own algorithm, A1–A32 = DX7 algorithms 1–32.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + PITCH</td><td class="p">Feedback <span class="scr">FB</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up adds up to 7 steps of operator feedback.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + DECAY</td><td class="p">Op6 Ratio <span class="scr">OP6R</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up sweeps operator 6 from ½ to 32× the note, continuously.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + COLOR</td><td class="p">Vel Sens <span class="scr">VELS</span></td><td class="d">0</td><td>0 = the patch&#x27;s; up makes soft notes darker (the modulators follow velocity).</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + SHAPE</td><td class="p">Detune <span class="scr">DET</span></td><td class="d">0</td><td>0 = none; up spreads the six operators by up to ±24 cents.</td></tr></tbody></table>
 
 <p class="origin">Source: original 6-operator FM (MIT); the 32 DX7 algorithms in Plaits&#x27; encoding (Émilie Gillet, MIT) · CPU 6.5 / 10.5 % of a block (defaults / charge)</p>
 </section>

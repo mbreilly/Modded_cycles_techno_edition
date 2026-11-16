@@ -61,6 +61,29 @@ The patcher checks that your file is the official one, applies the mods, checks 
 SHA-256 and writes **`modded-cycles-techno-edition.syx`** next to your file. If anything does not match, it stops and
 writes nothing.
 
+### Your own DX sounds (optional)
+
+The DX machine (20) plays 32 sounds of its own on COLOR. You can swap them for any **DX7 32-voice bank** (a `.syx`
+of about 4 KB: from a DX7, from [Dexed](https://asb2m10.github.io/dexed/), or a bank you downloaded) when you build
+the firmware:
+
+- **Web builder:** open *Optional: your own DX sounds*, choose the bank, then drop the OS file (in either order).
+- **Patcher:** `python3 patch.py path/to/model-cycles_OS1.13.syx --dx-bank my-bank.syx`
+
+The firmware is first built and checked as usual, then the bank goes in, and the file is called
+`modded-cycles-techno-edition-dx.syx`. COLOR 0–31 then picks the bank's voices 1–32, and the screen shows the first
+three letters of each name (BRASS 1 and BRASS 2 become BR1 and BR2). To change banks, build and flash again; your
+projects keep the COLOR value, so they play whatever voice is in that slot. To edit the built-in sounds, start from
+[`docs/dx/modded-cycles-dx-bank.syx`](docs/dx/modded-cycles-dx-bank.syx) (also in the patcher zip's `dx` folder), the
+32 built-in sounds as a DX7 bank.
+
+What the DX machine takes from each voice: the algorithm, feedback, each operator's frequency (ratio, fine, detune),
+output level, envelope (four rates, four levels) and velocity sensitivity, and the voice's transpose. What it leaves
+out: keyboard level and rate scaling, the pitch envelope, the LFO and amplitude modulation, and fixed-frequency
+operators are tuned as if you played C4. So a voice sounds close to, but not exactly like, a real DX7: SHAPE (Bright)
+and SWEEP (Env Time) are the quickest way to tame one that is too bright or too fast. The plug-in still shows the
+built-in names (BEL, TUB...) for COLOR. Banks are your own: none is included except ours.
+
 ## Flash it
 
 Back up your projects and samples with Elektron Transfer first.
@@ -108,7 +131,7 @@ SETTINGS › Mods for the stock behaviour).
 | 17 | MACRO | Émilie Gillet's Braids, 47 models |
 | 18 | VACF | Virtual-analog oscillator and filter voice |
 | 19 | XMOD | Cross-modulation of two oscillators |
-| 20 | DX | 6-operator FM with 32 sounds of its own |
+| 20 | DX | 6-operator FM with 32 sounds of its own, or a DX7 bank of your choice ([how](#your-own-dx-sounds-optional)) |
 | 21 | ATMOS | Dark chord pad, playable as a drone |
 | 22 | SAMPLER | Plays your own sample |
 | 23 | GRANULAR | Granular playback of your sample |
@@ -239,7 +262,10 @@ libglu1-mesa-dev mesa-common-dev`.)
 `firmware/patch.py` runs `firmware/tools/build.py` with the list of mods in `firmware/tweaks/model-cycles_OS1.13/`.
 Each mod is a table of byte changes, each carrying the original bytes it replaces, so the build refuses any file that
 is not the official OS 1.13. The added machines are compiled code stored compressed in the mods. The MAIN OS SHA-256
-of the result is checked before anything is written.
+of the result is checked before anything is written. With `--dx-bank`, that check is made on the build with the
+built-in DX sounds; then `firmware/tools/dx7bank.py` converts the DX7 bank and writes it over the DX machine's built-in
+bank (and its names), which it first finds and checks byte for byte, before the machines are compressed. The web
+builder does exactly the same (`tools/check_dx7bank.py` compares the two).
 
 ## Bugs and features
 

@@ -317,10 +317,11 @@ def md_data(path):
     return headers.md_parts(path)
 
 
-def build_payload(chosen, main_os, syntakt_path, md_path=None):
+def build_payload(chosen, main_os, syntakt_path, md_path=None, edit=None):
     """Charges utiles des tweaks « append » (notes/17), l'une après l'autre dans l'ordre des tweaks (Model-TG, puis
     les moteurs du Syntakt de la version combinée, notes/31). Renvoie (octets à ajouter après l'image, dernier
-    tweak) ou (b"", None)."""
+    tweak) ou (b"", None). edit(t, charge utile) -> charge utile modifiée ou None (banque DX7, dx7bank.py) : renvoie
+    alors aussi les octets à ajouter avec la modification (avant compression), en troisième."""
     apps = sorted((t for t in chosen if t.get("append")), key=lambda t: t["order"])
     if not apps:
         return b"", None
@@ -342,7 +343,7 @@ def build_payload(chosen, main_os, syntakt_path, md_path=None):
         if not md_path:
             raise SystemExit(f"!! {t['id']} a besoin de ton OS du Machinedrum : --md Elektron_SPS1-1UW_OS1.63.syx")
         md = md_data(md_path)
-    out = bytearray()
+    out, edited = bytearray(), bytearray()
     for t in apps:
         ap_ = t["append"]
         if BASE + len(main_os) + len(out) != int(ap_["at"], 16):
@@ -350,6 +351,9 @@ def build_payload(chosen, main_os, syntakt_path, md_path=None):
         rt = payload_runtime(t, main_os, img, md)
         chunk = payload_image(t, rt)
         out += chunk
+        if edit:
+            rt2 = edit(t, rt)
+            edited += payload_image(t, rt2) if rt2 is not None else chunk
         src = pathlib.Path(syntakt_path).name if "syntakt" in ap_ else \
             pathlib.Path(md_path).name + " et le tweak" if md is not None and any("md" in p_ for p_ in ap_["parts"]) else "le tweak seul"
         where = "en place" if ap_["dest"] == ap_["at"] else f"copiée à {ap_['dest']} au démarrage"
@@ -358,6 +362,10 @@ def build_payload(chosen, main_os, syntakt_path, md_path=None):
         print(f"  charge utile {t['id']} : {ap_['size']} o depuis {src}, {len(ap_['reloc'])} relocalisations, {where}{packed}")
     if BASE + len(main_os) + len(out) > END_LIMIT:
         raise SystemExit(f"!! l'OS agrandi dépasserait {END_LIMIT:#x}")
+    if edit:
+        if BASE + len(main_os) + len(edited) > END_LIMIT:
+            raise SystemExit(f"!! l'OS agrandi dépasserait {END_LIMIT:#x}")
+        return bytes(out), apps[-1], bytes(edited)
     return bytes(out), apps[-1]
 
 
@@ -372,6 +380,8 @@ def main():
     ap.add_argument("--expect-mainos", help="SHA-256 attendu du MAIN OS patche (verification)")
     ap.add_argument("--syntakt", help="ton Syntakt_OS1.42.syx officiel (tweaks qui en extraient un moteur)")
     ap.add_argument("--md", help="ton Elektron_SPS1-1UW_OS1.63.syx officiel (machines du Machinedrum)")
+    ap.add_argument("--dx-bank", help="banque DX7 de 32 voix (.syx) à la place de celle de la machine DX (dx7bank.py) ; "
+                                      "--expect-mainos vérifie alors le build avec la banque d'origine")
     ap.add_argument("--force-cave", action="store_true",
                     help="ecrit meme si l'image d'origine pointe dans une zone 0xFF utilisee (a verifier a la main)")
     args = ap.parse_args()
@@ -418,15 +428,46 @@ def main():
 
     patched, dirty = apply_writes(main_os, chosen)
     check_caves(main_os, chosen, args.force_cave, dirty, patched, dev.get("cave_refs_ok"))
-    payload, _ = build_payload(chosen, main_os, args.syntakt, args.md)
+    custom = None
+    if args.dx_bank:
+        import dx7bank                                  # noqa: E402
+        bank_raw = pathlib.Path(args.dx_bank).read_bytes()
+        _, _, names, shorts, warn = dx7bank.convert(bank_raw)   # refuse tout de suite un fichier qui n'est pas une banque
+        found = []
+
+        def edit(t, rt):
+            try:
+                dx7bank.locate(rt)
+            except SystemExit:
+                return None
+            found.append(t["id"])
+            return dx7bank.apply(rt, bank_raw)
+        res = build_payload(chosen, main_os, args.syntakt, args.md, edit=edit)
+        payload, custom = res[0], res[2] if len(res) > 2 else None
+        if len(found) != 1:
+            raise SystemExit("!! --dx-bank : la machine DX n'est pas dans ces tweaks (ou plusieurs fois)")
+    else:
+        payload, _ = build_payload(chosen, main_os, args.syntakt, args.md)
     orig_len = len(patched)
     if payload:
+        stock = patched + payload
+        print(f"  MAIN OS patche SHA-256 : {sha(stock)}")
+        if args.expect_mainos and sha(stock) != args.expect_mainos.lower():
+            raise SystemExit("!! le MAIN OS patche ne correspond pas au SHA attendu")
+        if custom is not None:
+            print(f"  banque DX7 {pathlib.Path(args.dx_bank).name} : " + " ".join(shorts))
+            if warn:
+                print(f"  (note : {warn})")
+            payload = custom
         patched = patched + payload
         dirty = dirty + bytearray(b"\x01") * len(payload)
+        if custom is not None:
+            print(f"  MAIN OS avec la banque DX7 SHA-256 : {sha(patched)}")
+    else:
+        print(f"  MAIN OS patche SHA-256 : {sha(patched)}")
+        if args.expect_mainos and sha(patched) != args.expect_mainos.lower():
+            raise SystemExit("!! le MAIN OS patche ne correspond pas au SHA attendu")
     print(f"  {sum(dirty)} octets changes sur {len(patched)}")
-    print(f"  MAIN OS patche SHA-256 : {sha(patched)}")
-    if args.expect_mainos and sha(patched) != args.expect_mainos.lower():
-        raise SystemExit("!! le MAIN OS patche ne correspond pas au SHA attendu")
 
     # reconstruction : re-emet le flux aPLib, recalcule checksums + HMAC
     if payload:

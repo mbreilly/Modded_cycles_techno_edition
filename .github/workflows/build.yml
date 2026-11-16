@@ -102,11 +102,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check the patcher
-        run: python3 -m py_compile firmware/patch.py firmware/tools/build.py firmware/tools/aplib_grow.py && python3 firmware/tools/build.py --list && python3 tools/make_web_data.py --check && python3 tools/make_web_manual.py --check
+        run: python3 -m py_compile firmware/patch.py firmware/tools/build.py firmware/tools/aplib_grow.py firmware/tools/dx7bank.py && python3 firmware/tools/build.py --list && python3 tools/make_web_data.py --check && python3 tools/make_web_manual.py --check && python3 tools/check_dx7bank.py
       - name: Pack
         run: |
           mkdir -p dist
           cp README.md LICENSE THIRD-PARTY-NOTICES.md firmware/
+          mkdir -p firmware/dx && cp docs/dx/modded-cycles-dx-bank.syx firmware/dx/
           (cd firmware && zip -qr ../dist/Modded-Cycles-Techno-Edition-firmware-patcher.zip .)
       - uses: actions/upload-artifact@v4
         with:

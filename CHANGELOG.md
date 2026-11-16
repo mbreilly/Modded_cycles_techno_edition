@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2
+
+- **Your own DX sounds:** the web builder and the patcher (`--dx-bank`) can put a DX7 32-voice bank in place of the
+  DX machine's 32 built-in sounds. The built-in sounds are also available as a DX7 bank,
+  `docs/dx/modded-cycles-dx-bank.syx`, to edit in Dexed. Without a bank the firmware is unchanged.
+- Manual: third edition, with your own DX sounds.
+
 ## v1.1
 
 - **MIDI machine** (26, after EMPTY): makes no sound; the track plays another instrument over MIDI OUT and USB. Each
