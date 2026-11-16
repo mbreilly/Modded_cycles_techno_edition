@@ -12,7 +12,8 @@
  "writes": [
   {
    "off": 676257,
-   "old": "07199c",
+   "old_len": 3,
+   "old_sha256": "bf7828422b40c377ac044469169beb10fd8d7767c5d8e2d9602f34650bcdebf6",
    "new": "147f22"
   },
   {

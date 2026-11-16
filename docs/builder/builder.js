@@ -455,21 +455,29 @@ function buildStream(blob, padTo) {
 const BASE = 0x40000400;
 const END_LIMIT = 0x40200000;     // l'image décompressée doit finir sous la zone de travail du bootstrap
 
+// Octets d'origine d'une ecriture : « old » en clair, ou leur longueur et SHA-256 (« old_len », « old_sha256 ») dans la
+// version publique, qui ne contient aucun octet d'Elektron (tools/hash_old.py). Meme regle que old_len / old_is de build.py.
+const oldLen = (w) => (w.old !== undefined ? w.old.length / 2 : w.old_len);
+function oldIs(w, cur) {
+  if (w.old !== undefined) { const old = fromHex(w.old); return old.length === cur.length && old.every((b, k) => cur[k] === b); }
+  return cur.length === w.old_len && hex(sha256(cur)) === w.old_sha256;
+}
+
 function applyWrites(mainOs, tweaks) {
   const data = Uint8Array.from(mainOs);
   const dirty = new Uint8Array(mainOs.length);
   for (const t of tweaks) {
     for (const w of t.writes) {
-      const off = w.off, old = fromHex(w.old), nw = fromHex(w.new);
-      if (!Number.isInteger(off) || off < 0 || off + old.length > data.length)
+      const off = w.off, n = oldLen(w), nw = fromHex(w.new);
+      if (!Number.isInteger(off) || !Number.isInteger(n) || off < 0 || off + n > data.length)
         throw new Error(`${t.id} : ecriture hors de la section 3 (off ${off})`);
+      const cur = data.slice(off, off + n), ok = oldIs(w, cur);
       // the same write, already made by another tweak (a sprite mask both free, notes/32): nothing to do
-      if (nw.length === old.length && nw.every((b, k) => data[off + k] === b) && !old.every((b, k) => data[off + k] === b))
+      if (nw.length === n && nw.every((b, k) => cur[k] === b) && !ok)
         continue;
-      for (let k = 0; k < old.length; k++)
-        if (data[off + k] !== old[k])
-          throw new Error(`${t.id} @ 0x${(off + BASE).toString(16)} : octet 'old' ${hex(old)} attendu, trouve `
-            + hex(data.subarray(off, off + old.length)));
+      if (!ok)
+        throw new Error(`${t.id} @ 0x${(off + BASE).toString(16)} : octets d'origine differents (${n} o), trouve `
+          + hex(cur.subarray(0, 32)));
       data.set(nw, off);
       for (let k = off; k < off + nw.length; k++) dirty[k] = 1;
     }
@@ -483,8 +491,8 @@ function writesBytes(t) {
   const parts = [];
   const u32 = (x) => Uint8Array.of(x >>> 24, (x >>> 16) & 255, (x >>> 8) & 255, x & 255);
   for (const w of t.writes) {
-    const old = fromHex(w.old), nw = fromHex(w.new);
-    parts.push(u32(w.off), u32(old.length), old, u32(nw.length), nw);
+    const old = w.old !== undefined ? fromHex(w.old) : fromHex(w.old_sha256), nw = fromHex(w.new);
+    parts.push(u32(w.off), u32(oldLen(w)), old, u32(nw.length), nw);
   }
   return concat(...parts);
 }
@@ -508,7 +516,7 @@ function checkConflicts(chosen) {
 function checkCaves(mainOs, chosen, force, dirty, patched, known) {
   const top = new Map();                        // debut du bloc -> fin ecrite la plus haute
   for (const t of chosen) for (const w of t.writes) {
-    const old = fromHex(w.old);
+    const old = fromHex(w.old || "");             // zones 0xFF : « old » toujours en clair
     if (old.length < 2 || !old.every((b) => b === 0xff)) continue;
     let lo = w.off;
     const hi = w.off + old.length;
@@ -560,7 +568,7 @@ function checkCaves(mainOs, chosen, force, dirty, patched, known) {
   const acked = [];
   if (known && known.length) {
     const spans = [];
-    for (const t of chosen) for (const w of t.writes) spans.push([w.off, w.off + fromHex(w.old).length]);
+    for (const t of chosen) for (const w of t.writes) spans.push([w.off, w.off + oldLen(w)]);
     const covers = ([va, tgt]) => {
       const [zlo, zhi] = zones.find(([lo, hi]) => tgt >= lo + BASE && tgt < hi + BASE);
       return known.some((k) => {

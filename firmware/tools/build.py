@@ -10,7 +10,8 @@ de ton .syx, puis reconstruit et re-signe le conteneur (checksums + HMAC-SHA256)
     python3 tools/build.py -i model-cycles_OS1.13.syx -t 6ch-multiout
     python3 tools/build.py -i model-cycles_OS1.13.syx -t 6ch-multiout --expect-mainos 65e24b50...
 
-Sécurité : chaque octet « old » est vérifié avant écriture ; le SHA-256 de la section 3
+Sécurité : les octets d'origine (« old », ou leur longueur et SHA-256 « old_len » / « old_sha256 » dans la version
+publique, qui ne contient aucun octet d'Elektron) sont vérifiés avant écriture ; le SHA-256 de la section 3
 d'origine est vérifié ; après build, tous les checksums et le HMAC sont recontrôlés.
 Deux tweaks déclarés incompatibles (champ « conflicts ») sont refusés ensemble. Un tweak
 qui écrit dans une zone 0xFF (cave) est refusé si l'image d'origine pointe dans cette zone,
@@ -44,6 +45,18 @@ def sha(b):
 
 
 HEX = re.compile(r"(?:[0-9a-fA-F]{2})*")
+
+
+def old_len(w):
+    """Longueur des octets d'origine d'une écriture (« old » en clair, ou « old_len » + « old_sha256 »)."""
+    return len(bytes.fromhex(w["old"])) if "old" in w else w["old_len"]
+
+
+def old_is(w, cur):
+    """Les octets cur sont-ils ceux d'origine attendus par l'écriture w ?"""
+    if "old" in w:
+        return cur == bytes.fromhex(w["old"])
+    return len(cur) == w["old_len"] and hashlib.sha256(cur).hexdigest() == w["old_sha256"]
 
 
 def unhex(s):
@@ -101,7 +114,7 @@ def cave_zones(main_os, chosen):
     zones = {}                                  # debut du bloc -> fin ecrite la plus haute
     for t in chosen:
         for w in t["writes"]:
-            old = bytes.fromhex(w["old"])
+            old = bytes.fromhex(w.get("old", ""))      # zones 0xFF : « old » toujours en clair (tools/hash_old.py)
             if len(old) < 2 or old.count(0xFF) != len(old):
                 continue
             lo, hi = w["off"], w["off"] + len(old)
@@ -164,7 +177,7 @@ def known_ref(known, chosen, zones, hit):
         if int(k["ref"], 16) != va:
             continue
         lo, hi = int(k["lo"], 16) - BASE, int(k["hi"], 16) - BASE
-        spans = [(w["off"], w["off"] + len(bytes.fromhex(w["old"]))) for t in chosen for w in t["writes"]]
+        spans = [(w["off"], w["off"] + old_len(w)) for t in chosen for w in t["writes"]]
         if all(lo <= a and b <= hi for a, b in spans if a < zhi and b > zlo):
             return k
     return None
@@ -232,17 +245,18 @@ def apply_writes(main_os, tweaks_selected):
     for t in tweaks_selected:
         for w in t["writes"]:
             off = w["off"]
-            old = unhex(w["old"])
+            n_old = old_len(w)
             new = unhex(w["new"])
-            if not isinstance(off, int) or isinstance(off, bool) or off < 0 or off + len(old) > len(data):
+            if not isinstance(off, int) or isinstance(off, bool) or off < 0 or off + n_old > len(data):
                 raise SystemExit(f"!! {t['id']} : ecriture hors de la section 3 (off {off})")
-            cur = bytes(data[off:off + len(old)])
-            if cur == new and cur != old:
+            cur = bytes(data[off:off + n_old])
+            ok = old_is(w, cur)
+            if cur == new and not ok:
                 continue                         # la meme ecriture, deja faite par un autre tweak (masque partage)
-            if cur != old:
+            if not ok:
                 raise SystemExit(
-                    f"!! {t['id']} @ {off}: octets 'old' attendus {old.hex()} "
-                    f"mais trouves {cur.hex()} — refus d'ecrire")
+                    f"!! {t['id']} @ {off}: octets d'origine differents ({n_old} o, trouves {cur.hex()[:64]}) "
+                    f"— refus d'ecrire")
             data[off:off + len(new)] = new
             for k in range(off, off + len(new)):
                 dirty[k] = 1
