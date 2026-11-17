@@ -248,13 +248,13 @@ A dark pad: a 4-note chord of detuned saw pairs under a low-pass that drifts slo
 
 ## 22 · SAMPLER
 
-Plays a sample you sent with Elektron Transfer (see the README, Samples). One sample per track, up to about 71 s. PITCH and the trig note transpose (64 / C4 = as recorded).
+Plays a sample you sent with Elektron Transfer (see the README, Samples). One sample per track, up to about 71 s. PITCH and the trig note transpose (64 / C4 = as recorded). Start, End and Loop Start can be turned while a note plays and are heard at once (since v1.4). In SLD mode, SHAPE sets the loop length and the loop slides through the sample as you turn Start.
 
 | Knob | Parameter | Default |
 |---|---|---|
 | COLOR | Start | 0 |
-| SHAPE | End | 127 |
-| SWEEP | Mode (FWD / REV / LOP / PNG) | 0 |
+| SHAPE | End (in SLD: loop Length) | 127 |
+| SWEEP | Mode (FWD / REV / LOP / PNG / SLD) | 0 |
 | CONTOUR | Lofi | 0 |
 | Layer + PITCH | Fine | 0 |
 | Layer + DECAY | Attack | 0 |

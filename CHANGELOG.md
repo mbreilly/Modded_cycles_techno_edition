@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4 (in progress)
+
+- **SAMPLER**: Start, End and Loop Start now follow the knobs while a note plays, as on the Model:Samples (before,
+  a turn was only heard at the next trig).
+- **SAMPLER**: new Mode **SLD** (slide, SWEEP at the top): SHAPE sets the loop length, and the loop keeps that length
+  and moves through the sample as you turn Start.
+- Manual: fourth edition.
+
+Thanks to the user who asked for both.
+
 ## v1.3
 
 Bug fixes in the machines, the sound otherwise unchanged:
