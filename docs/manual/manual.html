@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.4.1 · Model:Cycles OS 1.13 · Fifth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.4.2 · Model:Cycles OS 1.13 · Sixth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -128,7 +128,7 @@ table.mlist { page-break-inside: avoid; }
   <div class="band"></div>
   <div class="grid"><div class="sq a"></div><div class="sq"></div><div class="sq"></div><div class="sq a"></div></div>
   <div class="t">
-    <div class="kicker">OWNER'S MANUAL · FOURTH EDITION · FIRMWARE 1.4</div>
+    <div class="kicker">OWNER'S MANUAL · SIXTH EDITION · FIRMWARE 1.4.2</div>
     <h1>Modded Cycles Techno Edition</h1>
     <div class="sub">The guide to the 26-machine firmware for the Elektron Model:Cycles, and the Modded Cycles Techno Edition plug-in.</div>
   </div>
@@ -693,7 +693,7 @@ exactly as described in the Model:Cycles manual. They have no extras; the per-tr
 <h3><span class="num">22</span> SAMPLER <span class="cat">Sample</span></h3>
 <p class="intro">Plays a sample you sent with Elektron Transfer (see Sampling). One sample per track, up to about 71 s. PITCH transposes (64 = as recorded) and so does the trig note (C4 = as recorded), −48 to +36 semitones. DECAY, GATE and PUNCH: the OS amp envelope, as on TONE. Start, End and Loop Start follow the knobs while a note plays, as on the Model:Samples: turn them and you hear it at once (a jump in the playback can click).</p>
 <table class="knobs"><thead><tr><th>Control</th><th>Parameter</th><th>Default</th><th>What it does</th></tr></thead>
-<tbody><tr><td class="k">COLOR</td><td class="p">Start</td><td class="d">0</td><td>Start point.</td></tr><tr><td class="k">SHAPE</td><td class="p">End</td><td class="d">127</td><td>Where the sample stops playing (127 = its end), always at least a little after Start. In SLD mode: the loop length instead, very short at the bottom of the knob (fine control for short loops) up to the whole sample.</td></tr><tr><td class="k">SWEEP</td><td class="p">Mode</td><td class="d">0</td><td>FWD (forward), REV (reverse), LOP (loop), PNG (ping-pong), SLD (slide: a loop of fixed length that moves with Start; turn COLOR to scan it through the sample).</td></tr><tr><td class="k">CONTOUR</td><td class="p">Lofi</td><td class="d">0</td><td>Sample rate divided by up to 16, down to 2 bits.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + PITCH</td><td class="p">Fine <span class="scr">FINE</span></td><td class="d">0</td><td>Fine tune, 0 to +1 semitone.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + DECAY</td><td class="p">Attack <span class="scr">ATK</span></td><td class="d">0</td><td>Fade-in at the start of each note.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + COLOR</td><td class="p">Loop Start <span class="scr">LPST</span></td><td class="d">0</td><td>Loop start for LOP, PNG and SLD (0 = at Start).</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + SHAPE</td><td class="p">Drive <span class="scr">DRV</span></td><td class="d">0</td><td>Gain up to ×8 into a soft clip.</td></tr></tbody></table>
+<tbody><tr><td class="k">COLOR</td><td class="p">Start</td><td class="d">0</td><td>Start point. Hold a trig and turn it to p-lock Start while you watch the waveform (Sampling).</td></tr><tr><td class="k">SHAPE</td><td class="p">End</td><td class="d">127</td><td>Where the sample stops playing (127 = its end), always at least a little after Start. In SLD mode: the loop length instead, very short at the bottom of the knob (fine control for short loops) up to the whole sample.</td></tr><tr><td class="k">SWEEP</td><td class="p">Mode</td><td class="d">0</td><td>FWD (forward), REV (reverse), LOP (loop), PNG (ping-pong), SLD (slide: a loop of fixed length that moves with Start; turn COLOR to scan it through the sample).</td></tr><tr><td class="k">CONTOUR</td><td class="p">Lofi</td><td class="d">0</td><td>Sample rate divided by up to 16, down to 2 bits.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + PITCH</td><td class="p">Fine <span class="scr">FINE</span></td><td class="d">0</td><td>Fine tune, 0 to +1 semitone.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + DECAY</td><td class="p">Attack <span class="scr">ATK</span></td><td class="d">0</td><td>Fade-in at the start of each note.</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + COLOR</td><td class="p">Loop Start <span class="scr">LPST</span></td><td class="d">0</td><td>Loop start for LOP, PNG and SLD (0 = at Start).</td></tr><tr class="x"><td class="k"><span class="hold">LAYER</span> + SHAPE</td><td class="p">Drive <span class="scr">DRV</span></td><td class="d">0</td><td>Gain up to ×8 into a soft clip.</td></tr></tbody></table>
 
 <p class="origin">Source: original sampler; sample transfer after Model-TG (MIT) · CPU 2.6 / 4.5 % of a block (defaults / charge)</p>
 </section>
@@ -745,13 +745,24 @@ in the sound browser.</p>
 <div class="box warn"><p><b>Never update the OS while Transfer is on SMP.</b> Switch back to CYC (or restart the Cycles) before any firmware update.</p></div>
 
 <h2 id="c7-send">Sending and loading a sample</h2>
+<div class="box warn"><p><b>Choosing SAMPLER, GRANULAR or WAVETABLE in the MACHINES list does not load a sample.</b> The track stays silent until you pick a sample file with <span class="key">FUNC</span> + <span class="key">MACHINES</span> (step 4). The screen tells you: <i>NO SAMPLE · FUNC+MACHINES: PICK</i>.</p></div>
 <ol class="steps">
 <li>Connect the Cycles over USB and set SETTINGS › Device › Transfer to <b>SMP</b>.</li>
 <li>Open Elektron Transfer. It finds a “Model:Samples”. Drag your WAV files onto it.</li>
 <li>On the Cycles, select a track and choose <b>SAMPLER</b>, <b>GRANULAR</b> or <b>WAVETABLE</b> in the MACHINES list.</li>
-<li>Press <span class="key">FUNC</span> + <span class="key">MACHINES</span>, find the sample file in the browser and load it. A window says <i>Sample on track N</i>. Other messages: <i>Sample not found</i>, <i>Not a sample</i>, <i>Read error</i>.</li>
+<li>Press <span class="key">FUNC</span> + <span class="key">MACHINES</span> to open the sound browser. Your sample files are listed there next to the sounds. Find the sample and load it the way you load a sound. A window says <i>Sample on track N</i>, and the waveform appears on the screen.</li>
 <li>The sound is now named <b>SMP</b> followed by eight characters (the sample's fingerprint). Save the sound or the project: the name is how the Cycles finds the sample again.</li>
 </ol>
+<h3>What the screen says</h3>
+<table><thead><tr><th>Screen</th><th>What it means</th><th>What to do</th></tr></thead><tbody>
+<tr><td><b>NO SAMPLE</b><br>FUNC+MACHINES: PICK</td><td>No sample was chosen on this track yet.</td><td>Step 4.</td></tr>
+<tr><td><b>LOADING</b></td><td>The track is reading its sample (after a project load, a pattern change or a power-on). It takes a moment for a long sample.</td><td>Wait.</td></tr>
+<tr><td><b>NOT FOUND</b><br>FUNC+MACHINES: PICK</td><td>The sound names a sample that is no longer on the Cycles (deleted or replaced in Transfer).</td><td>Send it again, or pick another one.</td></tr>
+<tr><td><b>NOT A SAMPLE</b> / <b>READ ERROR</b></td><td>The file could not be read as a sample.</td><td>Send the WAV again, or pick another one.</td></tr>
+<tr><td>Waveform</td><td>The sample is loaded. On SAMPLER the bars show Start and End, and the playhead moves while a note plays.</td><td>Play.</td></tr>
+</tbody></table>
+<h3>Seeing a p-locked Start or End</h3>
+<p>On a SAMPLER track, hold a trig and turn <b>COLOR</b> (Start) or <b>SHAPE</b> (End): the waveform stays on the screen and the bars move to that trig's values, instead of the usual number popup. The bottom line starts with <b>LK</b> and reads, for example, <i>LK ST40 END100 FWD</i>. Hold another trig to see its locks; a trig without locks shows the knob values. Together with trig preview, this lets you set where each step of a break starts by eye.</p>
 <ul>
 <li><b>Recall:</b> when a project opens, the Cycles starts, the pattern changes, or you pick one of these machines on a track, the track reloads its sample from the name, one file at a time. The track is silent while its sample loads.</li>
 <li><b>One sample per track</b>, up to about 71 seconds (6.5 MB) each, 48 kHz 16-bit mono. Two tracks using the same file share it without reading it again.</li>
