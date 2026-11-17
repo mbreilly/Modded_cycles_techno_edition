@@ -18,7 +18,7 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 MODS = ['rel-macro-acid-t9-t8-606-909-smp-gran-wave-rumbl-vacf-metl2-xmod-dx-growl-atmos-empty-bias-midi', 'browser-scroll', 'boot-anim-te', 'multiline-browser', 'level-pan-values', 'mod-settings', 'cpu-monitor', 'track-filter-soft', 'filter-no-poli', 'usb-recover', 'lfo-polarity', 'sidechain', 'track-select', 'sidechain-project', 'machine-click', 'midi-dump']
-EXPECT_MAIN_OS = "d1ed975f9740f526a621ff11c6a96573d57969b9bd6f7e6ca12fbc633f48c343"
+EXPECT_MAIN_OS = "ea74a6ac0141ac20e2f6f2d9e5afcdb86a086a71188ae52cf5366bb329376631"
 
 
 def main():

@@ -194,7 +194,7 @@ amount. Both save with the sound and take p-locks.
 | `Trk Trg` | OFF: the track buttons only select the track; `TRK` + button plays it |
 | `Mch Clk` | ON: press `LEVEL/DATA` to load a machine; OFF: turning loads, as stock |
 | `Knb Lyr` | PUNCH double tap (default) or the MACHINES screen for the knob layer |
-| `CPU Lim` | Machines that would push the CPU past this limit are greyed out in the list (70 % default; OFF) |
+| `CPU Lim` | Machines that would push the CPU past this limit are greyed out in the list (80 % default; OFF) |
 
 **Master DJ EQ.** Double-tap `GATE`: `PITCH` / `DECAY` / `COLOR` are LOW / MID / HIGH on the whole mix (centre =
 0 dB, full left = kill, right = +6 dB). Double-tap again to leave. GATE itself moves to a long press. Saved with the

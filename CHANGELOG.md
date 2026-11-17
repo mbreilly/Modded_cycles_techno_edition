@@ -5,6 +5,16 @@
 - README and manual: what happens to projects saved on this firmware when you go back to the official OS or
   to another mod, and what to do before (set the tracks to original machines and save).
 
+## v1.4.1
+
+- **CPU Lim** now defaults to **80 %** (was 70 %). A project made before flashing keeps the six stock machines, which
+  already count about 74 % with the rest of the OS, so at 70 % every heavier machine was greyed out even with nothing
+  playing. New projects still start with EMPTY on all six tracks. If you had set CPU Lim to 80 % yourself, it now
+  reads 70 %: press LEVEL/DATA to move it on.
+- Manual: fifth edition.
+
+Thanks to the user who reported it.
+
 ## v1.4
 
 - **SAMPLER**: Start, End and Loop Start now follow the knobs while a note plays, as on the Model:Samples (before,
