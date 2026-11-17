@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.5.1
 
 - **SAMPLER, GRANULAR, WAVETABLE**: the screen now says what to do instead of LOADING forever. Choosing the machine
   loads no sample: it shows **NO SAMPLE** and **FUNC+MACHINES: PICK**. A saved sample that is gone shows
@@ -8,7 +8,17 @@
   loads.
 - **SAMPLER**: hold a trig and turn COLOR (Start) or SHAPE (End) to see that trig's locked Start and End on the
   waveform, instead of a number. The bottom line starts with **LK** while you look at a trig's locks.
-- Manual (sixth edition) and README: sample loading as clear steps, with what each screen message means.
+- Manual (seventh edition) and README: sample loading as clear steps, with what each screen message means.
+
+Thanks to the users who asked.
+
+## v1.5
+
+- **New machine 27, UBSAW**: the JP-8000 style supersaw. Seven detuned saws on the curves measured on the original,
+  up to two chord saws (SWEEP: octave, fifth, major, minor, sus, sevenths...), a high pass that follows the note,
+  and four extras: Attack, Drift, Pad Filter and Chord Level. It comes after MIDI, so the machines of your projects
+  keep their numbers.
+- Manual: sixth edition (UBSAW page, machine tables).
 - README and manual: how to switch firmware cleanly (load or start a project made on the new firmware before
   playing, answer NO to saving the old one, one set of projects per firmware), and what happens to projects saved on
   this firmware when you go back to the official OS or to another mod.

@@ -3041,6 +3041,92 @@
      ]
     }
    ]
+  },
+  {
+   "index": 26,
+   "name": "UBSAW",
+   "knobs": [
+    {
+     "name": "Detune",
+     "cc": 16,
+     "default": 64,
+     "max": 127,
+     "values": null
+    },
+    {
+     "name": "Mix",
+     "cc": 17,
+     "default": 80,
+     "max": 127,
+     "values": null
+    },
+    {
+     "name": "Chord",
+     "cc": 18,
+     "default": 0,
+     "max": 12,
+     "values": [
+      "OFF",
+      "OCT",
+      "5TH",
+      "5OC",
+      "MAJ",
+      "MIN",
+      "SU4",
+      "SU2",
+      "MA7",
+      "MI7",
+      "DO7",
+      "AD9",
+      "MOC"
+     ]
+    },
+    {
+     "name": "High Pass",
+     "cc": 19,
+     "default": 0,
+     "max": 127,
+     "values": null
+    }
+   ],
+   "extras": [
+    {
+     "name": "Attack",
+     "cc": 20,
+     "nrpn": [
+      1,
+      40
+     ],
+     "values": null
+    },
+    {
+     "name": "Drift",
+     "cc": 21,
+     "nrpn": [
+      1,
+      41
+     ],
+     "values": null
+    },
+    {
+     "name": "Pad Filter",
+     "cc": 22,
+     "nrpn": [
+      1,
+      42
+     ],
+     "values": null
+    },
+    {
+     "name": "Chord Level",
+     "cc": 23,
+     "nrpn": [
+      1,
+      43
+     ],
+     "values": null
+    }
+   ]
   }
  ],
  "filter": [
