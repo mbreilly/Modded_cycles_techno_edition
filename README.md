@@ -102,9 +102,26 @@ At power-on the new firmware shows a short logo animation and *modded cycles / t
 ## Going back to the official OS
 
 Only the main OS is changed: the bootloader and the startup menu stay exactly as Elektron made them. To go back, send
-Elektron's official `model-cycles_OS1.13.syx` the same way (Transfer, or the startup menu over MIDI IN). Before that,
-set any track that uses an added machine (7–25) back to one of the six original machines, so your projects open
-cleanly on the stock OS.
+Elektron's official `model-cycles_OS1.13.syx` the same way (Transfer, or the startup menu over MIDI IN).
+
+### Your projects on the official OS (or another mod)
+
+Projects you saved on this firmware open on the official OS without crashing, but not everything comes with them.
+Before you go back, set every track that uses an added machine (7–26, EMPTY included) to one of the six original
+machines and save the project. Here is what happens if you don't:
+
+- **A track on an added machine** plays CHORD with the wrong settings; the MACHINES screen shows *Error* and the
+  knobs do nothing. Turn LEVEL/DATA on the MACHINES screen: the track lands on CHORD with its own settings, and you
+  can pick any original machine from there.
+- **A project started on this firmware** has EMPTY on all six tracks, so on the official OS all six show *Error*
+  until you change them.
+- **The added settings** (track filter, machine extras, insert FX, sidechain, master EQ) are ignored by the official
+  OS. An LFO aimed at the track filter moves another parameter instead. If you save the project on the official OS,
+  they are erased: back on this firmware they load at their default values.
+- **Another mod firmware** numbers its added machines its own way, so a track can open as a different machine, and
+  its added settings may read ours differently. Set the tracks to original machines first there too.
+
+Projects made on the official OS open on this firmware as they were, with the added settings at their defaults.
 
 If the Cycles ever fails to start, the startup menu (`FUNC` + power on, then `TRIG 4`) over MIDI IN always brings
 the official OS back.

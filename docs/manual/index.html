@@ -320,8 +320,20 @@ official OS update.</p>
 <li>Send the .syx to the interface's port with any SysEx tool. The screen moves to RECEIVING, then UPDATING FLASH. Do not switch off during the update: sending over MIDI takes a few minutes.</li>
 <li>The Cycles restarts by itself within 1–3 minutes when it is done.</li>
 </ol>
-<p>To go back to the stock firmware, send Elektron's official OS 1.13 file the same way. Before that, set any track that
-uses an added machine (7–25) back to one of the six original machines, so your projects open cleanly on the stock OS.</p>
+<p>To go back to the stock firmware, send Elektron's official OS 1.13 file the same way.</p>
+</div>
+<div class="box warn">
+<h4>Your projects on the official OS (or another mod)</h4>
+<p>Projects saved on this firmware open on the official OS without crashing, but not everything comes with them.
+<b>Before going back, set every track that uses an added machine (7–26, EMPTY included) to one of the six original
+machines, and save the project.</b> Otherwise:</p>
+<ul>
+<li><b>A track on an added machine</b> plays CHORD with the wrong settings; the MACHINES screen shows <i>Error</i> and the knobs do nothing. Turn LEVEL/DATA on the MACHINES screen: the track lands on CHORD with its own settings, and you can pick any original machine from there.</li>
+<li><b>A project started on this firmware</b> has EMPTY on all six tracks, so on the official OS all six show <i>Error</i> until you change them.</li>
+<li><b>The added settings</b> (track filter, machine extras, insert FX, sidechain, master EQ) are ignored by the official OS; an LFO aimed at the track filter moves another parameter instead. Saving the project on the official OS erases them: back on this firmware they load at their default values.</li>
+<li><b>Another mod firmware</b> numbers its added machines its own way, so a track can open as a different machine, and its added settings may read ours differently. Set the tracks to original machines first there too.</li>
+</ul>
+<p>Projects made on the official OS open on this firmware as they were, with the added settings at their defaults.</p>
 </div>
 <div class="box warn"><p><b>Experimental firmware.</b> Every part of it is tested in emulation, running the Model:Cycles' own code
 (Chapter 11), and has been played on real hardware, but it is not made or supported by Elektron. Use it at your own
