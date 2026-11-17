@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.5
 
 - **New machine 27, UBSAW**: the JP-8000 style supersaw. Seven detuned saws on the curves measured on the original,
   up to two chord saws (SWEEP: octave, fifth, major, minor, sus, sevenths...), a high pass that follows the note,
