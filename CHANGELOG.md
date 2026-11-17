@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.4 (in progress)
+## v1.4
 
 - **SAMPLER**: Start, End and Loop Start now follow the knobs while a note plays, as on the Model:Samples (before,
   a turn was only heard at the next trig).
