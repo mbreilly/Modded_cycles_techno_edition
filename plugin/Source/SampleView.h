@@ -6,7 +6,7 @@
 /**
     The sample window of a SAMPLER / GRANULAR / WAVETABLE track (firmware notes/91 and 93): the track's sample as
     a waveform with what the knobs do drawn over it, as the Cycles' own screen draws it but larger:
-      SAMPLER    Start and End bars, the part that doesn't play dimmed, Loop Start in LOOP and PING
+      SAMPLER    Start and End (Length in SLIDE) bars, the part that doesn't play dimmed, Loop Start in LOOP, PING, SLIDE
       GRANULAR   the position, Spray's spread, one mark per grain (Density), Scan as an arrow
       WAVETABLE  the frame that plays as Warp reads it, the strip of frames with the current one, Env as an arrow
     and under it the samples on the +Drive (sent with the Transfer app): double-click one, or LOAD, to put it on
