@@ -3,9 +3,10 @@
 A free, modded firmware for the **Elektron Model:Cycles** (OS 1.13), with a companion plug-in (VST3 / AU /
 standalone) for Mac, Windows and Linux.
 
-- **26 machines**: Elektron's six, plus 20 added ones: classic drum machines (909, 808, 606), a rumble kick, modal
-  metal, an additive drum voice, acid and growl basses, Braids, virtual-analog, cross-mod, 6-operator FM, a pad, and
-  a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your other gear.
+- **27 machines**: Elektron's six, plus 21 added ones: classic drum machines (909, 808, 606), a rumble kick, modal
+  metal, an additive drum voice, acid and growl basses, Braids, virtual-analog, cross-mod, 6-operator FM, a pad, a
+  supersaw, a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your
+  other gear.
 - **A filter and an insert effect on every track**, a sidechain, a master DJ EQ, 6-channel USB audio, an LFO
   polarity switch, a CPU monitor and CPU budget, and quality-of-life changes to the screens.
 - **The plug-in** shows every knob of every machine, follows the track and machine you pick on the Cycles, reads the
@@ -107,7 +108,7 @@ Elektron's official `model-cycles_OS1.13.syx` the same way (Transfer, or the sta
 ### Your projects on the official OS (or another mod)
 
 Projects you saved on this firmware open on the official OS without crashing, but not everything comes with them.
-Before you go back, set every track that uses an added machine (7–26, EMPTY included) to one of the six original
+Before you go back, set every track that uses an added machine (7–27, EMPTY included) to one of the six original
 machines and save the project. Here is what happens if you don't:
 
 - **A track on an added machine** plays CHORD with the wrong settings; the MACHINES screen shows *Error* and the
@@ -171,6 +172,7 @@ SETTINGS › Mods for the stock behaviour).
 | 24 | WAVETABLE | Your sample as a wavetable |
 | 25 | EMPTY | Silence at almost no CPU; a new project starts with EMPTY on all six tracks |
 | 26 | MIDI | No sound: the track plays another instrument over MIDI, with transpose, gate length and four CCs |
+| 27 | UBSAW | JP-8000 style supersaw: seven detuned saws with chord saws, for stabs, leads and pads |
 
 Every knob of every machine, with its defaults, is in **[docs/MACHINES.md](docs/MACHINES.md)**.
 
@@ -329,6 +331,8 @@ Built on the work of:
   and the designs behind METL2, VACF, XMOD and DX's algorithms.
 - **Robin Schmidt, [Open303](https://github.com/RobinSchmidt/Open303)** (MIT): the model behind ACID.
 - **[100demons/bias](https://github.com/100demons/bias)** (MIT): BIAS.
+- **Adam Szabo**, "How to emulate the super saw" (2010): the JP-8000 detune and mix curves behind UBSAW, and
+  Graham Keane's [UberSaw](https://github.com/GrahamJamesKeane/UberSaw) (MIT) for the idea (no code used).
 - **Matthew Fecher's** TR-606 analysis: the 606.
 - **djd_oz**: volume and pan as numbers.
 - **[JUCE](https://juce.com)** (AGPL-3.0 / commercial): the plug-in framework.

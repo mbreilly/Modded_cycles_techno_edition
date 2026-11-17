@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **New machine 27, UBSAW**: the JP-8000 style supersaw. Seven detuned saws on the curves measured on the original,
+  up to two chord saws (SWEEP: octave, fifth, major, minor, sus, sevenths...), a high pass that follows the note,
+  and four extras: Attack, Drift, Pad Filter and Chord Level. It comes after MIDI, so the machines of your projects
+  keep their numbers.
+- Manual: sixth edition (UBSAW page, machine tables).
 - README and manual: how to switch firmware cleanly (load or start a project made on the new firmware before
   playing, answer NO to saving the old one, one set of projects per firmware), and what happens to projects saved on
   this firmware when you go back to the official OS or to another mod.

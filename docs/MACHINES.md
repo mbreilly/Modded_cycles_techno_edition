@@ -1,6 +1,6 @@
 # Machines
 
-Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–26 are added.
+Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–27 are added.
 
 Main knobs are the usual COLOR / SHAPE / SWEEP / CONTOUR (MIDI CC 16–19). **Extras** are played on the knob layer:
 double-tap PUNCH (LED blinks) and PITCH / DECAY / COLOR / SHAPE become Extra 1–4 (CC 20–23, NRPN 1:40–1:43). Holding
@@ -319,3 +319,23 @@ CC numbers: 0 = the default shown, 1–119 = that CC, 120–127 = OFF (not sent)
 when you turn the knob (sequencer stopped too), and just before a note whose trig p-locks it. Picking the machine or
 loading a project sends nothing until a knob moves. PUNCH, GATE, the filter, the insert FX, sends and level do nothing
 here. The plug-in does not take these CCs as the track's filter or pan.
+
+## 27 · UBSAW
+
+The JP-8000 "supersaw": seven detuned saws, plus up to two chord saws, with the detune and mix curves measured on the
+original (Adam Szabo's analysis, written from scratch, band-limited). Every saw starts at a random phase on each note and
+drifts slowly, so no two notes are quite the same. Big trance and hoover stabs, wide leads and pads.
+
+| Knob | Parameter | Default |
+|---|---|---|
+| COLOR | Detune: from unison to the wide JP-8000 spread | 64 |
+| SHAPE | Mix: the centre saw alone at 0, the six side saws louder as you turn up | 80 |
+| SWEEP | Chord (OFF, OCT, 5TH, 5OC, MAJ, MIN, SU4, SU2, MA7, MI7, DO7, AD9, MOC) | 0 |
+| CONTOUR | High Pass that follows the note, up to twice the note's pitch (thins the low end like the JP-8000) | 0 |
+| Layer + PITCH | Attack: a fade-in after each trig, up to 2 s | 0 |
+| Layer + DECAY | Drift: more and slower random detune, up to about 12 cents | 0 |
+| Layer + COLOR | Pad Filter: a slowly wandering low-pass, from about 5 kHz down to 250 Hz | 0 |
+| Layer + SHAPE | Chord Level: louder chord saws, up to three times | 0 |
+
+Chords: OCT octave, 5TH fifth, 5OC fifth and octave, MAJ / MIN triads, SU4 / SU2 suspended, MA7 / MI7 / DO7 sevenths,
+AD9 fifth and ninth, MOC minor third and octave. Amplitude follows DECAY like TONE; GATE holds the note.
