@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- README and manual: what happens to projects saved on this firmware when you go back to the official OS or
-  to another mod, and what to do before (set the tracks to original machines and save).
+- README and manual: how to switch firmware cleanly (load or start a project made on the new firmware before
+  playing, answer NO to saving the old one, one set of projects per firmware), and what happens to projects saved on
+  this firmware when you go back to the official OS or to another mod.
 
 ## v1.4.1
 
