@@ -123,6 +123,22 @@ machines and save the project. Here is what happens if you don't:
 
 Projects made on the official OS open on this firmware as they were, with the added settings at their defaults.
 
+### Switching firmware cleanly
+
+Flashing changes the firmware, not your project: after the flash, the Cycles reopens the project you were on, made on
+the old firmware. A project belongs to the firmware it was made on; keep as many projects for each firmware as you like.
+
+1. Save your project and back it up with Elektron Transfer.
+2. Flash the other firmware.
+3. Before you play or save anything, load a project made on this firmware, or start a new one. If the Cycles asks
+   whether to save the old project first, answer **NO**.
+4. Save a new project right away in a free slot. A name that tells the firmware (`OG…`, `TE…`) makes it easy to find
+   later.
+
+To take a project along: before you flash, set every track to one of the six original machines, save it as a copy in
+a free slot (the original stays as it is), then flash; the Cycles opens the copy. Whatever only the old firmware has
+stays behind. The Mods page settings (USB Out, Trk Trg, Mch Clk…) are kept by the Cycles itself, not by a project.
+
 If the Cycles ever fails to start, the startup menu (`FUNC` + power on, then `TRIG 4`) over MIDI IN always brings
 the official OS back.
 
