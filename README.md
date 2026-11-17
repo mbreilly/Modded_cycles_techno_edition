@@ -235,9 +235,15 @@ SAMPLER, GRANULAR and WAVETABLE play your own WAV files.
 1. Connect the Cycles over USB and set SETTINGS › Device › `Transfer` to **SMP**: Elektron Transfer now sees a
    Model:Samples. Drag your WAV files onto it. (Transfer goes back to CYC at every power-on. Never update the OS while
    it is on SMP.)
-2. On the Cycles, choose SAMPLER, GRANULAR or WAVETABLE on a track, press `FUNC` + `MACHINES`, find the sample in the
-   browser and load it.
-3. Save the sound or the project: the track finds its sample again by name when the project opens.
+2. On the Cycles, choose SAMPLER, GRANULAR or WAVETABLE on a track. **This alone loads nothing**: the screen says
+   `NO SAMPLE` and `FUNC+MACHINES: PICK`.
+3. Press `FUNC` + `MACHINES`. Your sample files are listed in the sound browser; find one and load it the way you load
+   a sound. The waveform appears.
+4. Save the sound or the project: the track finds its sample again by name when the project opens (the screen says
+   `LOADING` meanwhile, or `NOT FOUND` if the file is no longer on the Cycles).
+
+On SAMPLER, hold a trig and turn COLOR (Start) or SHAPE (End): the waveform shows that trig's locked Start and End
+(`LK` on the bottom line), so you can place each step of a break by eye.
 
 One sample per track, up to about 71 seconds each. The three machines share the track's sample, so you can switch
 between them.

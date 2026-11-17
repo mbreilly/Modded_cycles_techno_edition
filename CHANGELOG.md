@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.1
+
+- **SAMPLER, GRANULAR, WAVETABLE**: the screen now says what to do instead of LOADING forever. Choosing the machine
+  loads no sample: it shows **NO SAMPLE** and **FUNC+MACHINES: PICK**. A saved sample that is gone shows
+  **NOT FOUND** (or **NOT A SAMPLE** / **READ ERROR**) with the same hint. LOADING only shows while a sample really
+  loads.
+- **SAMPLER**: hold a trig and turn COLOR (Start) or SHAPE (End) to see that trig's locked Start and End on the
+  waveform, instead of a number. The bottom line starts with **LK** while you look at a trig's locks.
+- Manual (seventh edition) and README: sample loading as clear steps, with what each screen message means.
+
+Thanks to the users who asked.
+
 ## v1.5
 
 - **New machine 27, UBSAW**: the JP-8000 style supersaw. Seven detuned saws on the curves measured on the original,
