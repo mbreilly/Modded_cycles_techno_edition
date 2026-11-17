@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.4 · Model:Cycles OS 1.13 · Fourth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.4.1 · Model:Cycles OS 1.13 · Fifth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -365,7 +365,7 @@ added machine.</p>
 <tr><td>SETTINGS › Mods › USB Out, press <span class="key">LEVEL/DATA</span></td><td class="w">Settings</td><td>Toggles 2CH (stereo mix) and 6CH (six tracks). The computer sees the Cycles reconnect.</td></tr>
 <tr><td>SETTINGS › Mods › SC rows</td><td class="w">Settings</td><td>Sidechain: source, depth, attack, hold, release; Duck T1–T6 (Ch. 8).</td></tr>
 <tr><td>SETTINGS › Mods › Trk Trg / Mch Clk / Knb Lyr</td><td class="w">Settings</td><td>Track buttons select only; press to load a machine; PUNCH (default) or MACH for the knob layer.</td></tr>
-<tr><td>SETTINGS › Mods › CPU Lim</td><td class="w">Settings</td><td>The limit for greying out machines: 70 % (default), 75 … 95, OFF, 60, 65.</td></tr>
+<tr><td>SETTINGS › Mods › CPU Lim</td><td class="w">Settings</td><td>The limit for greying out machines: 80 % (default), 85, 90, 95, OFF, 60 … 75.</td></tr>
 <tr><td>SETTINGS › Device › Transfer</td><td class="w">Settings</td><td>CYC (normal) or SMP (Elektron Transfer sees a Model:Samples, to send samples). Back to CYC at each power-on.</td></tr>
 <tr><td>SETTINGS › Device › CPU</td><td class="w">Settings</td><td>Opens the CPU monitor. Turn LEVEL/DATA right for each track's share, left to go back.</td></tr>
 <tr><td>Hold <span class="key">FUNC</span> at power-on, then <span class="key">TRIG 4</span></td><td class="w">Startup</td><td>Startup menu, OS UPGRADE over MIDI IN (recovery).</td></tr>
@@ -827,10 +827,14 @@ are saved at once and kept at power-off.</p>
 
 <h2 id="c8-cpulim">CPU Lim</h2>
 <p><b>SETTINGS › Mods › CPU Lim</b>, the last row, after Knb Lyr: the limit for greying out machines on the MACHINES list
-(Chapter 3). <b>70 %</b> (default), 75, 80, 85, 90, 95, OFF, 60, 65; LEVEL/DATA goes round. The limit is the
+(Chapter 3). <b>80 %</b> (default), 85, 90, 95, OFF, 60, 65, 70, 75; LEVEL/DATA goes round. The limit is the
 <b>total</b> load, as on the CPU page: the rest of the OS (about 31 %), USB audio to the computer (8 %) and the six
 tracks. The peak runs about 15 points above the average on the device, so 70 % keeps the peaks near 85 %; at 80 % and up,
 expect peaks near 100 % when three or four tracks hit on the same step. OFF never greys anything out.</p>
+<p>A new project starts with EMPTY on all six tracks, so the whole budget is free. A project made before you flashed this
+firmware keeps the six stock machines, which already count about 74 % with the rest of the OS: at 80 % you can still
+swap one of them for a heavier machine; choose EMPTY on the tracks you don't use, or a higher limit, to free more.
+(Before 1.4.1 the default was 70 %, which greyed out every heavier machine in such a project.)</p>
 <p>The budget only greys out choices on the list; it never stops a sound. A machine allowed while the delay and reverb
 rest stays loaded if you then raise a send: the load can then pass the limit by up to 8 %.</p>
 
