@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- README and manual: what happens to projects saved on this firmware when you go back to the official OS or
+  to another mod, and what to do before (set the tracks to original machines and save).
+
 ## v1.4.1
 
 - **CPU Lim** now defaults to **80 %** (was 70 %). A project made before flashing keeps the six stock machines, which
