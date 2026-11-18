@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.6
+
+- **Attack on every track**: on the knob layer (double-tap `PUNCH`, or hold `MACHINES`), `VOL + DIST` now sets a
+  fade-in that restarts on every note, after the filter and the insert effect. It works on all 27 machines, the
+  six Elektron machines included. 0 = off (the default, the track is unchanged), 1 = 1.4 ms, 64 ≈ 53 ms, 127 = 2 s.
+  Saves with the sound, takes p-locks, LFO and velocity; CC 29 / NRPN 1:22. The plug-in has it in TRACK FX.
+- Fixed: a sound saved with the **RAT** insert effect came back with the effect OFF when reloaded.
+- Manual: eighth edition (Attack in chapters 2 and 4, MIDI tables).
+
+Tested on a Model:Cycles before release.
+
+Thanks to the user who asked.
+
 ## v1.5.1
 
 - **SAMPLER, GRANULAR, WAVETABLE**: the screen now says what to do instead of LOADING forever. Choosing the machine

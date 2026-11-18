@@ -74,7 +74,7 @@ int main (int argc, char** argv)
     auto pp = makeProcessor();
     auto& p = *pp;
 
-    CHECK (cycles::allParams().size() == 6 * 39 + 4 + 3 + 11); // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
+    CHECK (cycles::allParams().size() == 6 * 40 + 4 + 3 + 11); // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
@@ -188,6 +188,9 @@ int main (int argc, char** argv)
     setParam (p, "t2_fxamt", 90);
     out = runBlock (p);
     CHECK (out.size() == 1 && out[0].cc == 28 && out[0].val == 90);
+    setParam (p, "t2_attack", 64);           // Attack is CC 29, a plain dial
+    out = runBlock (p);
+    CHECK (out.size() == 1 && out[0].ch == 2 && out[0].cc == 29 && out[0].val == 64);
     {
         juce::MidiBuffer fxin;
         fxin.addEvent (juce::MidiMessage::controllerEvent (3, 27, 2), 0);   // device: track 3 Bitcrush

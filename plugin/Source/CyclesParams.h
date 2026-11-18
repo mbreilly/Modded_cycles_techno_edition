@@ -122,6 +122,9 @@ inline const std::vector<Def>& trackDefs()
         { "fxon",    "FX On",        "TRACK FX", 27, Kind::Toggle, 0, { "Off", "On" } },
         { "fxtype",  "FX Type",      "TRACK FX", 27, Kind::List,   0, { "Drive", "Bitcrush", "Fold", "Ring", "Resonator", "RAT" } },
         { "fxamt",   "FX Amount",    "TRACK FX", 28, Kind::Dial,  64, {} },
+        // Attack: a fade-in on every note, after the filter and the FX; 0 = off, 1 = 1.4 ms, 64 = 53 ms, 127 = 2 s.
+        // On the device: knob layer (PUNCH twice, or hold MACHINES) + VOLUME/DIST.
+        { "attack",  "Attack",       "TRACK FX", 29, Kind::Dial,   0, {} },
         // ---- MIX ----
         { "level",   "Track Level",  "MIX", 95, Kind::Dial, 100, {} },
         { "voldist", "Vol + Dist",   "MIX",  7, Kind::Dial, 100, {} },

@@ -3225,6 +3225,18 @@
    "gesture": "MACHINES + CHANCE",
    "default": 64,
    "values": null
+  },
+  {
+   "key": "attack",
+   "name": "Attack",
+   "cc": 29,
+   "nrpn": [
+    1,
+    22
+   ],
+   "gesture": "PUNCH + VOLUME/DIST",
+   "default": 0,
+   "values": null
   }
  ],
  "sidechain": [

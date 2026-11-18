@@ -203,6 +203,10 @@ about ±1 dB, like the parts of a real drum machine), plus tuning, decay and ton
 FLD (wavefold) / RNG (ring mod) / RES (resonator) / RAT (RAT-pedal style distortion), `CHANCE` sets the
 amount. Both save with the sound and take p-locks.
 
+**Attack on every track,** after the insert effect: on the knob layer, `VOL + DIST` sets a fade-in that restarts on
+every note, on every machine including Elektron's six. 0 = off (the default), 1 = 1.4 ms (softens a click), 64 ≈ 53 ms,
+127 = 2 s: soft pads, bowed basses, hats that turn into a shaker. Saves with the sound, takes p-locks, CC 29.
+
 **Settings › Mods** (a new ninth row of SETTINGS):
 
 | Row | Does |
