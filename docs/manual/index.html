@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.5.1 · Model:Cycles OS 1.13 · Seventh edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.6 · Model:Cycles OS 1.13 · Eighth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -188,6 +188,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="c"><a href="#ch4"><span class="cn">4</span>Filter and insert FX on every track</a></li>
     <li class="s"><a href="#c4-filter">The filter</a></li>
     <li class="s"><a href="#c4-fx">Insert FX</a></li>
+    <li class="s"><a href="#c4-attack">Attack</a></li>
     <li class="c"><a href="#ch5"><span class="cn">5</span>Extra parameters</a></li>
     <li class="c"><a href="#ch6"><span class="cn">6</span>Machine reference</a></li>
     <li class="s"><a href="#c6-stock">1–6 · Stock machines</a></li>
@@ -356,7 +357,7 @@ risk, and back up your projects before flashing.</p></div>
 <p class="lede">Every key combination the firmware adds or changes, the machine list, and what each knob does on each
 added machine.</p>
 
-<div class="holdmap"><div class="hm-t">The knob layer (double-tap <span class="key">PUNCH</span>), or <span class="key">MACHINES</span> held, turns the knobs into…</div><table class="hm"><tr><td><div class="kn a"></div><div class="kl">PITCH</div><div class="kf">Extra 1</div><div class="ks">CC 20</div></td><td><div class="kn a"></div><div class="kl">DECAY</div><div class="kf">Extra 2</div><div class="ks">CC 21</div></td><td><div class="kn a"></div><div class="kl">COLOR</div><div class="kf">Extra 3</div><div class="ks">CC 22</div></td><td><div class="kn a"></div><div class="kl">SHAPE</div><div class="kf">Extra 4</div><div class="ks">CC 23</div></td><td class="sep"></td><td><div class="kn s"></div><div class="kl">SWEEP</div><div class="kf">Cutoff</div><div class="ks">CC 74</div></td><td><div class="kn s"></div><div class="kl">CONTOUR</div><div class="kf">Reso</div><div class="ks">CC 71</div></td><td><div class="kn s"></div><div class="kl">DELAY</div><div class="kf">Env</div><div class="ks">CC 24</div></td><td><div class="kn s"></div><div class="kl">REVERB</div><div class="kf">Env Decay</div><div class="ks">CC 25</div></td><td><div class="kn s"></div><div class="kl">LFO SPEED</div><div class="kf">Type</div><div class="ks">CC 26</div></td><td class="sep"></td><td><div class="kn f"></div><div class="kl">SWING</div><div class="kf">FX Type</div><div class="ks">CC 27</div></td><td><div class="kn f"></div><div class="kl">CHANCE</div><div class="kf">FX Amt</div><div class="ks">CC 28</div></td></tr></table><div class="hm-l"><span>Extras · added machines (Ch. 5)</span><span>Filter · every track (Ch. 4)</span><span>Insert FX · every track</span></div></div>
+<div class="holdmap"><div class="hm-t">The knob layer (double-tap <span class="key">PUNCH</span>), or <span class="key">MACHINES</span> held, turns the knobs into…</div><table class="hm"><tr><td><div class="kn a"></div><div class="kl">PITCH</div><div class="kf">Extra 1</div><div class="ks">CC 20</div></td><td><div class="kn a"></div><div class="kl">DECAY</div><div class="kf">Extra 2</div><div class="ks">CC 21</div></td><td><div class="kn a"></div><div class="kl">COLOR</div><div class="kf">Extra 3</div><div class="ks">CC 22</div></td><td><div class="kn a"></div><div class="kl">SHAPE</div><div class="kf">Extra 4</div><div class="ks">CC 23</div></td><td class="sep"></td><td><div class="kn s"></div><div class="kl">SWEEP</div><div class="kf">Cutoff</div><div class="ks">CC 74</div></td><td><div class="kn s"></div><div class="kl">CONTOUR</div><div class="kf">Reso</div><div class="ks">CC 71</div></td><td><div class="kn s"></div><div class="kl">DELAY</div><div class="kf">Env</div><div class="ks">CC 24</div></td><td><div class="kn s"></div><div class="kl">REVERB</div><div class="kf">Env Decay</div><div class="ks">CC 25</div></td><td><div class="kn s"></div><div class="kl">LFO SPEED</div><div class="kf">Type</div><div class="ks">CC 26</div></td><td class="sep"></td><td><div class="kn f"></div><div class="kl">SWING</div><div class="kf">FX Type</div><div class="ks">CC 27</div></td><td><div class="kn f"></div><div class="kl">CHANCE</div><div class="kf">FX Amt</div><div class="ks">CC 28</div></td><td><div class="kn f"></div><div class="kl">VOL+DIST</div><div class="kf">Attack</div><div class="ks">CC 29</div></td></tr></table><div class="hm-l"><span>Extras · added machines (Ch. 5)</span><span>Filter · every track (Ch. 4)</span><span>Insert FX + Attack · every track</span></div></div>
 <h2 id="c2-combos">Every button combination</h2>
 <table class="combos"><thead><tr><th>Press</th><th class="w">Where</th><th>Does</th></tr></thead><tbody>
 <tr><td><span class="key">PUNCH</span> twice, quickly</td><td class="w">Any track (Knb Lyr PUNCH, the default)</td><td>Knob layer on or off: the knobs play the extras, filter and insert FX. The PUNCH LED blinks while it is on.</td></tr>
@@ -369,6 +370,7 @@ added machine.</p>
 <tr><td>Layer + <span class="key">LFO SPEED</span></td><td class="w">Every track</td><td>Filter Type: OFF / LP / HP / BP / LP24 / HP24 (CC 26).</td></tr>
 <tr><td>Layer + <span class="key">SWING</span></td><td class="w">Every track</td><td>Insert FX Type: OFF / DRV / CRS / FLD / RNG / RES / RAT (CC 27).</td></tr>
 <tr><td>Layer + <span class="key">CHANCE</span></td><td class="w">Every track</td><td>Insert FX Amount, 0–127 (CC 28).</td></tr>
+<tr><td>Layer + <span class="key">VOL + DIST</span></td><td class="w">Every track</td><td>Attack: a fade-in on every note, 0 = off to 2 s (CC 29).</td></tr>
 <tr><td><span class="key">MACHINES</span> held + any of the knobs above</td><td class="w">Any track</td><td>The same parameters as the layer, while MACHINES is held.</td></tr>
 <tr><td><span class="key">MACHINES</span></td><td class="w">Any track</td><td>Opens the MACHINES list; turn LEVEL/DATA to choose one of 27 machines.</td></tr>
 <tr><td><span class="key">LEVEL/DATA</span> (press)</td><td class="w">MACHINES list, Mch Clk ON</td><td>Loads the machine under the “&gt;” and closes the list. Turning alone only moves the cursor; the loaded machine keeps its box.</td></tr>
@@ -555,12 +557,26 @@ quick acid pluck. Type HP with a high cutoff on a hat track thins it without tou
 </tbody></table>
 <ul>
 <li>Both settings save with the sound and take p-locks. An LFO cannot jump the FX Type (an LFO on <i>None</i> leaves it alone); FX Amount can be modulated.</li>
-<li>Off the layer, SWING and CHANCE are the stock trig settings. VOL + DIST is unchanged.</li>
+<li>Off the layer, SWING and CHANCE are the stock trig settings, and VOL + DIST is the stock Volume + Distortion.</li>
 <li>Sounds saved on the stock OS load with FX OFF, Amount 64.</li>
 <li>Six tracks of RES cost about 13 % of a block; with the filter at its worst on all six as well, about 20 %.</li>
 </ul>
 <div class="box tip"><p><b>Try this.</b> DRV at 70 on a 909BD for a harder, rounder kick; RES at 110 on a hat track for metallic ringing; CRS on a
 pad for lo-fi grit; RNG on a DX bell for a broken, clangorous tone; RAT at 100 on a kick for a square, overdriven attack with the low end intact.</p></div>
+
+<h2 id="c4-attack">Attack</h2>
+<p>A fade-in on every track and every machine, the six Elektron machines included. Each note starts from silence and
+rises to full level, after the filter and the insert effect, so the whole sound fades in: a soft pad, a bowed bass,
+hats that turn into a shaker.</p>
+<table class="combos"><thead><tr><th>Layer +</th><th class="w">Parameter</th><th>Range and use</th></tr></thead><tbody>
+<tr><td><span class="key">VOL + DIST</span></td><td class="w"><b>Attack</b> · CC 29</td><td>0 (default) = off, the track plays exactly as without it. 1 = 1.4 ms (softens a click), 20 ≈ 4 ms, 40 ≈ 13 ms, 64 ≈ 53 ms, 100 ≈ 0.4 s, 127 = 2 s.</td></tr>
+</tbody></table>
+<ul>
+<li>Every trig starts the fade again from silence, so a note that retriggers cuts the tail of the one before, like an amp envelope.</li>
+<li>Saves with the sound and takes p-locks, LFO and velocity. Attack and FX Type are stored together: a p-lock of one also keeps the other's value on that trig.</li>
+<li>The screen shows <b>ATCK</b> while you turn it. It costs about 0.3 % of a block per track while a note fades in, nothing once it has.</li>
+<li>Machines that have their own Attack extra (GROWL, MACRO, SAMPLER, UBSAW, ATMOS Swell) keep it; this one comes on top.</li>
+</ul>
 
 <!-- 5 -->
 <h1 class="ch" id="ch5"><span class="chn">CHAPTER 5</span><span class="tt">Extra parameters</span></h1>
@@ -922,6 +938,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td>Filter Type (0 OFF, 1 LP, 2 HP, 3 BP, 4 LP24, 5 HP24)</td><td>26</td><td>1:46</td><td>Track</td></tr>
 <tr><td>Insert FX Type (0 OFF, 1 DRV, 2 CRS, 3 FLD, 4 RNG, 5 RES, 6 RAT)</td><td>27</td><td>1:48</td><td>Track</td></tr>
 <tr><td>Insert FX Amount</td><td>28</td><td>1:49</td><td>Track</td></tr>
+<tr><td>Attack</td><td>29</td><td>1:22</td><td>Track</td></tr>
 <tr><td>USB Out (0 = 2CH, 1 = 6CH)</td><td>—</td><td>1:47</td><td>FX</td></tr>
 <tr><td>SC Src (0 OFF, 1–6 = T1–T6)</td><td>—</td><td>1:50</td><td>FX</td></tr>
 <tr><td>Duck T1–T6 (0–63, one bit per track, T1 = 1, T2 = 2, T3 = 4 …)</td><td>—</td><td>1:51</td><td>FX</td></tr>
@@ -1022,7 +1039,7 @@ message from and to the device, the audio stream (channels, rate, delay) and the
 <tr><td><b>TRIG</b></td><td>Note, Swing, Chance.</td><td>3, 15, 14</td></tr>
 <tr><td><b>MIX</b></td><td>Track Level, Vol + Dist, Pan (L/C/R), Delay Send, Reverb Send.</td><td>95, 7, 10, 12, 13</td></tr>
 <tr><td><b>FILTER</b></td><td>Filter Type (Off / LP / HP / BP / LP24 / HP24), Cutoff, Reso, Env, Env Decay.</td><td>26, 74, 71, 24, 25</td></tr>
-<tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28</td></tr>
+<tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount, Attack. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28, 29</td></tr>
 <tr><td><b>LFO</b></td><td>Speed, Multiplier, Fade, <b>Destination</b> (a dropdown of the device's destinations: Pitch, Color … Filter Cutoff), <b>Waveform</b> (Triangle … Random), <b>Polarity</b> (Bi / Uni, NRPN 1:56), Start Phase, Mode, Depth.</td><td>102–109</td></tr>
 </tbody></table>
 <p class="small">The extras, filter and track FX exist only on this firmware; the stock OS ignores CC 20–28. They also

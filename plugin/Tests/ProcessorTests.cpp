@@ -188,6 +188,9 @@ int main (int argc, char** argv)
     setParam (p, "t2_fxamt", 90);
     out = runBlock (p);
     CHECK (out.size() == 1 && out[0].cc == 28 && out[0].val == 90);
+    setParam (p, "t2_attack", 64);           // Attack is CC 29, a plain dial
+    out = runBlock (p);
+    CHECK (out.size() == 1 && out[0].ch == 2 && out[0].cc == 29 && out[0].val == 64);
     {
         juce::MidiBuffer fxin;
         fxin.addEvent (juce::MidiMessage::controllerEvent (3, 27, 2), 0);   // device: track 3 Bitcrush
