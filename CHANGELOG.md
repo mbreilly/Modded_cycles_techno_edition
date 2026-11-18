@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (v1.6)
+## v1.6
 
 - **Attack on every track**: on the knob layer (double-tap `PUNCH`, or hold `MACHINES`), `VOL + DIST` now sets a
   fade-in that restarts on every note, after the filter and the insert effect. It works on all 27 machines, the
