@@ -9,6 +9,8 @@
 - Fixed: a sound saved with the **RAT** insert effect came back with the effect OFF when reloaded.
 - Manual: eighth edition (Attack in chapters 2 and 4, MIDI tables).
 
+Tested on a Model:Cycles before release.
+
 Thanks to the user who asked.
 
 ## v1.5.1
