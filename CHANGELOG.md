@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.6.1
+
+- Fixed: **stereo samples** played at half speed, an octave too low, on SAMPLER, GRANULAR and WAVETABLE. A stereo
+  file is now mixed to mono (left + right) as it loads, so it plays at its own speed and pitch, like a mono one.
+  A slot holds up to about 35 seconds of stereo (71 seconds of mono). The plug-in's sample window shows stereo
+  samples at their right length too.
+- Manual: ninth edition (stereo samples in "Sending and loading a sample").
+
+Thanks to the user who reported it.
+
 ## v1.6
 
 - **Attack on every track**: on the knob layer (double-tap `PUNCH`, or hold `MACHINES`), `VOL + DIST` now sets a
