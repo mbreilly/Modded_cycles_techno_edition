@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.6.2
+
+- **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
+  both official OS 1.13 files, to send through its startup menu over MIDI IN (or with Transfer while it still runs
+  its own OS). Same packing as Modded-Cycles' (original flasher by RDS (AIM), integrated by DaftMaple), same bytes.
+  Tested on a real Model:Samples through the startup menu over MIDI, and DaftMaple loaded this edition's Samples
+  file on a Model:Samples (18/11/2026); Elektron Transfer is not verified yet. The
+  packing checks Elektron's code by SHA-256 only, so no byte of the OS is stored in the repository.
+
 ## v1.6.1
 
 - Fixed: **stereo samples** played at half speed, an octave too low, on SAMPLER, GRANULAR and WAVETABLE. A stereo
