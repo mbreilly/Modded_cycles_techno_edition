@@ -74,7 +74,7 @@ int main (int argc, char** argv)
     auto pp = makeProcessor();
     auto& p = *pp;
 
-    CHECK (cycles::allParams().size() == 6 * 39 + 4 + 3 + 11); // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
+    CHECK (cycles::allParams().size() == 6 * 40 + 4 + 3 + 11); // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
