@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.6.1 · Model:Cycles OS 1.13 · Ninth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.6.2 · Model:Cycles OS 1.13 · Tenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -171,6 +171,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c1-build">Building the firmware</a></li>
     <li class="s"><a href="#c1-dx">Your own DX sounds</a></li>
     <li class="s"><a href="#c1-safe">Installing, and getting back to the official OS</a></li>
+    <li class="s"><a href="#c1-samples">On a Model:Samples (experimental)</a></li>
     <li class="c"><a href="#ch2"><span class="cn">2</span>Quick reference</a></li>
     <li class="s"><a href="#c2-combos">Every button combination</a></li>
     <li class="s"><a href="#c2-list">The 27 machines</a></li>
@@ -252,8 +253,10 @@ audio, a MIDI machine that plays your other gear from the sequencer, and a plug-
 <tr><td><b>Knob layer</b></td><td>Double-tap PUNCH and the knobs play the extras, the filter and the insert FX; the PUNCH LED blinks. Punch itself moves to a long press.</td><td>Ch. 3, 8</td></tr>
 <tr><td><b>Extra parameters</b></td><td>Up to four more parameters per added machine, on the knob layer's PITCH / DECAY / COLOR / SHAPE. The drum machines get Accent and Drift, after the real 909, 808 and 606.</td><td>Ch. 5</td></tr>
 <tr><td><b>Per-track filter</b></td><td>LP / HP / BP and 24 dB LP24 / HP24 with resonance and an envelope on every track, logarithmic cutoff.</td><td>Ch. 4</td></tr>
+<tr><td><b>Attack</b></td><td>A fade-in on every track, the six Elektron machines included: VOL + DIST on the knob layer.</td><td>Ch. 4</td></tr>
 <tr><td><b>Insert FX</b></td><td>One effect per track: drive, bitcrush, fold, ring modulator, resonator, RAT distortion.</td><td>Ch. 4</td></tr>
-<tr><td><b>Sampler</b></td><td>Send samples with Elektron Transfer; play them on SAMPLER, GRANULAR and WAVETABLE.</td><td>Ch. 7</td></tr>
+<tr><td><b>Sampler</b></td><td>Send samples with Elektron Transfer; play them on SAMPLER, GRANULAR and WAVETABLE (mono or stereo files).</td><td>Ch. 7</td></tr>
+<tr><td><b>Model:Samples</b></td><td>The same firmware can be built for a Model:Samples (experimental).</td><td>Ch. 1</td></tr>
 <tr><td><b>USB audio 2CH / 6CH</b></td><td>SETTINGS › Mods › USB Out: the stereo mix, or the six tracks on six USB channels, with overload recovery.</td><td>Ch. 8</td></tr>
 <tr><td><b>Sidechain</b></td><td>One track ducks the others on every trig (the kick pumping the bass), saved with the project.</td><td>Ch. 8</td></tr>
 <tr><td><b>Master EQ</b></td><td>A DJ-style LOW / MID / HIGH EQ with kills on the whole mix: double-tap GATE.</td><td>Ch. 3</td></tr>
@@ -347,6 +350,36 @@ machines, and save the project.</b> Otherwise:</p>
 <li>Save a new project right away in a free slot. A name that tells the firmware (OG…, TE…) makes it easy to find later.</li>
 </ol>
 <p>To take a project along: before you flash, set every track to one of the six original machines, save it as a copy in a free slot (the original stays as it is), then flash; the Cycles opens the copy. Whatever only the old firmware has stays behind. The Mods page settings (USB Out, Trk Trg, Mch Clk…) are kept by the Cycles itself, not by a project.</p>
+</div>
+<h2 id="c1-samples">On a Model:Samples (experimental)</h2>
+<p>The same firmware runs on a <b>Model:Samples</b>: the hardware is the same, and the Samples becomes a Model:Cycles with
+everything in this manual. Its own sampling is replaced by this firmware's SAMPLER, GRANULAR and WAVETABLE, which play
+samples you send with Elektron Transfer (Chapter 7). The knobs and keys do what this manual says for the control in the
+same place on a Model:Cycles; only the printed names differ.</p>
+<p>The firmware is packed inside the Samples' own firmware file: its bootloader, startup menu and signature stay
+Elektron's, and only the main OS changes, so the official Model:Samples OS can always be put back. This option is
+<b>experimental</b>: it has been loaded on a real Model:Samples through the startup menu, but installing with Elektron
+Transfer is not verified yet.</p>
+<div class="box">
+<h4>Build it</h4>
+<ol class="steps">
+<li>Download both official files from elektron.se: <b>model-cycles_OS1.13.syx</b> (Model:Cycles › Support › Downloads) and <b>model-samples_OS1.13.syx</b> (Model:Samples › Support › Downloads).</li>
+<li>In the web builder, pick <b>Model:Samples</b> in step 1 and drop both files. Or with the patcher: <code>python3 patch.py --machine samples model-cycles_OS1.13.syx model-samples_OS1.13.syx</code> (the files in any order; <code>--dx-bank</code> works here too).</li>
+<li>You get <b>modded-cycles-techno-edition_model-samples.syx</b> (…<b>-dx.syx</b> with your DX bank).</li>
+</ol>
+</div>
+<div class="box">
+<h4>Install it</h4>
+<ol class="steps">
+<li>Back up the Samples' projects and samples with Elektron Transfer. Projects and samples made on the Model:Samples OS are not made for this firmware.</li>
+<li><b>Through the startup menu (tested):</b> connect a MIDI interface's MIDI OUT to the Samples' MIDI IN. Power off, hold <span class="key">FUNC</span>, power on, release, press <span class="key">TRIG 4</span> (OS UPGRADE), and send the file with any SysEx tool, as above. This works whatever OS the Samples runs, so it is also how you install a newer version later.</li>
+<li><b>Or with Elektron Transfer over USB (not verified yet):</b> only while the Samples still runs its own Model:Samples OS. Drop the file on Transfer, as for an official OS update.</li>
+<li>Do not switch off during the update; the Samples restarts by itself within 1–3 minutes after the transfer.</li>
+</ol>
+<p>Once installed, Transfer no longer updates it: install newer versions through the startup menu. A file built for a
+Model:Cycles is refused by a Samples running this firmware (nothing is written), and a Samples file is only for a real
+Model:Samples. <b>To go back</b>, set every track to one of the six original machines (as above), then send the official
+<b>model-samples_OS1.13.syx</b> through the startup menu.</p>
 </div>
 <div class="box warn"><p><b>Experimental firmware.</b> Every part of it is tested in emulation, running the Model:Cycles' own code
 (Chapter 11), and has been played on real hardware, but it is not made or supported by Elektron. Use it at your own
@@ -1290,6 +1323,7 @@ DX 10.5 %, ATMOS 16.5 %.</p>
 <tr><td>GET says “No answer from the Cycles”</td><td>The FX channel is off on the device (SETTINGS › MIDI CONFIG › CHANNELS), or the plug-in's FX channel does not match it.</td></tr>
 <tr><td>Extras, filter or FX do nothing from the DAW</td><td>Receive CC/NRPN must be on; CC 20–28 work only on this firmware.</td></tr>
 <tr><td>The plug-in does not follow knob turns</td><td>SETTINGS › MIDI CONFIG › ENCODER DEST must be I+E and MIDI OUT on for each track; RECEIVE on in the plug-in.</td></tr>
+<tr><td>A Model:Samples refuses the update in Transfer</td><td>Once it runs this firmware, update it through the startup menu over MIDI IN with the <i>model-samples</i> file (Chapter 1).</td></tr>
 <tr><td>The firmware does not start</td><td>Reflash through the startup menu (Chapter 1), or flash the official OS 1.13.</td></tr>
 </tbody></table>
 
@@ -1303,7 +1337,7 @@ model909 by DMDaudio (MIT) for 909BD and the 909's toms, rim, clap and snare. BI
 voices, the 909 hats and cymbals, the 606 (after Matthew Fecher's analysis), GROWL, ATMOS (plate after Jon Dattorro's
 published figure), EMPTY, RAT (a model of the published ProCo RAT circuit) and the sampler machines are this project's
 own code. Sample transfer, the CPU measurement and the delay and reverb rest after Model-TG by TinyGregAudio (MIT);
-6-channel USB after ms-multi-output by Scott Metoyer (MIT); scrolling names and the mtlib toolkit by drumkilla (MIT),
+6-channel USB after ms-multi-output by Scott Metoyer (MIT); Model:Samples packing from Modded-Cycles (original flasher by RDS (AIM), integrated by DaftMaple); scrolling names and the mtlib toolkit by drumkilla (MIT),
 after Marcel Bierling's elektron-firmware-tool (MIT); level and pan numbers after a mod by djd_oz. The plug-in is built
 with JUCE and licensed under the AGPL-3.0; everything else is MIT. Full licence texts are in the repository.</p>
 <p class="small">Elektron, Model:Cycles, Model:Samples, Overbridge and Elektron Transfer are trademarks of Elektron Music

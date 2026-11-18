@@ -8,6 +8,7 @@
   Tested on a real Model:Samples through the startup menu over MIDI, and DaftMaple loaded this edition's Samples
   file on a Model:Samples (18/11/2026); Elektron Transfer is not verified yet. The
   packing checks Elektron's code by SHA-256 only, so no byte of the OS is stored in the repository.
+- Manual: tenth edition ("On a Model:Samples" in chapter 1; Attack and the Model:Samples option in the overview).
 
 ## v1.6.1
 
