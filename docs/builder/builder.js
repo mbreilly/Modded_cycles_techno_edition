@@ -924,7 +924,11 @@ function crossflash(hostRaw, guestRaw) {
  * dans le conteneur officiel du Samples (bootstrap, updater, signature Samples). Ainsi l'OS Cycles accepte ensuite
  * l'OS Samples officiel par USB (samplesBack). Relu en entier. Renvoie { raw, mainOsSha }. */
 const CYC_KEY_STR = 0x40129650, CYC_KEY_CONST = 0x401296b2;
-const CYC_KEY_CODE = [[0x4005275c, "487940129650"], [0x400527c0, "43f9401296b2"]];
+// Checked by SHA-256 only (no byte of Elektron's OS here): the 6-byte pea / lea that load the string and the constant,
+// and the 12-byte string (with its 0).
+const CYC_KEY_CODE = [[0x4005275c, "5b1d397f647eac3d6ee65af0cf3b619e8232a3b30a361929d41fe021a45bc587"],
+                      [0x400527c0, "eb9d9378695b927cd507ed05f4b4981d71fe1f52cc1bd12683ba0281cb4b126a"]];
+const CYC_KEY_STR_SHA = "164621c3d3ca52fcaa36047bb4a3fc03ccd44c58aae624fa857451d1b02dfcf2";
 
 function keyOf(c) {
   const plain = [];
@@ -942,9 +946,9 @@ function keyOf(c) {
 function cyclesOsInSamples(c3, cKey, sc, sKey) {
   const { data: main, ops } = aplibDepack(c3);
   for (const [va, want] of CYC_KEY_CODE)
-    if (hex(main.subarray(va - BASE, va - BASE + 6)) !== want) throw new Error("code de verification inattendu");
+    if (hex(sha256(main.subarray(va - BASE, va - BASE + 6))) !== want) throw new Error("code de verification inattendu");
   const text = main.subarray(CYC_KEY_STR - BASE, CYC_KEY_STR - BASE + 12);
-  if (hex(text) !== "5245564552422053454e4400") throw new Error("chaine de derivation inattendue");
+  if (hex(sha256(text)) !== CYC_KEY_STR_SHA) throw new Error("chaine de derivation inattendue");
   const s = text.subarray(0, 11), h = sha256(s), hr = sha256(Uint8Array.from(s).reverse());
   const co = CYC_KEY_CONST - BASE, old = main.subarray(co, co + 32);
   if (!eq(old.map((b, i) => b ^ h[i] ^ hr[i]), cKey)) throw new Error("la cle du MAIN OS Cycles differe de celle du bootstrap");

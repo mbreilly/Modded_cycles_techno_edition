@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
+  both official OS 1.13 files, to send through its startup menu over MIDI IN (or with Transfer while it still runs
+  its own OS). Same packing as Modded-Cycles' (original flasher by RDS (AIM), integrated by DaftMaple), same bytes.
+  Tested on a real Model:Samples through the startup menu over MIDI; Elektron Transfer is not verified yet. The
+  packing checks Elektron's code by SHA-256 only, so no byte of the OS is stored in the repository.
+
 ## v1.6
 
 - **Attack on every track**: on the knob layer (double-tap `PUNCH`, or hold `MACHINES`), `VOL + DIST` now sets a

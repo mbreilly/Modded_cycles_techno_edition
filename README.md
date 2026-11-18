@@ -26,6 +26,7 @@ manages the CPU) is **[docs/Modded-Cycles-Techno-Edition-Manual.pdf](docs/Modded
 
 - [Build the firmware](#build-the-firmware)
 - [Flash it](#flash-it)
+- [On a Model:Samples](#on-a-modelsamples)
 - [Going back to the official OS](#going-back-to-the-official-os)
 - [The machines](#the-machines)
 - [What else changes on the Cycles](#what-else-changes-on-the-cycles)
@@ -99,6 +100,41 @@ interface's port with any SysEx tool. Do not switch off during the update: sendi
 minutes, then the Cycles restarts by itself within 1–3 minutes.
 
 At power-on the new firmware shows a short logo animation and *modded cycles / techno edition*.
+
+## On a Model:Samples
+
+**Experimental.** The same firmware runs on a Model:Samples (same hardware): it becomes a Model:Cycles with these mods, and SAMPLER,
+GRANULAR and WAVETABLE play your samples. The firmware is packed inside the Samples' own firmware, so its bootloader,
+startup menu and signature stay Elektron's. You also need the official **Model:Samples OS 1.13**
+(`model-samples_OS1.13.syx`, from [elektron.se](https://www.elektron.se/support-downloads/modelsamples)).
+
+**Build it.** In the [web builder](https://mbreilly.github.io/Modded_cycles_techno_edition/), pick *Model:Samples*
+and drop both official files. Or with Python, give both files in any order:
+
+```sh
+python3 patch.py --machine samples model-cycles_OS1.13.syx model-samples_OS1.13.syx
+```
+
+Both write `modded-cycles-techno-edition_model-samples.syx`. Back up your projects and samples with Elektron
+Transfer first, then send it one of two ways:
+
+- **Startup menu over MIDI** (tested on a real Model:Samples; works whatever OS the Samples runs, so this is also
+  how you install a newer version later): connect a MIDI interface's MIDI OUT to the Samples' MIDI IN. Power off,
+  hold `FUNC`, power on, release, press `TRIG 4` (OS UPGRADE): the screen shows READY TO RECEIVE. Send the `.syx`
+  to the interface's port with any SysEx tool.
+- **Elektron Transfer over USB** (not verified yet), only while the Samples still runs its own Model:Samples OS:
+  drop the file on Transfer, as for an official OS update. If anything goes wrong, the startup menu brings it back.
+  Once Modded Cycles is installed, Transfer can no longer update it: use the startup menu.
+
+Do not switch off during the update: the Samples restarts by itself within 1–3 minutes after the transfer.
+
+- The packing is the one of [Modded-Cycles](https://github.com/18nelli18/Modded-Cycles) (original flasher by RDS
+  (AIM), integrated by DaftMaple). This edition was tested on a real Model:Samples through the startup menu over
+  MIDI (16/11/2026); installing it with Elektron Transfer is not verified yet.
+- Only for a real Model:Samples: a Model:Cycles running the Samples OS would take it too, then refuse Model:Cycles
+  firmwares over USB until its startup menu reinstalls the Cycles OS over MIDI IN.
+- **Going back:** send the official `model-samples_OS1.13.syx` through the startup menu the same way. Before that,
+  set any track that uses an added machine back to one of the six original machines.
 
 ## Going back to the official OS
 
