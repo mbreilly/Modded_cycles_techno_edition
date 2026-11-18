@@ -130,7 +130,8 @@ Do not switch off during the update: the Samples restarts by itself within 1–3
 
 - The packing is the one of [Modded-Cycles](https://github.com/18nelli18/Modded-Cycles) (original flasher by RDS
   (AIM), integrated by DaftMaple). This edition was tested on a real Model:Samples through the startup menu over
-  MIDI (16/11/2026); installing it with Elektron Transfer is not verified yet.
+  MIDI (16/11/2026), and the v1.6 build loaded on a Model:Samples again on 18/11/2026; installing it with
+  Elektron Transfer is not verified yet.
 - Only for a real Model:Samples: a Model:Cycles running the Samples OS would take it too, then refuse Model:Cycles
   firmwares over USB until its startup menu reinstalls the Cycles OS over MIDI IN.
 - **Going back:** send the official `model-samples_OS1.13.syx` through the startup menu the same way. Before that,
