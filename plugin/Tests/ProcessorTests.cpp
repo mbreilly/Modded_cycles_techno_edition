@@ -541,6 +541,26 @@ int main (int argc, char** argv)
         CHECK (w != nullptr && *std::max_element (w->hi.begin(), w->hi.end()) > 15000 && *std::min_element (w->lo.begin(), w->lo.end()) < -15000
                && w->hi[1000] < w->hi[10]);
         CHECK (SampleLibrary::waveFromFile (static_cast<const juce::uint8*> (preset.getData()), preset.getSize()) == nullptr);
+        {
+            // a stereo file (header byte 1 = 1, L R interleaved, notes/118): frames, mixed (L + R) >> 1 as the firmware
+            juce::MemoryBlock st (64, true);
+            auto* sh = static_cast<juce::uint8*> (st.getData());
+            sh[1] = 1;
+            const juce::uint32 sbytes = (juce::uint32) pcm.size() * 4;
+            sh[4] = (juce::uint8) (sbytes >> 24); sh[5] = (juce::uint8) (sbytes >> 16); sh[6] = (juce::uint8) (sbytes >> 8); sh[7] = (juce::uint8) sbytes;
+            sh[8] = 0; sh[9] = 0; sh[10] = 0xbb; sh[11] = 0x80; // 48 000
+            std::vector<juce::int16> mixed;
+            for (size_t i = 0; i < pcm.size(); ++i)
+            {
+                const juce::int16 l = pcm[i], r = (juce::int16) (-pcm[i] / 3);
+                for (auto v : { l, r }) { const juce::uint8 b[] = { (juce::uint8) ((juce::uint16) v >> 8), (juce::uint8) v }; st.append (b, 2); }
+                mixed.push_back ((juce::int16) (((int) l + (int) r) >> 1));
+            }
+            int n = 0, ch = 0;
+            CHECK (SampleLibrary::headerOk (static_cast<const juce::uint8*> (st.getData()), 64, n, ch) && n == (int) pcm.size() && ch == 2);
+            auto sw = SampleLibrary::waveFromFile (static_cast<const juce::uint8*> (st.getData()), st.getSize());
+            CHECK (sw != nullptr && sw->numSamples == (int) pcm.size() && sw->pcm == mixed);
+        }
 
         // the whole library against the fake device: only the sample is listed, its waveform read, then cached
         auto cache = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("mcw-test");

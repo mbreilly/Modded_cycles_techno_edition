@@ -13,8 +13,9 @@
     the list of sample files (read from the device, each one's header checked), and each sample's waveform, read
     back once and kept in a cache folder by its hash. All device work runs on this object's own thread.
 
-    A sample file: a 64-byte header (+4 the PCM's length in bytes, +8 the rate, 48 000) then 16-bit big-endian mono
-    PCM, as the firmware's loader reads it (smp.c, smp_load).
+    A sample file: a 64-byte header (+1 = 1 for stereo, +4 the PCM's length in bytes, +8 the rate, 48 000) then
+    16-bit big-endian PCM, L R interleaved when stereo; the firmware's loader (smp.c, smp_load, notes/118) mixes a
+    stereo file to mono, so numSamples counts frames and the waveform is (L + R) / 2, as the Cycles plays it.
 */
 class SampleLibrary : private juce::Thread
 {
@@ -23,7 +24,8 @@ public:
     {
         juce::String path, name;
         juce::uint32 hash = 0, size = 0;
-        int numSamples = 0;
+        int numSamples = 0;   // frames
+        int channels = 1;
     };
 
     /** A waveform: columns (min, max) over the whole sample, and the PCM itself when it is short enough. */
@@ -67,7 +69,7 @@ public:
         ++serial;
     }
     static std::shared_ptr<Wave> waveFromFile (const juce::uint8* file, size_t size);
-    static bool headerOk (const juce::uint8* p, size_t n, int& numSamples);
+    static bool headerOk (const juce::uint8* p, size_t n, int& numSamples, int& channels);
 
 private:
     void run() override;

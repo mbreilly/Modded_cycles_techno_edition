@@ -1,12 +1,22 @@
 # Changelog
 
-## Unreleased
+## v1.6.2
 
 - **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
   both official OS 1.13 files, to send through its startup menu over MIDI IN (or with Transfer while it still runs
   its own OS). Same packing as Modded-Cycles' (original flasher by RDS (AIM), integrated by DaftMaple), same bytes.
   Tested on a real Model:Samples through the startup menu over MIDI; Elektron Transfer is not verified yet. The
   packing checks Elektron's code by SHA-256 only, so no byte of the OS is stored in the repository.
+
+## v1.6.1
+
+- Fixed: **stereo samples** played at half speed, an octave too low, on SAMPLER, GRANULAR and WAVETABLE. A stereo
+  file is now mixed to mono (left + right) as it loads, so it plays at its own speed and pitch, like a mono one.
+  A slot holds up to about 35 seconds of stereo (71 seconds of mono). The plug-in's sample window shows stereo
+  samples at their right length too.
+- Manual: ninth edition (stereo samples in "Sending and loading a sample").
+
+Thanks to the user who reported it.
 
 ## v1.6
 

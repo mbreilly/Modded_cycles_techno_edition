@@ -80,22 +80,28 @@ void SampleLibrary::setStatus (const juce::String& s)
     ++serial;
 }
 
-bool SampleLibrary::headerOk (const juce::uint8* p, size_t n, int& numSamples)
+bool SampleLibrary::headerOk (const juce::uint8* p, size_t n, int& numSamples, int& channels)
 {
     if (n < headerBytes || be32 (p + 8) != 48000 || be32 (p + 4) == 0) return false;
-    numSamples = (int) (be32 (p + 4) >> 1);
-    return true;
+    channels = p[1] == 1 ? 2 : 1;                      // stereo: frames L R interleaved (notes/118)
+    numSamples = (int) (be32 (p + 4) >> 1) / channels;
+    return numSamples > 0;
 }
 
 std::shared_ptr<SampleLibrary::Wave> SampleLibrary::waveFromFile (const juce::uint8* f, size_t size)
 {
-    int n = 0;
-    if (! headerOk (f, size, n)) return {};
-    n = juce::jmin (n, (int) ((size - headerBytes) / 2));
+    int n = 0, ch = 1;
+    if (! headerOk (f, size, n, ch)) return {};
+    n = juce::jmin (n, (int) ((size - headerBytes) / (2 * (size_t) ch)));
     auto w = std::make_shared<Wave>();
     w->numSamples = n;
     w->pcm.resize ((size_t) n);
-    for (int i = 0; i < n; ++i) w->pcm[(size_t) i] = be16 (f + headerBytes + 2 * (size_t) i);
+    for (int i = 0; i < n; ++i)
+    {
+        const auto* p = f + headerBytes + 2 * (size_t) ch * (size_t) i;
+        // as the firmware mixes it: (L + R) >> 1
+        w->pcm[(size_t) i] = ch == 2 ? (juce::int16) (((int) be16 (p) + (int) be16 (p + 2)) >> 1) : be16 (p);
+    }
     w->lo.assign (columns, 0);
     w->hi.assign (columns, 0);
     for (int c = 0; c < columns && n > 0; ++c)
@@ -170,10 +176,10 @@ void SampleLibrary::doRefresh()
     {
         progress.store ((float) i / (float) files.size());
         const auto& [path, e] = files[i];
-        Sample s { path, e.name, e.hash, e.size, 0 };
+        Sample s { path, e.name, e.hash, e.size, 0, 1 };
         juce::MemoryBlock head;
         if (fs.readFile (path, 0, headerBytes, head)
-            && headerOk (static_cast<const juce::uint8*> (head.getData()), head.getSize(), s.numSamples))
+            && headerOk (static_cast<const juce::uint8*> (head.getData()), head.getSize(), s.numSamples, s.channels))
             found.push_back (s);
     }
     std::sort (found.begin(), found.end(), [] (const Sample& a, const Sample& b) { return a.path.compareNatural (b.path) < 0; });
@@ -229,20 +235,26 @@ void SampleLibrary::doWave (juce::uint32 hash)
         w->numSamples = s.numSamples;
         w->lo.assign (columns, 0);
         w->hi.assign (columns, 0);
-        const juce::uint32 pcmBytes = (juce::uint32) s.numSamples * 2;
+        const juce::uint32 frameBytes = 2u * (juce::uint32) s.channels;
+        const juce::uint32 pcmBytes = (juce::uint32) s.numSamples * frameBytes;
         juce::uint32 id = 0, fileSize = 0;
         const bool opened = fs.openRead (s.path, id, fileSize);
         if (! opened) w.reset();
         for (int c = 0; c < columns && w != nullptr; ++c)
         {
             if (! keepGoing ((float) c / columns)) { w.reset(); break; }
-            const juce::uint32 at = headerBytes + (juce::uint32) ((juce::uint64) pcmBytes * (juce::uint64) c / columns) / 2 * 2;
+            const juce::uint32 at = headerBytes + (juce::uint32) ((juce::uint64) pcmBytes * (juce::uint64) c / columns) / frameBytes * frameBytes;
             const juce::uint32 end = juce::jmin (headerBytes + pcmBytes, fileSize);
             juce::MemoryBlock win;
             if (at >= end || ! fs.readChunk (id, at, juce::jmin (windowBytes, end - at), win)) { w.reset(); break; }
             const auto* p = static_cast<const juce::uint8*> (win.getData());
             juce::int16 lo = 32767, hi = -32768;
-            for (size_t i = 0; i + 1 < win.getSize(); i += 2) { lo = juce::jmin (lo, be16 (p + i)); hi = juce::jmax (hi, be16 (p + i)); }
+            for (size_t i = 0; i + frameBytes <= win.getSize(); i += frameBytes)
+            {
+                const juce::int16 v = s.channels == 2 ? (juce::int16) (((int) be16 (p + i) + (int) be16 (p + i + 2)) >> 1) : be16 (p + i);
+                lo = juce::jmin (lo, v);
+                hi = juce::jmax (hi, v);
+            }
             w->lo[(size_t) c] = lo;
             w->hi[(size_t) c] = hi;
         }
@@ -263,7 +275,7 @@ void SampleLibrary::doWave (juce::uint32 hash)
     ++serial;
 }
 
-// Cache file: "MCW1", samples, columns, lo[], hi[], pcm count, pcm[] (all little-endian)
+// Cache file (MCW2 since stereo files are mixed, notes/118; MCW1 files are read again): "MCW2", samples, columns, lo[], hi[], pcm count, pcm[] (all little-endian)
 bool SampleLibrary::saveCache (juce::uint32 hash, const Wave& w) const
 {
     if (! cacheDir.createDirectory()) return false;
@@ -271,7 +283,7 @@ bool SampleLibrary::saveCache (juce::uint32 hash, const Wave& w) const
     if (! o.openedOk()) return false;
     o.setPosition (0);
     o.truncate();
-    o.write ("MCW1", 4);
+    o.write ("MCW2", 4);
     o.writeInt (w.numSamples);
     o.writeInt ((int) w.lo.size());
     for (auto v : w.lo) o.writeShort (v);
@@ -286,7 +298,7 @@ std::shared_ptr<SampleLibrary::Wave> SampleLibrary::loadCache (juce::uint32 hash
     juce::FileInputStream in (cacheDir.getChildFile (hex (hash) + ".mcw"));
     if (! in.openedOk()) return {};
     char magic[4] {};
-    if (in.read (magic, 4) != 4 || std::memcmp (magic, "MCW1", 4) != 0) return {};
+    if (in.read (magic, 4) != 4 || std::memcmp (magic, "MCW2", 4) != 0) return {};
     auto w = std::make_shared<Wave>();
     w->numSamples = in.readInt();
     const int cols = in.readInt();

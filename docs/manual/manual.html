@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.6 · Model:Cycles OS 1.13 · Eighth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.6.1 · Model:Cycles OS 1.13 · Ninth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -128,7 +128,7 @@ table.mlist { page-break-inside: avoid; }
   <div class="band"></div>
   <div class="grid"><div class="sq a"></div><div class="sq"></div><div class="sq"></div><div class="sq a"></div></div>
   <div class="t">
-    <div class="kicker">OWNER'S MANUAL · EIGHTH EDITION · FIRMWARE 1.6</div>
+    <div class="kicker">OWNER'S MANUAL · NINTH EDITION · FIRMWARE 1.6.1</div>
     <h1>Modded Cycles Techno Edition</h1>
     <div class="sub">The guide to the 27-machine firmware for the Elektron Model:Cycles, and the Modded Cycles Techno Edition plug-in.</div>
   </div>
@@ -790,7 +790,7 @@ in the sound browser.</p>
 <p>On a SAMPLER track, hold a trig and turn <b>COLOR</b> (Start) or <b>SHAPE</b> (End): the waveform stays on the screen and the bars move to that trig's values, instead of the usual number popup. The bottom line starts with <b>LK</b> and reads, for example, <i>LK ST40 END100 FWD</i>. Hold another trig to see its locks; a trig without locks shows the knob values. Together with trig preview, this lets you set where each step of a break starts by eye.</p>
 <ul>
 <li><b>Recall:</b> when a project opens, the Cycles starts, the pattern changes, or you pick one of these machines on a track, the track reloads its sample from the name, one file at a time. The track is silent while its sample loads.</li>
-<li><b>One sample per track</b>, up to about 71 seconds (6.5 MB) each, 48 kHz 16-bit mono. Two tracks using the same file share it without reading it again.</li>
+<li><b>One sample per track</b>, 48 kHz 16-bit, up to about 71 seconds mono (6.5 MB) each. A stereo file is mixed to mono as it loads (left + right), so it plays at its own speed and pitch, up to about 35 seconds. Two tracks using the same file share it without reading it again.</li>
 <li>On any other machine the browser behaves as stock (“Error loading preset” if you pick a sample).</li>
 <li>The three machines read the same sample slot: switch a track from SAMPLER to GRANULAR or WAVETABLE and it keeps its sample.</li>
 </ul>
