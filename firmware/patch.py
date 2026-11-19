@@ -28,7 +28,7 @@ sys.path.insert(0, str(HERE / "tools"))
 import for_samples  # noqa: E402
 
 MODS = ['rel-macro-acid-t9-t8-ubsaw-606-909-smp-gran-wave-rumbl-vacf-metl2-xmod-dx-growl-atmos-empty-bias-midi', 'browser-scroll', 'trig-preview', 'boot-anim-te', 'multiline-browser', 'level-pan-values', 'mod-settings', 'cpu-monitor', 'track-filter-soft', 'filter-no-poli', 'usb-recover', 'lfo-polarity', 'sidechain', 'track-select', 'sidechain-project', 'machine-click', 'midi-dump']
-EXPECT_MAIN_OS = "5213c93459f8884c87c012809eabf90fd5eb6c96fe19e2f55ba97440cc9893ce"
+EXPECT_MAIN_OS = "fc2ef74393dd19e42edd47df17a13f088e572e40cd4d36977d3a60a0c93b3ba4"
 OUTPUT = {"cycles": "modded-cycles-techno-edition", "samples": "modded-cycles-techno-edition_model-samples"}
 
 
