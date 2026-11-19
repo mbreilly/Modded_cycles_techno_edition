@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.6.5
+
+- **UBSAW, simpler**: one filter and one Attack per track, as on the other machines. UBSAW's own Pad Filter and
+  Attack are gone: the track filter (LP / LP24) and the track's Attack (`VOL + DIST` on the knob layer) do the same.
+  CONTOUR is now **Chord Level**; the high pass that follows the note moved to the knob layer as **Low Cut**
+  (hold `MACHINES` + `PITCH`); Drift stays on `MACHINES` + `DECAY`.
+- **UBSAW chords are now ATMOS's**: OFF, then OCT 5TH MIN MI7 MI9 M11 SU2 SU4 MAJ MA7 DRK CLU, shown by name. Four-note
+  chords play three chord saws over the supersaw. Both machines read the same list, so chords added later reach both.
+- UBSAW projects saved with v1.5 to v1.6.4 sound different: CONTOUR is read as Chord Level, the old Attack value as
+  Low Cut, and the chord numbers follow the new list. ATMOS is unchanged.
+- Manual: thirteenth edition (UBSAW page and knob tables).
+
+Thanks to the user who suggested it.
+
 ## v1.6.4
 
 - **SAMPLER, fine Start and End with a waveform zoom**: hold `FUNC` and turn `COLOR` (Start) or `SHAPE` (End) to move

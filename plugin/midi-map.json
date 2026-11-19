@@ -3069,20 +3069,20 @@
       "OFF",
       "OCT",
       "5TH",
-      "5OC",
-      "MAJ",
       "MIN",
-      "SU4",
-      "SU2",
-      "MA7",
       "MI7",
-      "DO7",
-      "AD9",
-      "MOC"
+      "MI9",
+      "M11",
+      "SU2",
+      "SU4",
+      "MAJ",
+      "MA7",
+      "DRK",
+      "CLU"
      ]
     },
     {
-     "name": "High Pass",
+     "name": "Chord Level",
      "cc": 19,
      "default": 0,
      "max": 127,
@@ -3091,7 +3091,7 @@
    ],
    "extras": [
     {
-     "name": "Attack",
+     "name": "Low Cut",
      "cc": 20,
      "nrpn": [
       1,
@@ -3108,24 +3108,8 @@
      ],
      "values": null
     },
-    {
-     "name": "Pad Filter",
-     "cc": 22,
-     "nrpn": [
-      1,
-      42
-     ],
-     "values": null
-    },
-    {
-     "name": "Chord Level",
-     "cc": 23,
-     "nrpn": [
-      1,
-      43
-     ],
-     "values": null
-    }
+    null,
+    null
    ]
   }
  ],
