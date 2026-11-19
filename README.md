@@ -270,6 +270,9 @@ project.
 **Screens.** The sound browser shows three names at once and scrolls long names; turning `LEVEL/DATA` shows the
 track level (and pan, with `FUNC`) as numbers.
 
+**Trig preview.** With the sequencer stopped or paused, hold a trig and press `PAGE` to hear that step; the page
+does not turn.
+
 ## Samples
 
 SAMPLER, GRANULAR and WAVETABLE play your own WAV files.
@@ -366,8 +369,8 @@ Built on the work of:
 
 - **[18nelli18/Modded-Cycles](https://github.com/18nelli18/Modded-Cycles)** (MIT): the build toolchain, the
   per-track filter, the machine list, MACRO and ACID ports, and much of the reverse engineering.
-- **[drumkilla/elektron-model-tweaks](https://github.com/drumkilla/elektron-model-tweaks)** (MIT): scrolling names
-  and the `mtlib` firmware toolkit.
+- **[drumkilla/elektron-model-tweaks](https://github.com/drumkilla/elektron-model-tweaks)** (MIT): scrolling names,
+  trig preview and the `mtlib` firmware toolkit.
 - **Marcel Bierling, [elektron-firmware-tool](https://github.com/mischa85/elektron-firmware-tool)** (MIT): the
   firmware container format.
 - **[scottmetoyer/ms-multi-output](https://github.com/scottmetoyer/ms-multi-output)** (MIT): the original 6-channel
