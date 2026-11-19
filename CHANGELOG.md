@@ -8,11 +8,23 @@
   (hold `MACHINES` + `PITCH`); Drift stays on `MACHINES` + `DECAY`.
 - **UBSAW chords are now ATMOS's**: OFF, then OCT 5TH MIN MI7 MI9 M11 SU2 SU4 MAJ MA7 DRK CLU, shown by name. Four-note
   chords play three chord saws over the supersaw. Both machines read the same list, so chords added later reach both.
-- UBSAW projects saved with v1.5 to v1.6.2 sound different: CONTOUR is read as Chord Level, the old Attack value as
+- UBSAW projects saved with v1.5 to v1.6.3 sound different: CONTOUR is read as Chord Level, the old Attack value as
   Low Cut, and the chord numbers follow the new list. ATMOS is unchanged.
 - Manual: UBSAW page and knob tables.
 
 Thanks to the user who suggested it.
+
+## v1.6.3
+
+- **Trig preview**: with the sequencer stopped or paused, hold a trig and press `PAGE` to hear that step (its note,
+  length, p-locks and sound lock); the page does not turn. drumkilla's mod (MIT). The manual already mentioned it,
+  but no build had it.
+- **SAMPLER, setting a locked Start or End**: holding a trig shows the trig menu (NOTE / VEL / LEN) over the left half
+  of the waveform. Turning `COLOR` (Start) or `SHAPE` (End) now hides the menu, so the whole waveform shows with that
+  trig's bars; press or turn `LEVEL/DATA` to bring the menu back. Proven in emulation, not yet tried on hardware.
+- Manual: eleventh edition (trig preview in chapters 2 and 3, the trig menu in "Seeing a p-locked Start or End").
+
+Thanks to the user who reported both.
 
 ## v1.6.2
 
