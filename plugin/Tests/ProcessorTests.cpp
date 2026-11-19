@@ -81,6 +81,9 @@ int main (int argc, char** argv)
         CHECK (modded::numMachines == 27 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
         CHECK (cycles::dialText (def ("shape"), 2, 9) == "HT"); // 909 Voice
         CHECK (cycles::dialText (def ("shape"), 9, 9) == "SD"); // the 909 snare
+        // Turing Machine LFO: Waveform 7..14 = Turing 3..16, sent as CC 106 = 7..14
+        CHECK (def ("lfowave").choices.size() == 15 && def ("lfowave").choices[14] == "Turing 16");
+        CHECK (cycles::toCc (def ("lfowave"), 7) == 7 && cycles::toCc (def ("lfowave"), 14) == 14);
         CHECK (juce::String (modded::machines[7].knobs[3].name) == "Accent" && juce::String (modded::machines[7].extras[0]) == "Drift"); // 808BD
         // per-value names (notes/90): BASSLINE Wave zones, XMOD ratio steps, names only on the pure spots of a morph
         CHECK (juce::String (modded::machines[18].name) == "XMOD" && juce::String (modded::machines[6].name) == "909BD");

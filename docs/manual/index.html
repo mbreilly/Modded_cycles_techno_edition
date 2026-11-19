@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.6.5 · Model:Cycles OS 1.13 · Thirteenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.7 · Model:Cycles OS 1.13 · Fourteenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -185,6 +185,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c3-tp">Trig preview</a></li>
     <li class="s"><a href="#c3-boot">Boot animation</a></li>
     <li class="s"><a href="#c3-lfo">LFO polarity</a></li>
+    <li class="s"><a href="#c3-turing">Turing Machine LFO</a></li>
     <li class="s"><a href="#c3-trk">Track buttons and drones</a></li>
     <li class="s"><a href="#c3-eq">Master EQ (GATE double tap)</a></li>
     <li class="c"><a href="#ch4"><span class="cn">4</span>Filter and insert FX on every track</a></li>
@@ -262,6 +263,7 @@ audio, a MIDI machine that plays your other gear from the sequencer, and a plug-
 <tr><td><b>Sidechain</b></td><td>One track ducks the others on every trig (the kick pumping the bass), saved with the project.</td><td>Ch. 8</td></tr>
 <tr><td><b>Master EQ</b></td><td>A DJ-style LOW / MID / HIGH EQ with kills on the whole mix: double-tap GATE.</td><td>Ch. 3</td></tr>
 <tr><td><b>LFO polarity</b></td><td>FUNC + LFO › Pol: BI (stock) or UNI per track, so the LFO only moves one way.</td><td>Ch. 3</td></tr>
+<tr><td><b>Turing Machine LFO</b></td><td>WAVE T3 … T16: a random loop of 3 to 16 steps that repeats and mutates (Sph), for melodies made on the fly.</td><td>Ch. 3</td></tr>
 <tr><td><b>Trk Trg</b></td><td>Track buttons can select a track without playing it.</td><td>Ch. 3, 8</td></tr>
 <tr><td><b>CPU management</b></td><td>A CPU charge per machine and a budget on the MACHINES list (CPU Lim); the send delay and reverb rest when nothing is sent to them; the machines that play run from fast internal memory; a CPU monitor with each track's share.</td><td>Ch. 8, 11</td></tr>
 <tr><td><b>Screens</b></td><td>A three-line sound browser with scrolling names, level and pan as numbers, and a boot animation.</td><td>Ch. 3</td></tr>
@@ -530,6 +532,25 @@ closes it below the knob. EXP and RMP already worked that way and are unchanged.
 <li>Pol is set per track and remembered at power-off (it is a setting of the machine, not of the sound). The plug-in
 sets it too (NRPN 1:56).</li>
 <li>Cost: under 0.1 % of the CPU.</li>
+</ul>
+
+<h2 id="c3-turing">Turing Machine LFO</h2>
+<p>Turn the LFO page's <b>WAVE</b> past RND: <b>T3 T4 T5 T6 T7 T8 T12 T16</b>. Each is a loop of random values, 3 to
+16 steps long, that repeats, the idea of Music Thing Modular's Turing Machine (as in the alternative Peaks firmware's
+LFO). Point it at PITCH and it plays a short melody that you can freeze or let drift.</p>
+<ul>
+<li><b>How much it changes</b>: <span class="key">FUNC</span> + <span class="key">LFO</span> › <b>Sph</b>. 0 = the loop
+is locked and repeats exactly; turn it up and a few notes change on each pass; 127 = fully random. For these waves Sph
+is the mutation, not the start phase. Found a loop you like? Set Sph back to 0.</li>
+<li><b>Speed</b>: one step per LFO cycle, set with SPD and MULT like any wave. With MODE on TRG (or HLD), every trig of
+the track also moves one step and restarts the cycle: with a slow SPD you get <b>one new note per trig</b>.</li>
+<li><b>Notes</b>: DEST PITCH, then DEP sets the range (DEP 6 ≈ an octave up and down). The steps land on whole
+semitones (any destination moves in whole knob steps). Pol UNI keeps the melody above PITCH.</li>
+<li>WAVE, Sph and the rest save with the sound and take p-locks; the plug-in shows them as Turing 3 … Turing 16 and
+Phase/Mutate. A stock OS reads these waves as RND.</li>
+<li>The loop itself is not saved: after power-off, or after another wave, a new random loop starts. Changing the
+length keeps the loop going. A short loop can come out flat (every step the same): raise Sph for a moment.</li>
+<li>Cost: about 0.5 % of the CPU at worst with all six tracks on a Turing wave.</li>
 </ul>
 
 <h2 id="c3-trk">Track buttons and drones</h2>
@@ -1015,7 +1036,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td>Color / Shape / Sweep / Contour</td><td>16 / 17 / 18 / 19</td><td>Delay send / Reverb send</td><td>12 / 13</td></tr>
 <tr><td>Punch / Gate</td><td>66 / 67</td><td>Mute</td><td>94</td></tr>
 <tr><td>Note / Swing / Chance</td><td>3 / 15 / 14</td><td>LFO Speed, Mult, Fade, Dest</td><td>102 – 105</td></tr>
-<tr><td>LFO Wave, Start Phase, Mode, Depth</td><td>106 – 109</td><td>Delay Time, Feedback (FX)</td><td>85, 86</td></tr>
+<tr><td>LFO Wave (0–6, Turing 7–14), Start Phase (Mutate), Mode, Depth</td><td>106 – 109</td><td>Delay Time, Feedback (FX)</td><td>85, 86</td></tr>
 <tr><td></td><td></td><td>Reverb Size, Tone (FX)</td><td>87, 88</td></tr>
 </tbody></table>
 <p class="small">On the added machines CC 16–19 reach COLOR, SHAPE, SWEEP and CONTOUR just as on the stock ones. A stock
@@ -1086,7 +1107,7 @@ message from and to the device, the audio stream (channels, rate, delay) and the
 <tr><td><b>MIX</b></td><td>Track Level, Vol + Dist, Pan (L/C/R), Delay Send, Reverb Send.</td><td>95, 7, 10, 12, 13</td></tr>
 <tr><td><b>FILTER</b></td><td>Filter Type (Off / LP / HP / BP / LP24 / HP24), Cutoff, Reso, Env, Env Decay.</td><td>26, 74, 71, 24, 25</td></tr>
 <tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount, Attack. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28, 29</td></tr>
-<tr><td><b>LFO</b></td><td>Speed, Multiplier, Fade, <b>Destination</b> (a dropdown of the device's destinations: Pitch, Color … Filter Cutoff), <b>Waveform</b> (Triangle … Random), <b>Polarity</b> (Bi / Uni, NRPN 1:56), Start Phase, Mode, Depth.</td><td>102–109</td></tr>
+<tr><td><b>LFO</b></td><td>Speed, Multiplier, Fade, <b>Destination</b> (a dropdown of the device's destinations: Pitch, Color … Filter Cutoff), <b>Waveform</b> (Triangle … Random, Turing 3 … Turing 16), <b>Polarity</b> (Bi / Uni, NRPN 1:56), Phase/Mutate (the start phase, or the Turing loops' mutation), Mode, Depth.</td><td>102–109</td></tr>
 </tbody></table>
 <p class="small">The extras, filter and track FX exist only on this firmware; the stock OS ignores CC 20–28. They also
 answer NRPN 1:40–1:43 (extras), 1:20, 1:21, 1:44–1:46 (filter) and 1:48, 1:49 (track FX).</p>
@@ -1298,6 +1319,7 @@ DX 10.5 %, ATMOS 16.5 %.</p>
 <tr><td>Sidechain</td><td>0.13 % with Src OFF, up to 2.3 % with five tracks ducked</td></tr>
 <tr><td>Master EQ</td><td>0 when all three bands are at 64; up to 3.9 % when in use</td></tr>
 <tr><td>LFO polarity, CPU monitor</td><td>0.09 %, 0.03 %</td></tr>
+<tr><td>Turing Machine LFO (six tracks)</td><td>0.2 %, 0.5 % at worst</td></tr>
 <tr><td>The rest of the OS (sequencer, mixer, send delay and reverb, outputs)</td><td>about 31 % on the device; about 8–10 points less while the delay and reverb rest</td></tr>
 <tr><td>USB audio to the computer (2CH or 6CH alike)</td><td>about 8 % while the computer reads it</td></tr>
 </tbody></table>
