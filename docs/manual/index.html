@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.6.2 · Model:Cycles OS 1.13 · Tenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.6.3 · Model:Cycles OS 1.13 · Eleventh edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -182,6 +182,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c3-layer">The knob layer (PUNCH double tap)</a></li>
     <li class="s"><a href="#c3-browser">The sound browser</a></li>
     <li class="s"><a href="#c3-lp">Level and pan as numbers</a></li>
+    <li class="s"><a href="#c3-tp">Trig preview</a></li>
     <li class="s"><a href="#c3-boot">Boot animation</a></li>
     <li class="s"><a href="#c3-lfo">LFO polarity</a></li>
     <li class="s"><a href="#c3-trk">Track buttons and drones</a></li>
@@ -427,6 +428,7 @@ added machine.</p>
 <tr><td>SETTINGS › Mods › CPU Lim</td><td class="w">Settings</td><td>The limit for greying out machines: 80 % (default), 85, 90, 95, OFF, 60 … 75.</td></tr>
 <tr><td>SETTINGS › Device › Transfer</td><td class="w">Settings</td><td>CYC (normal) or SMP (Elektron Transfer sees a Model:Samples, to send samples). Back to CYC at each power-on.</td></tr>
 <tr><td>SETTINGS › Device › CPU</td><td class="w">Settings</td><td>Opens the CPU monitor. Turn LEVEL/DATA right for each track's share, left to go back.</td></tr>
+<tr><td>Hold trig + <span class="key">PAGE</span></td><td class="w">Sequencer stopped or paused</td><td>Trig preview: that step plays; the page does not turn.</td></tr>
 <tr><td>Hold <span class="key">FUNC</span> at power-on, then <span class="key">TRIG 4</span></td><td class="w">Startup</td><td>Startup menu, OS UPGRADE over MIDI IN (recovery).</td></tr>
 </tbody></table>
 
@@ -505,6 +507,12 @@ while the MACHINES list is open (press MACHINES again to leave), and PUNCH works
 loudspeaker icon, and <span class="key">FUNC</span> + <span class="key">LEVEL/DATA</span> shows the pan (−64 to 63). The
 number disappears 3–4 seconds after you stop. LEVEL/DATA moves in steps of 1, so every value is reachable. Changes by
 MIDI or by loading a project show nothing.</p>
+
+<h2 id="c3-tp">Trig preview</h2>
+<p>With the sequencer stopped or paused, hold a trig and press <span class="key">PAGE</span>: that step plays with its
+own note, length, p-locks and sound lock, so you can check a step without starting the pattern. The page does not turn
+and the trig stays. It plays whatever the trig condition or probability, and also on a muted track. While the sequencer
+runs, PAGE turns the page as on the stock OS. (Trig preview is drumkilla's mod, MIT licence, since 1.6.3.)</p>
 
 <h2 id="c3-boot">Boot animation</h2>
 <p>At power-on the screen shows the logo (four rounded squares popping in), then “modded cycles” and “techno edition”
@@ -843,7 +851,8 @@ in the sound browser.</p>
 <tr><td>Waveform</td><td>The sample is loaded. On SAMPLER the bars show Start and End, and the playhead moves while a note plays.</td><td>Play.</td></tr>
 </tbody></table>
 <h3>Seeing a p-locked Start or End</h3>
-<p>On a SAMPLER track, hold a trig and turn <b>COLOR</b> (Start) or <b>SHAPE</b> (End): the waveform stays on the screen and the bars move to that trig's values, instead of the usual number popup. The bottom line starts with <b>LK</b> and reads, for example, <i>LK ST40 END100 FWD</i>. Hold another trig to see its locks; a trig without locks shows the knob values. Together with trig preview, this lets you set where each step of a break starts by eye.</p>
+<p>On a SAMPLER track, hold a trig and turn <b>COLOR</b> (Start) or <b>SHAPE</b> (End): the waveform stays on the screen and the bars move to that trig's values, instead of the usual number popup. The bottom line starts with <b>LK</b> and reads, for example, <i>LK ST40 END100 FWD</i>. Hold another trig to see its locks; a trig without locks shows the knob values.</p>
+<p>Holding a trig opens the trig menu (NOTE, VEL, LEN) over the left half of the screen. As soon as you turn COLOR or SHAPE, the menu steps aside and the whole waveform shows. Press or turn <span class="key">LEVEL/DATA</span> to bring the menu back and edit the note, velocity or length; letting go of the trig or holding another one also brings it back. With trig preview (hold the trig + PAGE, sequencer stopped), you can set where each step of a break starts by eye and by ear.</p>
 <ul>
 <li><b>Recall:</b> when a project opens, the Cycles starts, the pattern changes, or you pick one of these machines on a track, the track reloads its sample from the name, one file at a time. The track is silent while its sample loads.</li>
 <li><b>One sample per track</b>, 48 kHz 16-bit, up to about 71 seconds mono (6.5 MB) each. A stereo file is mixed to mono as it loads (left + right), so it plays at its own speed and pitch, up to about 35 seconds. Two tracks using the same file share it without reading it again.</li>
@@ -1337,7 +1346,7 @@ model909 by DMDaudio (MIT) for 909BD and the 909's toms, rim, clap and snare. BI
 voices, the 909 hats and cymbals, the 606 (after Matthew Fecher's analysis), GROWL, ATMOS (plate after Jon Dattorro's
 published figure), EMPTY, RAT (a model of the published ProCo RAT circuit) and the sampler machines are this project's
 own code. Sample transfer, the CPU measurement and the delay and reverb rest after Model-TG by TinyGregAudio (MIT);
-6-channel USB after ms-multi-output by Scott Metoyer (MIT); Model:Samples packing from Modded-Cycles (original flasher by RDS (AIM), integrated by DaftMaple); scrolling names and the mtlib toolkit by drumkilla (MIT),
+6-channel USB after ms-multi-output by Scott Metoyer (MIT); Model:Samples packing from Modded-Cycles (original flasher by RDS (AIM), integrated by DaftMaple); scrolling names, trig preview and the mtlib toolkit by drumkilla (MIT),
 after Marcel Bierling's elektron-firmware-tool (MIT); level and pan numbers after a mod by djd_oz. The plug-in is built
 with JUCE and licensed under the AGPL-3.0; everything else is MIT. Full licence texts are in the repository.</p>
 <p class="small">Elektron, Model:Cycles, Model:Samples, Overbridge and Elektron Transfer are trademarks of Elektron Music

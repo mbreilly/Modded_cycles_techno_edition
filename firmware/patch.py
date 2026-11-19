@@ -27,8 +27,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "tools"))
 import for_samples  # noqa: E402
 
-MODS = ['rel-macro-acid-t9-t8-ubsaw-606-909-smp-gran-wave-rumbl-vacf-metl2-xmod-dx-growl-atmos-empty-bias-midi', 'browser-scroll', 'boot-anim-te', 'multiline-browser', 'level-pan-values', 'mod-settings', 'cpu-monitor', 'track-filter-soft', 'filter-no-poli', 'usb-recover', 'lfo-polarity', 'sidechain', 'track-select', 'sidechain-project', 'machine-click', 'midi-dump']
-EXPECT_MAIN_OS = "6e4a40518ca650f7edcefe24ee73630fd4f7813a664f98c20536132ac1c6deb2"
+MODS = ['rel-macro-acid-t9-t8-ubsaw-606-909-smp-gran-wave-rumbl-vacf-metl2-xmod-dx-growl-atmos-empty-bias-midi', 'browser-scroll', 'trig-preview', 'boot-anim-te', 'multiline-browser', 'level-pan-values', 'mod-settings', 'cpu-monitor', 'track-filter-soft', 'filter-no-poli', 'usb-recover', 'lfo-polarity', 'sidechain', 'track-select', 'sidechain-project', 'machine-click', 'midi-dump']
+EXPECT_MAIN_OS = "8bed21e149f76f49996cdf48edfc4024c4ba2f425942a9c625ca7961ec2a59b0"
 OUTPUT = {"cycles": "modded-cycles-techno-edition", "samples": "modded-cycles-techno-edition_model-samples"}
 
 

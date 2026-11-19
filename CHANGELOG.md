@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased (1.6.3)
+
+- **Trig preview**: with the sequencer stopped or paused, hold a trig and press `PAGE` to hear that step (its note,
+  length, p-locks and sound lock); the page does not turn. drumkilla's mod (MIT). The manual already mentioned it,
+  but no build had it.
+- **SAMPLER, setting a locked Start or End**: holding a trig shows the trig menu (NOTE / VEL / LEN) over the left half
+  of the waveform. Turning `COLOR` (Start) or `SHAPE` (End) now hides the menu, so the whole waveform shows with that
+  trig's bars; press or turn `LEVEL/DATA` to bring the menu back. Proven in emulation, not yet tried on hardware.
+- Manual: eleventh edition (trig preview in chapters 2 and 3, the trig menu in "Seeing a p-locked Start or End").
+
+Thanks to the user who reported both.
+
 ## v1.6.2
 
 - **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
