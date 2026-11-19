@@ -78,7 +78,7 @@ int main (int argc, char** argv)
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
-        CHECK (modded::numMachines == 27 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
+        CHECK (modded::numMachines == 28 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
         CHECK (cycles::dialText (def ("shape"), 2, 9) == "HT"); // 909 Voice
         CHECK (cycles::dialText (def ("shape"), 9, 9) == "SD"); // the 909 snare
         CHECK (juce::String (modded::machines[7].knobs[3].name) == "Accent" && juce::String (modded::machines[7].extras[0]) == "Drift"); // 808BD
@@ -95,6 +95,10 @@ int main (int argc, char** argv)
         CHECK (juce::String (modded::machines[26].name) == "UBSAW" && juce::String (modded::machines[26].extras[2]) == "Pad Filter");
         CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MAJ"
                && cycles::dialText (def ("sweep"), 12, 26) == "MOC");
+        // 707 (28, v1.7): after UBSAW; SHAPE names the part, extra 2 (Crush in the owner's build) is not used
+        CHECK (juce::String (modded::machines[27].name) == "707" && juce::String (modded::machines[27].extras[0]) == "Drift"
+               && juce::String (modded::machines[27].extras[2]).isEmpty());
+        CHECK (cycles::dialText (def ("shape"), 2, 27) == "CP" && cycles::dialText (def ("shape"), 5, 27) == "RD");
         for (auto& info : cycles::allParams())
             if (info.def->key == "machine") CHECK (info.defaultValue == 24);
     }

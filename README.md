@@ -3,7 +3,7 @@
 A free, modded firmware for the **Elektron Model:Cycles** (OS 1.13), with a companion plug-in (VST3 / AU /
 standalone) for Mac, Windows and Linux.
 
-- **27 machines**: Elektron's six, plus 21 added ones: classic drum machines (909, 808, 606), a rumble kick, modal
+- **28 machines**: Elektron's six, plus 22 added ones: classic drum machines (909, 808, 606, 707 percussion), a rumble kick, modal
   metal, an additive drum voice, acid and growl basses, Braids, virtual-analog, cross-mod, 6-operator FM, a pad, a
   supersaw, a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your
   other gear.
@@ -210,6 +210,7 @@ SETTINGS › Mods for the stock behaviour).
 | 25 | EMPTY | Silence at almost no CPU; a new project starts with EMPTY on all six tracks |
 | 26 | MIDI | No sound: the track plays another instrument over MIDI, with transpose, gate length and four CCs |
 | 27 | UBSAW | JP-8000 style supersaw: seven detuned saws with chord saws, for stabs, leads and pads |
+| 28 | 707 | TR-707 style percussion: cowbell, tambourine, hand clap, rim shot, crash and ride, picked per trig with SHAPE |
 
 Every knob of every machine, with its defaults, is in **[docs/MACHINES.md](docs/MACHINES.md)**.
 

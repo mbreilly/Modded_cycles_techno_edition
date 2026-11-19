@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- **New machine 28, 707**: TR-707 style percussion, the parts the 909, 808 and 606 kits do not have. SHAPE picks the
+  cowbell (CB), tambourine (TB), hand clap (CP), rim shot (RS), crash (CR) or ride (RD) on each trig, and each part keeps
+  ringing when another one plays on the same track. Every part is synthesised (no 707 sample), at the 707's lo-fi
+  grain: 24 kHz and 8 bits, cymbals 6 bits. COLOR = Tone, SWEEP = Snap, CONTOUR = Spread, PUNCH = accent; extras
+  Drift, Long Decay and Accent Level. It comes after UBSAW, so the machines of your projects keep their numbers.
+  Tested in emulation; not yet played on hardware.
+- Plug-in: knows the 707 (28 machines), with the part names on SHAPE.
+- Manual: eleventh edition (707 page, machine tables).
+
 ## v1.6.2
 
 - **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from

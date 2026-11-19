@@ -1,6 +1,6 @@
 # Machines
 
-Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–27 are added.
+Machines 1–6 are Elektron's own KICK, SNARE, METAL, PERC, TONE and CHORD, unchanged. Machines 7–28 are added.
 
 Main knobs are the usual COLOR / SHAPE / SWEEP / CONTOUR (MIDI CC 16–19). **Extras** are played on the knob layer:
 double-tap PUNCH (LED blinks) and PITCH / DECAY / COLOR / SHAPE become Extra 1–4 (CC 20–23, NRPN 1:40–1:43). Holding
@@ -339,3 +339,22 @@ drifts slowly, so no two notes are quite the same. Big trance and hoover stabs, 
 
 Chords: OCT octave, 5TH fifth, 5OC fifth and octave, MAJ / MIN triads, SU4 / SU2 suspended, MA7 / MI7 / DO7 sevenths,
 AD9 fifth and ninth, MOC minor third and octave. Amplitude follows DECAY like TONE; GATE holds the note.
+
+## 28 · 707
+
+TR-707 style percussion, the parts the 909, 808 and 606 kits lack: SHAPE picks the cowbell (CB), tambourine (TB),
+hand clap (CP), rim shot (RS), crash (CR) or ride (RD) on each trig. Each part keeps ringing when another one plays on the
+same track; the knobs act on the last part played. Every part is synthesised (no 707 sample) and has the 707's lo-fi
+grain: 24 kHz and 8 bits, the cymbals 6 bits. PITCH tunes the part (64 = as named, ±2 octaves), DECAY sets its length
+(64 = as named), PUNCH is the accent.
+
+| Knob | Parameter | Default |
+|---|---|---|
+| COLOR | Tone: the band of the cowbell and clap, the tambourine jingles, the rim shot's drive, the cymbals' high-pass | 64 |
+| SHAPE | Voice (CB / TB / CP / RS / CR / RD) | 0 |
+| SWEEP | Snap: cowbell click, tambourine shaker, clap tail, rim click, crash noise, ride bell ↔ wash | 64 |
+| CONTOUR | Spread: cowbell interval, tambourine shake and clap burst spacing, rim upper tone, cymbal metal spread | 64 |
+| Layer + PITCH | Drift: pitch and level vary a little from hit to hit | 0 |
+| Layer + DECAY | Long Decay: up to 50 times longer | 0 |
+| Layer + COLOR | (unused) | 0 |
+| Layer + SHAPE | Accent Level: how much louder PUNCH hits are | 0 |
