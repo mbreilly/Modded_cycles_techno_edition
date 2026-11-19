@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- **ATMOS with GATE now stops when you mute its track.** The Cycles' mute only holds back the sequencer's trigs, and
+  ATMOS's GATE drone plays without any trig, so it kept sounding on a muted track, even after a pattern change. Now
+  muting the track (`FUNC` + track, or latched mute) ends the drone at once and its Space tail fades out in about a
+  second; unmute and it starts again. Notes played by trigs (GATE off) are unchanged: they ring out as on the other
+  machines.
+
+Thanks to the user who reported it.
+
 ## v1.7
 
 - **Turing Machine LFO**: the LFO's WAVE goes past RND to **T3 T4 T5 T6 T7 T8 T12 T16**, a random loop of 3 to 16
