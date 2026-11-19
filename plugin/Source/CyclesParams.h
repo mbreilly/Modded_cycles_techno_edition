@@ -142,8 +142,9 @@ inline const std::vector<Def>& trackDefs()
         { "lfomul",  "Multiplier",   "LFO", 103, Kind::Dial,  0, {} },
         { "lfofade", "Fade",         "LFO", 104, Kind::Dial, 64, {} },
         { "lfodest", "Destination",  "LFO", 105, Kind::List,  0, lfoDestNames(), -1, 127, lfoDestCcs() },
-        { "lfowave", "Waveform",     "LFO", 106, Kind::List,   0, { "Triangle", "Sine", "Square", "Saw", "Exponential", "Ramp", "Random" } },
-        { "lfophs",  "Start Phase",  "LFO", 107, Kind::Dial,   0, {} },
+        // Waveform 7..14: the firmware's Turing Machine loops T3..T16, whose Start Phase is the mutation
+        { "lfowave", "Waveform",     "LFO", 106, Kind::List,   0, { "Triangle", "Sine", "Square", "Saw", "Exponential", "Ramp", "Random", "Turing 3", "Turing 4", "Turing 5", "Turing 6", "Turing 7", "Turing 8", "Turing 12", "Turing 16" } },
+        { "lfophs",  "Phase/Mutate", "LFO", 107, Kind::Dial,   0, {} },
         { "lfomode", "Mode",         "LFO", 108, Kind::List,   0, { "Free", "Trig", "Hold", "One", "Half" } },
         { "lfopol",  "Polarity",     "LFO",  -1, Kind::List,   0, { "Bi", "Uni" }, modded::kLfoPolarityNrpnLsb },
         { "lfodep",  "Depth",        "LFO", 109, Kind::Dial,  64, {} },

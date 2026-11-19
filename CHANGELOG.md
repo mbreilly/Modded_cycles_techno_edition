@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.7 (not released yet)
+
+- **Turing Machine LFO**: the LFO's WAVE goes past RND to **T3 T4 T5 T6 T7 T8 T12 T16**, a random loop of 3 to 16
+  steps that repeats, after Music Thing Modular's Turing Machine (as in the alternative Peaks firmware's LFO). Put it
+  on PITCH for melodies made on the fly: the steps land on whole semitones. `FUNC` + `LFO` › Sph sets how much the
+  loop changes (0 = locked, 127 = fully random). One step per LFO cycle, or one per trig with MODE on TRG and a slow
+  speed. Saves with the sound, takes p-locks; a stock OS reads these waves as RND. The plug-in lists them as Turing 3 …
+  Turing 16, and its Start Phase dial is now Phase/Mutate.
+- Manual: eleventh edition ("Turing Machine LFO" in chapter 3).
+
 ## v1.6.2
 
 - **Model:Samples** (experimental): the web builder and `patch.py --machine samples` pack the firmware for a Model:Samples from
