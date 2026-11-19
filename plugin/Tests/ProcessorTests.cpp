@@ -91,10 +91,13 @@ int main (int argc, char** argv)
         CHECK (juce::String (modded::machines[25].name) == "MIDI");
         CHECK (cycles::dialText (def ("x1"), 0, 25) == "74" && cycles::dialText (def ("x1"), 20, 25) == "20"
                && cycles::dialText (def ("x1"), 120, 25) == "OFF" && cycles::dialText (def ("x3"), 0, 25) == "1");
-        // UBSAW (27, v1.5): after MIDI, so the numbers of the others stay; SWEEP steps through the chord names
-        CHECK (juce::String (modded::machines[26].name) == "UBSAW" && juce::String (modded::machines[26].extras[2]) == "Pad Filter");
-        CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MAJ"
-               && cycles::dialText (def ("sweep"), 12, 26) == "MOC");
+        // UBSAW (27, v1.5): after MIDI, so the numbers of the others stay; SWEEP steps through ATMOS's chord names
+        // (OFF + the shared list since the cleanup: Low Cut and Drift extras, Chord Level on CONTOUR)
+        CHECK (juce::String (modded::machines[26].name) == "UBSAW" && juce::String (modded::machines[26].extras[0]) == "Low Cut"
+               && juce::String (modded::machines[26].extras[2]).isEmpty()
+               && juce::String (modded::machines[26].knobs[3].name) == "Chord Level");
+        CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MI7"
+               && cycles::dialText (def ("sweep"), 12, 26) == "CLU");
         for (auto& info : cycles::allParams())
             if (info.def->key == "machine") CHECK (info.defaultValue == 24);
     }
