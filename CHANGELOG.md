@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (1.6.3)
+## v1.6.3
 
 - **Trig preview**: with the sequencer stopped or paused, hold a trig and press `PAGE` to hear that step (its note,
   length, p-locks and sound lock); the page does not turn. drumkilla's mod (MIT). The manual already mentioned it,
