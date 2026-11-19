@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (1.6.4)
+## v1.6.4
 
 - **SAMPLER, fine Start and End with a waveform zoom**: hold `FUNC` and turn `COLOR` (Start) or `SHAPE` (End) to move
   it in 1/64 of a step instead of whole steps. While `FUNC` stays held, the screen zooms in around that bar (about two
