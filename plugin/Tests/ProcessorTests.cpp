@@ -81,6 +81,9 @@ int main (int argc, char** argv)
         CHECK (modded::numMachines == 28 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
         CHECK (cycles::dialText (def ("shape"), 2, 9) == "HT"); // 909 Voice
         CHECK (cycles::dialText (def ("shape"), 9, 9) == "SD"); // the 909 snare
+        // Turing Machine LFO: Waveform 7..14 = Turing 3..16, sent as CC 106 = 7..14
+        CHECK (def ("lfowave").choices.size() == 15 && def ("lfowave").choices[14] == "Turing 16");
+        CHECK (cycles::toCc (def ("lfowave"), 7) == 7 && cycles::toCc (def ("lfowave"), 14) == 14);
         CHECK (juce::String (modded::machines[7].knobs[3].name) == "Accent" && juce::String (modded::machines[7].extras[0]) == "Drift"); // 808BD
         // per-value names (notes/90): BASSLINE Wave zones, XMOD ratio steps, names only on the pure spots of a morph
         CHECK (juce::String (modded::machines[18].name) == "XMOD" && juce::String (modded::machines[6].name) == "909BD");
@@ -91,11 +94,14 @@ int main (int argc, char** argv)
         CHECK (juce::String (modded::machines[25].name) == "MIDI");
         CHECK (cycles::dialText (def ("x1"), 0, 25) == "74" && cycles::dialText (def ("x1"), 20, 25) == "20"
                && cycles::dialText (def ("x1"), 120, 25) == "OFF" && cycles::dialText (def ("x3"), 0, 25) == "1");
-        // UBSAW (27, v1.5): after MIDI, so the numbers of the others stay; SWEEP steps through the chord names
-        CHECK (juce::String (modded::machines[26].name) == "UBSAW" && juce::String (modded::machines[26].extras[2]) == "Pad Filter");
-        CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MAJ"
-               && cycles::dialText (def ("sweep"), 12, 26) == "MOC");
-        // 707 (28, v1.7): after UBSAW; SHAPE names the part, extra 2 (Crush in the owner's build) is not used
+        // UBSAW (27, v1.5): after MIDI, so the numbers of the others stay; SWEEP steps through ATMOS's chord names
+        // (OFF + the shared list since the cleanup: Low Cut and Drift extras, Chord Level on CONTOUR)
+        CHECK (juce::String (modded::machines[26].name) == "UBSAW" && juce::String (modded::machines[26].extras[0]) == "Low Cut"
+               && juce::String (modded::machines[26].extras[2]).isEmpty()
+               && juce::String (modded::machines[26].knobs[3].name) == "Chord Level");
+        CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MI7"
+               && cycles::dialText (def ("sweep"), 12, 26) == "CLU");
+        // 707 (28, v1.8): after UBSAW; SHAPE names the part, extra 2 (Crush in the owner's build) is not used
         CHECK (juce::String (modded::machines[27].name) == "707" && juce::String (modded::machines[27].extras[0]) == "Drift"
                && juce::String (modded::machines[27].extras[2]).isEmpty());
         CHECK (cycles::dialText (def ("shape"), 2, 27) == "CP" && cycles::dialText (def ("shape"), 5, 27) == "RD");

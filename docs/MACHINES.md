@@ -322,23 +322,25 @@ here. The plug-in does not take these CCs as the track's filter or pan.
 
 ## 27 · UBSAW
 
-The JP-8000 "supersaw": seven detuned saws, plus up to two chord saws, with the detune and mix curves measured on the
-original (Adam Szabo's analysis, written from scratch, band-limited). Every saw starts at a random phase on each note and
-drifts slowly, so no two notes are quite the same. Big trance and hoover stabs, wide leads and pads.
+The JP-8000 "supersaw": seven detuned saws, plus two or three chord saws on the same chords as ATMOS, with the detune
+and mix curves measured on the original (Adam Szabo's analysis, written from scratch, band-limited). Every saw starts at
+a random phase on each note and drifts slowly, so no two notes are quite the same. Big trance and hoover stabs, wide
+leads and pads.
 
 | Knob | Parameter | Default |
 |---|---|---|
 | COLOR | Detune: from unison to the wide JP-8000 spread | 64 |
 | SHAPE | Mix: the centre saw alone at 0, the six side saws louder as you turn up | 80 |
-| SWEEP | Chord (OFF, OCT, 5TH, 5OC, MAJ, MIN, SU4, SU2, MA7, MI7, DO7, AD9, MOC) | 0 |
-| CONTOUR | High Pass that follows the note, up to twice the note's pitch (thins the low end like the JP-8000) | 0 |
-| Layer + PITCH | Attack: a fade-in after each trig, up to 2 s | 0 |
+| SWEEP | Chord (OFF, OCT, 5TH, MIN, MI7, MI9, M11, SU2, SU4, MAJ, MA7, DRK, CLU: ATMOS's chords) | 0 |
+| CONTOUR | Chord Level: 0 = balanced under the supersaw, up to three times louder (nothing with Chord OFF) | 0 |
+| Layer + PITCH | Low Cut: a high pass that follows the note, up to twice its pitch (thins the low end like the JP-8000) | 0 |
 | Layer + DECAY | Drift: more and slower random detune, up to about 12 cents | 0 |
-| Layer + COLOR | Pad Filter: a slowly wandering low-pass, from about 5 kHz down to 250 Hz | 0 |
-| Layer + SHAPE | Chord Level: louder chord saws, up to three times | 0 |
 
-Chords: OCT octave, 5TH fifth, 5OC fifth and octave, MAJ / MIN triads, SU4 / SU2 suspended, MA7 / MI7 / DO7 sevenths,
-AD9 fifth and ninth, MOC minor third and octave. Amplitude follows DECAY like TONE; GATE holds the note.
+The note you play is the supersaw; the other notes of the chord are plain saws (OCT and 5TH add the octave below, DRK and
+CLU are ATMOS's dark chord and cluster). For a fade-in use the track's Attack, for a low pass the track filter: UBSAW
+has no filter or Attack of its own since the cleanup (projects saved with v1.5 to v1.6.2 sound different: CONTOUR is
+read as Chord Level, the old Attack value as Low Cut, chord numbers follow the new list). Amplitude follows DECAY like
+TONE; GATE holds the note.
 
 ## 28 · 707
 

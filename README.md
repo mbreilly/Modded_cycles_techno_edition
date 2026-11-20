@@ -8,7 +8,8 @@ standalone) for Mac, Windows and Linux.
   supersaw, a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your
   other gear.
 - **A filter and an insert effect on every track**, a sidechain, a master DJ EQ, 6-channel USB audio, an LFO
-  polarity switch, a CPU monitor and CPU budget, and quality-of-life changes to the screens.
+  polarity switch, Turing Machine LFO waves for looping melodies, a CPU monitor and CPU budget, and quality-of-life
+  changes to the screens.
 - **The plug-in** shows every knob of every machine, follows the track and machine you pick on the Cycles, reads the
   sound back from the machine, picks samples and projects, and records automation in your DAW.
 
@@ -261,6 +262,11 @@ every note, on every machine including Elektron's six. 0 = off (the default), 1 
 project.
 
 **LFO polarity.** `FUNC` + `LFO`, last row `Pol`: BI (stock) or UNI (the LFO only adds to the knob's position).
+
+**Turing Machine LFO.** On the LFO page, `WAVE` goes past RND to `T3` … `T16`: a random loop of 3 to 16 steps that
+repeats, for melodies made on the fly (DEST PITCH: the steps land on semitones). `FUNC` + `LFO` › `Sph` sets how much
+it changes: 0 = locked, 127 = fully random. One step per LFO cycle; with MODE on TRG and a slow speed, one step per
+trig.
 
 **CPU monitor.** SETTINGS › Device › `CPU`: load and peak bars; turn `LEVEL/DATA` right for each track's share.
 

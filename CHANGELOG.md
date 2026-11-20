@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.8
 
 - **New machine 28, 707**: TR-707 style percussion, the parts the 909, 808 and 606 kits do not have. SHAPE picks the
   cowbell (CB), tambourine (TB), hand clap (CP), rim shot (RS), crash (CR) or ride (RD) on each trig, and each part keeps
@@ -9,7 +9,42 @@
   Drift, Long Decay and Accent Level. It comes after UBSAW, so the machines of your projects keep their numbers.
   Tested in emulation; not yet played on hardware.
 - Plug-in: knows the 707 (28 machines), with the part names on SHAPE.
-- Manual: twelfth edition (707 page, machine tables).
+- Manual: fifteenth edition (707 page, machine tables).
+
+## v1.7
+
+- **Turing Machine LFO**: the LFO's WAVE goes past RND to **T3 T4 T5 T6 T7 T8 T12 T16**, a random loop of 3 to 16
+  steps that repeats, after Music Thing Modular's Turing Machine (as in the alternative Peaks firmware's LFO). Put it
+  on PITCH for melodies made on the fly: the steps land on whole semitones. `FUNC` + `LFO` › Sph sets how much the
+  loop changes (0 = locked, 127 = fully random). One step per LFO cycle, or one per trig with MODE on TRG and a slow
+  speed. Saves with the sound, takes p-locks; a stock OS reads these waves as RND. The plug-in lists them as Turing 3 …
+  Turing 16, and its Start Phase dial is now Phase/Mutate.
+- Manual: fourteenth edition ("Turing Machine LFO" in chapter 3).
+
+## v1.6.5
+
+- **UBSAW, simpler**: one filter and one Attack per track, as on the other machines. UBSAW's own Pad Filter and
+  Attack are gone: the track filter (LP / LP24) and the track's Attack (`VOL + DIST` on the knob layer) do the same.
+  CONTOUR is now **Chord Level**; the high pass that follows the note moved to the knob layer as **Low Cut**
+  (hold `MACHINES` + `PITCH`); Drift stays on `MACHINES` + `DECAY`.
+- **UBSAW chords are now ATMOS's**: OFF, then OCT 5TH MIN MI7 MI9 M11 SU2 SU4 MAJ MA7 DRK CLU, shown by name. Four-note
+  chords play three chord saws over the supersaw. Both machines read the same list, so chords added later reach both.
+- UBSAW projects saved with v1.5 to v1.6.4 sound different: CONTOUR is read as Chord Level, the old Attack value as
+  Low Cut, and the chord numbers follow the new list. ATMOS is unchanged.
+- Manual: thirteenth edition (UBSAW page and knob tables).
+
+Thanks to the user who suggested it.
+
+## v1.6.4
+
+- **SAMPLER, fine Start and End with a waveform zoom**: hold `FUNC` and turn `COLOR` (Start) or `SHAPE` (End) to move
+  it in 1/64 of a step instead of whole steps. While `FUNC` stays held, the screen zooms in around that bar (about two
+  steps, at least 50 ms) and shows its value (`ZOOM ST40.50`) and where it is in the sample in seconds. Let go of
+  `FUNC` to see the whole sample. Works on p-locks too. The plug-in still shows and sends whole steps. Proven in
+  emulation, not yet tried on hardware.
+- Manual: twelfth edition ("Fine Start and End, and the zoom").
+
+Thanks to the user who asked for it.
 
 ## v1.6.3
 
