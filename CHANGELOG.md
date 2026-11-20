@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9
+
+- **ATMOS with GATE now stops when you mute its track.** The Cycles' mute only holds back the sequencer's trigs, and
+  ATMOS's GATE drone plays without any trig, so it kept sounding on a muted track, even after a pattern change. Now
+  muting the track (`FUNC` + track, or latched mute) ends the drone at once and its Space tail fades out in about a
+  second; unmute and it starts again. Notes played by trigs (GATE off) are unchanged: they ring out as on the other
+  machines.
+
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
+
 ## v1.8
 
 - **New machine 28, 707**: TR-707 style percussion, the parts the 909, 808 and 606 kits do not have. SHAPE picks the
@@ -76,7 +86,7 @@ Thanks to the user who reported both.
   samples at their right length too.
 - Manual: ninth edition (stereo samples in "Sending and loading a sample").
 
-Thanks to the user who reported it.
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
 
 ## v1.6
 
@@ -122,7 +132,7 @@ Thanks to the users who asked.
   reads 70 %: press LEVEL/DATA to move it on.
 - Manual: fifth edition.
 
-Thanks to the user who reported it.
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
 
 ## v1.4
 
