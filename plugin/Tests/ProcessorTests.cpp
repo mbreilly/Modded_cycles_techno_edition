@@ -78,7 +78,7 @@ int main (int argc, char** argv)
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
-        CHECK (modded::numMachines == 27 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
+        CHECK (modded::numMachines == 28 && juce::String (modded::machines[13].name) == "BIAS" && juce::String (modded::machines[14].name) == "ACID");
         CHECK (cycles::dialText (def ("shape"), 2, 9) == "HT"); // 909 Voice
         CHECK (cycles::dialText (def ("shape"), 9, 9) == "SD"); // the 909 snare
         // Turing Machine LFO: Waveform 7..14 = Turing 3..16, sent as CC 106 = 7..14
@@ -101,6 +101,10 @@ int main (int argc, char** argv)
                && juce::String (modded::machines[26].knobs[3].name) == "Chord Level");
         CHECK (cycles::dialText (def ("sweep"), 0, 26) == "OFF" && cycles::dialText (def ("sweep"), 4, 26) == "MI7"
                && cycles::dialText (def ("sweep"), 12, 26) == "CLU");
+        // 707 (28, v1.8): after UBSAW; SHAPE names the part, extra 2 (Crush in the owner's build) is not used
+        CHECK (juce::String (modded::machines[27].name) == "707" && juce::String (modded::machines[27].extras[0]) == "Drift"
+               && juce::String (modded::machines[27].extras[2]).isEmpty());
+        CHECK (cycles::dialText (def ("shape"), 2, 27) == "CP" && cycles::dialText (def ("shape"), 5, 27) == "RD");
         for (auto& info : cycles::allParams())
             if (info.def->key == "machine") CHECK (info.defaultValue == 24);
     }

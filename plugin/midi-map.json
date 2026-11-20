@@ -3111,6 +3111,77 @@
     null,
     null
    ]
+  },
+  {
+   "index": 27,
+   "name": "707",
+   "knobs": [
+    {
+     "name": "Tone",
+     "cc": 16,
+     "default": 64,
+     "max": 127,
+     "values": null
+    },
+    {
+     "name": "Voice",
+     "cc": 17,
+     "default": 0,
+     "max": 5,
+     "values": [
+      "CB",
+      "TB",
+      "CP",
+      "RS",
+      "CR",
+      "RD"
+     ]
+    },
+    {
+     "name": "Snap",
+     "cc": 18,
+     "default": 64,
+     "max": 127,
+     "values": null
+    },
+    {
+     "name": "Spread",
+     "cc": 19,
+     "default": 64,
+     "max": 127,
+     "values": null
+    }
+   ],
+   "extras": [
+    {
+     "name": "Drift",
+     "cc": 20,
+     "nrpn": [
+      1,
+      40
+     ],
+     "values": null
+    },
+    {
+     "name": "Long Decay",
+     "cc": 21,
+     "nrpn": [
+      1,
+      41
+     ],
+     "values": null
+    },
+    null,
+    {
+     "name": "Accent Level",
+     "cc": 23,
+     "nrpn": [
+      1,
+      43
+     ],
+     "values": null
+    }
+   ]
   }
  ],
  "filter": [
