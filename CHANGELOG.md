@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.9
 
 - **ATMOS with GATE now stops when you mute its track.** The Cycles' mute only holds back the sequencer's trigs, and
   ATMOS's GATE drone plays without any trig, so it kept sounding on a muted track, even after a pattern change. Now
@@ -8,7 +8,7 @@
   second; unmute and it starts again. Notes played by trigs (GATE off) are unchanged: they ring out as on the other
   machines.
 
-Thanks to the user who reported it.
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
 
 ## v1.8
 
@@ -86,7 +86,7 @@ Thanks to the user who reported both.
   samples at their right length too.
 - Manual: ninth edition (stereo samples in "Sending and loading a sample").
 
-Thanks to the user who reported it.
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
 
 ## v1.6
 
@@ -132,7 +132,7 @@ Thanks to the users who asked.
   reads 70 %: press LEVEL/DATA to move it on.
 - Manual: fifth edition.
 
-Thanks to the user who reported it.
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
 
 ## v1.4
 
