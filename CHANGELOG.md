@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.10
+
+- **Arpeggiator.** The retrig becomes an arpeggiator, on every track. `FUNC` + `RETRIG` gets five new rows: `Arp`
+  (UP, DOWN, UPDN, RAND, PLAY = as played, OFF), `Oct` (1 to 4 octaves), `Chd` (a chord on each note: OCT, 5TH, MIN,
+  MI7, MI9, M11, SU2, SU4, MAJ, MA7, DRK, CLU), `Gat` (note length, 1/8 to 8/8 of the step) and `Lat` (latch).
+  Put a retrig on a trig and the sequencer arpeggiates that note and its chord at the retrig rate; or hold `RETRIG`
+  and play notes live. Saved with the pattern. Cost: tiny (a few thousand instructions per arpeggio note, worst case).
+  The live arpeggiator comes from the original Modded Cycles by 18nelli18; chords, sequencer, gate and latch are new.
+- Plug-in: Arp, Arp Oct, Arp Chord, Arp Gate and Arp Latch on each track's TRIG page, both ways (NRPN 1:74–1:78);
+  the window is a little taller to fit them.
+- Manual: sixteenth edition (arpeggiator page).
+
+Tested in emulation; not yet played on hardware.
+
 ## v1.9
 
 - **ATMOS with GATE now stops when you mute its track.** The Cycles' mute only holds back the sequencer's trigs, and

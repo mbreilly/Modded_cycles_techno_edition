@@ -74,7 +74,7 @@ int main (int argc, char** argv)
     auto pp = makeProcessor();
     auto& p = *pp;
 
-    CHECK (cycles::allParams().size() == 6 * 40 + 4 + 3 + 11); // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
+    CHECK (cycles::allParams().size() == 6 * 45 + 4 + 3 + 11); // 45 per track: 40 + the arpeggiator's 5; // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
@@ -180,7 +180,7 @@ int main (int argc, char** argv)
     p.sendAll();
     std::vector<Cc> all;
     for (int i = 0; i < 10; ++i) { auto b = runBlock (p); all.insert (all.end(), b.begin(), b.end()); }
-    CHECK (all.size() == cycles::allParams().size() + 20 * 3); // each master EQ, sidechain and LFO Polarity NRPN is four CCs
+    CHECK (all.size() == cycles::allParams().size() + 20 * 3 + 30 * 2); // each master EQ, sidechain and LFO Polarity NRPN is four CCs, each arpeggiator NRPN three
 
     // 6a. Track FX: On and Type share CC 27 (0 = Off, type + 1); Amount is CC 28
     setParam (p, "t2_fxtype", 2);           // Fold, while FX is off: nothing to send
@@ -301,6 +301,37 @@ int main (int argc, char** argv)
     setParam (p, "fx_eqmid", 64);
     setParam (p, "fx_eqhigh", 64);
     runBlock (p);
+    // 6f. Arpeggiator (firmware notes/125): NRPN 1:74-1:78 on the FX channel, CC 6 only = track << 4 | value
+    {
+        auto isArp = [] (const std::vector<Cc>& o, int lsb, int msb)
+        {
+            return o.size() == 3 && o[0].ch == 7 && o[0].cc == 99 && o[0].val == 1 && o[1].cc == 98 && o[1].val == lsb
+                && o[2].cc == 6 && o[2].val == msb;
+        };
+        CHECK ((int) getParam (p, "t1_arpgat") == 7 && (int) getParam (p, "t1_arp") == 0); // 8/8, UP: the device's defaults
+        setParam (p, "t3_arpchd", 3);       // T3 MIN
+        CHECK (isArp (runBlock (p), 76, 2 << 4 | 3));
+        setParam (p, "t6_arpgat", 1);       // T6 2/8
+        CHECK (isArp (runBlock (p), 77, 5 << 4 | 1));
+        setParam (p, "t1_arp", 5);          // T1 OFF
+        CHECK (isArp (runBlock (p), 74, 0 << 4 | 5));
+        // the device's report: CC 99, 98, 6 (no 38), applied even with RECEIVE off, not sent back
+        p.setOption (CyclesProcessor::optReceive, false);
+        for (auto [cc, v] : { std::pair { 99, 1 }, std::pair { 98, 75 }, std::pair { 6, 4 << 4 | 2 },
+                              std::pair { 99, 1 }, std::pair { 98, 78 }, std::pair { 6, 1 << 4 | 1 },
+                              std::pair { 99, 1 }, std::pair { 98, 76 }, std::pair { 6, 7 << 4 | 1 } })   // track 8: ignored
+            p.link.onMessage (juce::MidiMessage::controllerEvent (7, cc, v));
+        pump();
+        p.setOption (CyclesProcessor::optReceive, true);
+        CHECK ((int) getParam (p, "t5_arpoct") == 2 && (int) getParam (p, "t2_arplat") == 1);
+        CHECK (runBlock (p).empty());
+        setParam (p, "t3_arpchd", 0);
+        setParam (p, "t6_arpgat", 7);
+        setParam (p, "t1_arp", 0);
+        setParam (p, "t5_arpoct", 0);
+        setParam (p, "t2_arplat", 0);
+        runBlock (p);
+    }
     {
         juce::MidiBuffer scin;                // a CC 98 or 6 from the device doesn't move a sidechain control
         scin.addEvent (juce::MidiMessage::controllerEvent (7, 98, 50), 0);
@@ -360,7 +391,7 @@ int main (int argc, char** argv)
         pump();
         std::vector<Cc> recalled;
         for (int i = 0; i < 10; ++i) { auto b = runBlock (*p2); recalled.insert (recalled.end(), b.begin(), b.end()); }
-        CHECK (recalled.size() == cycles::allParams().size() + 20 * 3); // master EQ, sidechain and LFO Polarity NRPNs are four CCs each
+        CHECK (recalled.size() == cycles::allParams().size() + 20 * 3 + 30 * 2); // master EQ, sidechain and LFO Polarity NRPNs are four CCs each, arpeggiator three
         CHECK ((int) getParam (*p2, "t3_color") == 99);
         CHECK (p2->getChannel (0) == 10);
         bool colorOnCh3 = false;

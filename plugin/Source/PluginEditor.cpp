@@ -875,7 +875,7 @@ CyclesEditor::CyclesEditor (CyclesProcessor& p) : AudioProcessorEditor (p), proc
     addAndMakeVisible (projectBox);
 
     seenSerial = proc.incomingSerial.load();
-    setSize (1060, 740);
+    setSize (1060, 840); // 840: room for the TRIG page's arpeggiator row
     showView (0);
     startTimerHz (20);
 }

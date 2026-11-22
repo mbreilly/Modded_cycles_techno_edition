@@ -92,9 +92,12 @@ inline const juce::StringArray& filterTypes()
     return t;
 }
 
+// The arpeggiator's parameters (one set per track): sent as NRPN 1:nrpn with MSB = track << 4 | value
+inline bool isArpKey (const juce::String& key) { return key.startsWith ("arp"); }
+
 inline const std::vector<Def>& trackDefs()
 {
-    // Grouped into pages, Overbridge-style: MACHINE (sound source), MIX, TRIG, LFO.
+    // Grouped into pages, Overbridge-style: MACHINE (sound source), MIX, TRIG (with the arpeggiator), LFO.
     static const std::vector<Def> defs = {
         // ---- MACHINE ----
         { "machine", "Machine",      "MACHINE", 70, Kind::List,   0, machineNames() },
@@ -136,6 +139,14 @@ inline const std::vector<Def>& trackDefs()
         { "note",    "Note",         "TRIG",  3, Kind::Dial,  60, {} },
         { "swing",   "Swing",        "TRIG", 15, Kind::Dial,   0, {} },
         { "chance",  "Chance",       "TRIG", 14, Kind::Dial, 127, {} },
+        // Arpeggiator (modded firmware notes/125, FUNC + RETRIG on the device): a trig with a retrig arpeggiates its
+        // note (and chord) at the retrig rate. NRPN 1:74-1:78 on the FX channel, value = track << 4 | value (CC 6 only);
+        // the device reports its own changes the same way.
+        { "arp",     "Arp",          "TRIG", -1, Kind::List, modded::arpParams[0].defaultValue, splitValues (modded::arpParams[0].values), modded::arpParams[0].nrpnLsb },
+        { "arpoct",  "Arp Oct",      "TRIG", -1, Kind::List, modded::arpParams[1].defaultValue, splitValues (modded::arpParams[1].values), modded::arpParams[1].nrpnLsb },
+        { "arpchd",  "Arp Chord",    "TRIG", -1, Kind::List, modded::arpParams[2].defaultValue, splitValues (modded::arpParams[2].values), modded::arpParams[2].nrpnLsb },
+        { "arpgat",  "Arp Gate",     "TRIG", -1, Kind::List, modded::arpParams[3].defaultValue, splitValues (modded::arpParams[3].values), modded::arpParams[3].nrpnLsb },
+        { "arplat",  "Arp Latch",    "TRIG", -1, Kind::List, modded::arpParams[4].defaultValue, splitValues (modded::arpParams[4].values), modded::arpParams[4].nrpnLsb },
         // ---- LFO ---- (Polarity: the modded firmware's LFO Setup > Pol, one per track, all sent as one mask on NRPN
         // 1:56 on the FX channel, notes/81)
         { "lfospd",  "Speed",        "LFO", 102, Kind::Dial, 64, {} },

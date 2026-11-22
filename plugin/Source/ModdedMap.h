@@ -94,6 +94,19 @@ inline constexpr int kTrackSelectCC = 119;
 inline constexpr int kGetNrpnLsb = 57;
 inline constexpr int kGetDoneNrpnLsb = 58;
 
+// Arpeggiator (firmware notes/125, FUNC + RETRIG on the device), one set per track: NRPN 1:lsb on the FX channel,
+// value = MSB only (CC 6) = track (0..5) << 4 | value. The device sends the same NRPNs whenever a value changes
+// (its menu, another pattern), and all of them on NRPN 1:kArpAllNrpnLsb (or 1:62).
+struct ArpParam { const char* key; const char* name; int nrpnLsb; int min; int max; int defaultValue; const char* values; };
+inline const ArpParam arpParams[5] = {
+    { "arpMode", "Arp", 74, 0, 5, 0, "UP|DOWN|UPDN|RAND|PLAY|OFF" },
+    { "arpOct", "Oct", 75, 0, 3, 0, "1|2|3|4" },
+    { "arpChd", "Chd", 76, 0, 12, 0, "OFF|OCT|5TH|MIN|MI7|MI9|M11|SU2|SU4|MAJ|MA7|DRK|CLU" },
+    { "arpGat", "Gat", 77, 0, 7, 7, "1/8|2/8|3/8|4/8|5/8|6/8|7/8|8/8" },
+    { "arpLat", "Lat", 78, 0, 1, 0, "OFF|ON" },
+};
+inline constexpr int kArpAllNrpnLsb = 79;
+
 // MIDI machine (firmware notes/113): it sends COLOR, SHAPE, SWEEP, CONTOUR as CCs on the track's channel.
 // CC number = its extra (CC 20-23), 0 = kMidiMachineCc, 120-127 = not sent. The plug-in ignores those CCs
 // coming back from the device on that channel, so they are not taken as filter or pan moves.

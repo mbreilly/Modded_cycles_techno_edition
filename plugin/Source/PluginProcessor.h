@@ -222,8 +222,12 @@ private:
     std::atomic<bool> trackSampleDirty { false };
     int rxNrpnMsb = -1, rxNrpnLsb = -1, rxValue = 0;     // MIDI thread: NRPN in progress on the FX channel
     std::array<std::atomic<int>, 3> rxEq { -1, -1, -1 }; // MIDI thread -> message thread: master EQ from the device
+    static constexpr int numArpParams = 5;               // modded::arpParams: Arp, Oct, Chd, Gat, Lat
+    static constexpr const char* arpKeys[numArpParams] = { "arp", "arpoct", "arpchd", "arpgat", "arplat" };
+    std::array<std::atomic<int>, cycles::numTracks * numArpParams> rxArp {}; // MIDI -> message thread: value + 1, 0 = none
     juce::uint32 rxHi = 0, rxMid = 0;            // CC 27 value of that pair: 0 while off, else type + 1
     void receiveNrpn (int lsb, int value);     // a NRPN 1:lsb from the device on the FX channel (message thread)
+    void receiveArp (int track, int param, int value); // an arpeggiator setting from the device (message thread)
     std::map<int, std::vector<int>> nrpnParams; // NRPN lsb -> the parameters it carries (a mask: one per track)
     int getNrpnMsb = -1, getNrpnLsb = -1, getDataMsb = 0; // NRPN being received on the FX channel (message thread)
     std::atomic<bool> applyingNrpn { false };  // setting parameters from a received NRPN: don't send them back

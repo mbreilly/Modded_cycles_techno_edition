@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.8 · Model:Cycles OS 1.13 · Fifteenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.10 · Model:Cycles OS 1.13 · Sixteenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -186,6 +186,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c3-boot">Boot animation</a></li>
     <li class="s"><a href="#c3-lfo">LFO polarity</a></li>
     <li class="s"><a href="#c3-turing">Turing Machine LFO</a></li>
+    <li class="s"><a href="#c3-arp">Arpeggiator</a></li>
     <li class="s"><a href="#c3-trk">Track buttons and drones</a></li>
     <li class="s"><a href="#c3-eq">Master EQ (GATE double tap)</a></li>
     <li class="c"><a href="#ch4"><span class="cn">4</span>Filter and insert FX on every track</a></li>
@@ -419,6 +420,8 @@ added machine.</p>
 <tr><td><span class="key">FUNC</span> + <span class="key">PITCH</span></td><td class="w">MACRO</td><td>Lo-fi: left = sample rate (46K…4K), right = bits (12B…2B), centre = off. On other machines it still steps the note in semitones.</td></tr>
 <tr><td><span class="key">PUNCH</span> held ½ s</td><td class="w">ACID</td><td>Off = saw, on = square.</td></tr>
 <tr><td><span class="key">FUNC</span> + <span class="key">LFO</span> › Pol</td><td class="w">Any track</td><td>LFO polarity: BI (stock) or UNI; press LEVEL/DATA to switch.</td></tr>
+<tr><td><span class="key">FUNC</span> + <span class="key">RETRIG</span> › Arp … Lat</td><td class="w">Any track</td><td>Arpeggiator: direction, octaves, chord, gate, latch (saved with the pattern).</td></tr>
+<tr><td><span class="key">TRIG</span> + <span class="key">RETRIG</span></td><td class="w">Arp not OFF</td><td>That trig arpeggiates its note (and chord) at the retrig rate, for the retrig length.</td></tr>
 <tr><td><span class="key">GATE</span> twice, quickly</td><td class="w">Any track</td><td>Master EQ layer on or off: PITCH / DECAY / COLOR = LOW / MID / HIGH. The GATE LED blinks while it is on.</td></tr>
 <tr><td><span class="key">GATE</span> held ½ s</td><td class="w">Any track</td><td>GATE on or off (a single short press does nothing).</td></tr>
 <tr><td><span class="key">GATE</span> on, <span class="key">STOP</span> / <span class="key">PLAY</span></td><td class="w">ATMOS</td><td>Drone: the track plays by itself while the sequencer runs; STOP fades it out with DECAY, PLAY brings it back.</td></tr>
@@ -552,6 +555,35 @@ Phase/Mutate. A stock OS reads these waves as RND.</li>
 <li>The loop itself is not saved: after power-off, or after another wave, a new random loop starts. Changing the
 length keeps the loop going. A short loop can come out flat (every step the same): raise Sph for a moment.</li>
 <li>Cost: about 0.5 % of the CPU at worst with all six tracks on a Turing wave.</li>
+</ul>
+
+<h2 id="c3-arp">Arpeggiator</h2>
+<p>The retrig becomes an arpeggiator. Press <span class="key">FUNC</span> + <span class="key">RETRIG</span>: below Rte, Len
+and A.On come five rows, saved with the pattern for each track (turn LEVEL/DATA to change the one under the cursor).</p>
+<ul>
+<li><b>Arp</b>: the direction. UP, DOWN, UPDN (up then down), RAND (never the same note twice in a row), PLAY (in the
+order you played them), OFF (the plain retrig).</li>
+<li><b>Oct</b>: 1 to 4 octaves; the pattern repeats one octave higher each time.</li>
+<li><b>Chd</b>: a chord built on every note. OFF, OCT (octaves), 5TH (power chord), MIN, MI7, MI9, M11, SU2, SU4, MAJ,
+MA7, DRK (dark), CLU (cluster). One trig with MIN and Oct 2 plays a minor arpeggio over two octaves.</li>
+<li><b>Gat</b>: how long each note lasts, from 1/8 to 8/8 of the gap to the next one. 8/8 = the stock length; turn
+right for longer notes. Short gates make ACID and the basses pluck.</li>
+<li><b>Lat</b>: latch, for live playing. ON: the arpeggio keeps going after you let go; notes played after a full
+release replace the old ones. Back to OFF: it stops.</li>
+</ul>
+<p><b>From the sequencer.</b> Put a retrig on a trig (hold the trig, press <span class="key">RETRIG</span>, set its rate
+and length as usual). With Arp not OFF, that trig plays its note's arpeggio (chord × octaves) at the retrig rate and
+stops at the end of the retrig length. A trig without retrig plays its note alone. Each track has its own settings,
+so two tracks can arpeggiate different chords at once.</p>
+<p><b>Live.</b> Hold <span class="key">RETRIG</span> (or turn <b>A.On</b> on) and hold notes in keyboard mode: they play
+one after another at the Rte rate, with the chord and octaves. Add or release notes while it plays: the rhythm goes on.
+It stops when you let go of the last note, unless Lat is ON.</p>
+<ul>
+<li>Works on any machine that follows the note (synths, basses, ATMOS, SAMPLER…). Drums with a fixed pitch just repeat.</li>
+<li>Copying a track carries its Arp and Oct; Chd, Gat and Lat stay with the pattern's track slot.</li>
+<li>A stock OS, or a project saved before this version, plays the plain retrig.</li>
+<li>The plug-in shows the five settings on each track's TRIG page and follows the device.</li>
+<li>Cost: a few thousand instructions per arpeggio note at worst; nothing when no arpeggio plays.</li>
 </ul>
 
 <h2 id="c3-trk">Track buttons and drones</h2>
@@ -1016,6 +1048,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td>Insert FX Amount</td><td>28</td><td>1:49</td><td>Track</td></tr>
 <tr><td>Attack</td><td>29</td><td>1:22</td><td>Track</td></tr>
 <tr><td>USB Out (0 = 2CH, 1 = 6CH)</td><td>—</td><td>1:47</td><td>FX</td></tr>
+<tr><td>Arp / Oct / Chd / Gat / Lat, value on CC 6 only = track × 16 + value (Gat 0 = 1/8 … 7 = 8/8); sent back when they change; 1:79 = send all</td><td>—</td><td>1:74 – 1:78</td><td>FX</td></tr>
 <tr><td>SC Src (0 OFF, 1–6 = T1–T6)</td><td>—</td><td>1:50</td><td>FX</td></tr>
 <tr><td>Duck T1–T6 (0–63, one bit per track, T1 = 1, T2 = 2, T3 = 4 …)</td><td>—</td><td>1:51</td><td>FX</td></tr>
 <tr><td>SC Amt (0–100 %, steps of 5)</td><td>—</td><td>1:52</td><td>FX</td></tr>
@@ -1112,7 +1145,7 @@ message from and to the device, the audio stream (channels, rate, delay) and the
 <table><thead><tr><th>Section</th><th>Controls</th><th>CC</th></tr></thead><tbody>
 <tr><td><b>MACHINE</b></td><td>Machine dropdown with the 28 machines, in the device's order (a new plug-in starts on EMPTY, like a new kit); Pitch, Decay and the four sound knobs, named as on the device's screen; Punch and Gate. A machine loaded on the device shows here at once.</td><td>70, 65, 80, 16–19, 66, 67</td></tr>
 <tr><td><b>EXTRAS</b></td><td>The four extras, named and listed like on the device (DX Patch shows BEL … VOX).</td><td>20–23</td></tr>
-<tr><td><b>TRIG</b></td><td>Note, Swing, Chance.</td><td>3, 15, 14</td></tr>
+<tr><td><b>TRIG</b></td><td>Note, Swing, Chance; the arpeggiator: Arp, Arp Oct, Arp Chord, Arp Gate, Arp Latch (they follow the device's menu and the playing pattern).</td><td>3, 15, 14; NRPN 1:74–1:78</td></tr>
 <tr><td><b>MIX</b></td><td>Track Level, Vol + Dist, Pan (L/C/R), Delay Send, Reverb Send.</td><td>95, 7, 10, 12, 13</td></tr>
 <tr><td><b>FILTER</b></td><td>Filter Type (Off / LP / HP / BP / LP24 / HP24), Cutoff, Reso, Env, Env Decay.</td><td>26, 74, 71, 24, 25</td></tr>
 <tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount, Attack. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28, 29</td></tr>
