@@ -8,7 +8,7 @@ standalone) for Mac, Windows and Linux.
   supersaw, a sampler, granular and wavetable engine that play your own samples, and a MIDI machine that plays your
   other gear.
 - **A filter and an insert effect on every track**, a sidechain, a master DJ EQ, 6-channel USB audio, an LFO
-  polarity switch, Turing Machine LFO waves for looping melodies, a CPU monitor and CPU budget, and quality-of-life
+  polarity switch, Turing Machine LFO waves for looping melodies, an arpeggiator with chords, gate and latch, a CPU monitor and CPU budget, and quality-of-life
   changes to the screens.
 - **The plug-in** shows every knob of every machine, follows the track and machine you pick on the Cycles, reads the
   sound back from the machine, picks samples and projects, and records automation in your DAW.
@@ -267,6 +267,15 @@ project.
 repeats, for melodies made on the fly (DEST PITCH: the steps land on semitones). `FUNC` + `LFO` › `Sph` sets how much
 it changes: 0 = locked, 127 = fully random. One step per LFO cycle; with MODE on TRG and a slow speed, one step per
 trig.
+
+**Arpeggiator.** The retrig becomes an arpeggiator. `FUNC` + `RETRIG` adds five rows below Rte, Len and A.On:
+`Arp` (UP, DOWN, UPDN, RAND, PLAY = as played, OFF), `Oct` (1 to 4 octaves), `Chd` (a chord built on each note: OCT,
+5TH, MIN, MI7, MI9, M11, SU2, SU4, MAJ, MA7, DRK, CLU), `Gat` (note length, 1/8 to 8/8 of the gap between notes) and
+`Lat` (latch). From the sequencer: put a retrig on a trig (`TRIG` + `RETRIG`) and the trig's note is arpeggiated with
+its chord and octaves, at the retrig rate, for the retrig length. Live: hold `RETRIG` (or turn A.On on) and hold
+notes in keyboard mode; they play one after another and stop when you let go, unless `Lat` is ON (then new notes
+replace the old ones; `Lat` OFF stops it). Settings save with the pattern, for each track; a project from a firmware
+without them plays the plain retrig.
 
 **CPU monitor.** SETTINGS › Device › `CPU`: load and peak bars; turn `LEVEL/DATA` right for each track's share.
 
