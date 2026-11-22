@@ -8,6 +8,8 @@
   Put a retrig on a trig and the sequencer arpeggiates that note and its chord at the retrig rate; or hold `RETRIG`
   and play notes live. Saved with the pattern. Cost: tiny (a few thousand instructions per arpeggio note, worst case).
   The live arpeggiator comes from the original Modded Cycles by 18nelli18; chords, sequencer, gate and latch are new.
+- Plug-in: Arp, Arp Oct, Arp Chord, Arp Gate and Arp Latch on each track's TRIG page, both ways (NRPN 1:74–1:78);
+  the window is a little taller to fit them.
 - Manual: sixteenth edition (arpeggiator page).
 
 Tested in emulation; not yet played on hardware.

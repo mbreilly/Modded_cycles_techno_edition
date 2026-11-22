@@ -50,7 +50,7 @@ CyclesProcessor::CyclesProcessor()
         }
 
     for (size_t i = 0; i < infos.size(); ++i)
-        if (infos[i].def->nrpn >= 0)
+        if (infos[i].def->nrpn >= 0 && ! isArpKey (infos[i].def->key)) // the arpeggiator's come by track (receiveArp)
             nrpnParams[infos[i].def->nrpn].push_back ((int) i);
 
     for (int s = 0; s <= numTracks; ++s)
@@ -173,6 +173,8 @@ int CyclesProcessor::nrpnValue (int index) const
     // One toggle per track sent together as a mask (bit 0 = T1): the sidechain's Duck T1-T6 (1:51) and each
     // track's LFO Polarity (1:56)
     const bool duck = d.key.startsWith ("scduck");
+    // The arpeggiator: one NRPN for all tracks, MSB = track << 4 | value
+    if (isArpKey (d.key)) return allParams()[(size_t) index].slot << 4 | (valueOf (index) & 15);
     if (! duck && d.key != "lfopol") return toCc (d, valueOf (index)); // a list index or a dial value
 
     int mask = 0;
@@ -356,6 +358,7 @@ int CyclesProcessor::currentCcValue (int index) const
 void CyclesProcessor::queueParam (int index, int ccValue)
 {
     const auto& info = allParams()[(size_t) index];
+    if (info.def->nrpn >= 0 && isArpKey (info.def->key)) return queueNrpnMsb (info.def->nrpn, ccValue);
     if (info.def->nrpn >= 0) return queueNrpn (info.def->nrpn, ccValue);
     const auto msg = MidiQueue::pack (getChannel (info.slot) - 1, info.def->cc, ccValue);
     if (outgoing.push (msg))
@@ -442,6 +445,21 @@ void CyclesProcessor::receiveNrpn (int lsb, int value)
         lastValue[(size_t) i].store (currentCcValue (i));
     stateKnown.store (true);
     if (getState.load() == getWaiting) getCount += (int) list.size();
+    rxTime[(size_t) fxSlot].store (msNow());
+}
+
+void CyclesProcessor::receiveArp (int track, int param, int value)
+{
+    const auto id = "t" + juce::String (track + 1) + "_" + arpKeys[param];
+    auto it = idToIndex.find (id);
+    if (it == idToIndex.end()) return;
+    const int i = it->second;
+    auto* p = params[(size_t) i];
+    applyingNrpn.store (true);
+    p->setValueNotifyingHost (p->convertTo0to1 ((float) juce::jlimit (0, (int) p->getNormalisableRange().end, value)));
+    applyingNrpn.store (false);
+    lastValue[(size_t) i].store (currentCcValue (i));
+    stateKnown.store (true);
     rxTime[(size_t) fxSlot].store (msNow());
 }
 
@@ -537,6 +555,15 @@ void CyclesProcessor::onDeviceMessage (const juce::MidiMessage& m)
             onProjectNrpn (rxNrpnLsb, v);
             return;
         }
+        // The arpeggiator (NRPN 1:74-1:78, notes/125): the device sends CC 99, 98, 6 (track << 4 | value) when a
+        // setting changes on it or another pattern plays; followed like the EQ, applied on the message thread
+        else if (cc == 6 && rxNrpnMsb == 1 && rxNrpnLsb >= modded::arpParams[0].nrpnLsb
+                 && rxNrpnLsb < modded::arpParams[0].nrpnLsb + numArpParams)
+        {
+            if (const int t = v >> 4; t < numTracks)
+                rxArp[(size_t) (t * numArpParams + rxNrpnLsb - modded::arpParams[0].nrpnLsb)].store ((v & 15) + 1);
+            return;
+        }
         // The master EQ (NRPN 1:63-1:65, notes/101): the device sends CC 99, 98, 6 when its EQ knobs turn (also
         // followed with RECEIVE off, like turning the EQ on a DJ mixer); applied on the message thread
         else if (cc == 6 && rxNrpnMsb == 1 && rxNrpnLsb >= modded::kMasterEqNrpnLsb && rxNrpnLsb < modded::kMasterEqNrpnLsb + 3)
@@ -560,6 +587,9 @@ void CyclesProcessor::timerCallback()
     for (int b = 0; b < 3; ++b)
         if (const int v = rxEq[(size_t) b].exchange (-1); v >= 0)
             receiveNrpn (modded::kMasterEqNrpnLsb + b, v);
+    for (int i = 0; i < numTracks * numArpParams; ++i)
+        if (const int v = rxArp[(size_t) i].exchange (0); v > 0)
+            receiveArp (i / numArpParams, i % numArpParams, v - 1);
 
     juce::uint32 msg;
     while (incoming.pop (msg))

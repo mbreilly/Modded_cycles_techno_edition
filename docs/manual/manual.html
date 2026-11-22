@@ -559,6 +559,7 @@ It stops when you let go of the last note, unless Lat is ON.</p>
 <li>Works on any machine that follows the note (synths, basses, ATMOS, SAMPLER…). Drums with a fixed pitch just repeat.</li>
 <li>Copying a track carries its Arp and Oct; Chd, Gat and Lat stay with the pattern's track slot.</li>
 <li>A stock OS, or a project saved before this version, plays the plain retrig.</li>
+<li>The plug-in shows the five settings on each track's TRIG page and follows the device.</li>
 <li>Cost: a few thousand instructions per arpeggio note at worst; nothing when no arpeggio plays.</li>
 </ul>
 
@@ -1024,6 +1025,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td>Insert FX Amount</td><td>28</td><td>1:49</td><td>Track</td></tr>
 <tr><td>Attack</td><td>29</td><td>1:22</td><td>Track</td></tr>
 <tr><td>USB Out (0 = 2CH, 1 = 6CH)</td><td>—</td><td>1:47</td><td>FX</td></tr>
+<tr><td>Arp / Oct / Chd / Gat / Lat, value on CC 6 only = track × 16 + value (Gat 0 = 1/8 … 7 = 8/8); sent back when they change; 1:79 = send all</td><td>—</td><td>1:74 – 1:78</td><td>FX</td></tr>
 <tr><td>SC Src (0 OFF, 1–6 = T1–T6)</td><td>—</td><td>1:50</td><td>FX</td></tr>
 <tr><td>Duck T1–T6 (0–63, one bit per track, T1 = 1, T2 = 2, T3 = 4 …)</td><td>—</td><td>1:51</td><td>FX</td></tr>
 <tr><td>SC Amt (0–100 %, steps of 5)</td><td>—</td><td>1:52</td><td>FX</td></tr>
@@ -1120,7 +1122,7 @@ message from and to the device, the audio stream (channels, rate, delay) and the
 <table><thead><tr><th>Section</th><th>Controls</th><th>CC</th></tr></thead><tbody>
 <tr><td><b>MACHINE</b></td><td>Machine dropdown with the 28 machines, in the device's order (a new plug-in starts on EMPTY, like a new kit); Pitch, Decay and the four sound knobs, named as on the device's screen; Punch and Gate. A machine loaded on the device shows here at once.</td><td>70, 65, 80, 16–19, 66, 67</td></tr>
 <tr><td><b>EXTRAS</b></td><td>The four extras, named and listed like on the device (DX Patch shows BEL … VOX).</td><td>20–23</td></tr>
-<tr><td><b>TRIG</b></td><td>Note, Swing, Chance.</td><td>3, 15, 14</td></tr>
+<tr><td><b>TRIG</b></td><td>Note, Swing, Chance; the arpeggiator: Arp, Arp Oct, Arp Chord, Arp Gate, Arp Latch (they follow the device's menu and the playing pattern).</td><td>3, 15, 14; NRPN 1:74–1:78</td></tr>
 <tr><td><b>MIX</b></td><td>Track Level, Vol + Dist, Pan (L/C/R), Delay Send, Reverb Send.</td><td>95, 7, 10, 12, 13</td></tr>
 <tr><td><b>FILTER</b></td><td>Filter Type (Off / LP / HP / BP / LP24 / HP24), Cutoff, Reso, Env, Env Decay.</td><td>26, 74, 71, 24, 25</td></tr>
 <tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount, Attack. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28, 29</td></tr>

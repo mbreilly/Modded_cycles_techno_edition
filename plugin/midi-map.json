@@ -3422,5 +3422,113 @@
   "max": 63,
   "default": 0,
   "values": "mask: bit 0 = T1 unipolar (Uni), 0 = bipolar (Bi)"
+ },
+ "arp": {
+  "channel": "fx",
+  "value": "MSB = track (0..5) << 4 | value",
+  "send_all": [
+   1,
+   79
+  ],
+  "params": [
+   {
+    "key": "arpMode",
+    "name": "Arp",
+    "nrpn": [
+     1,
+     74
+    ],
+    "min": 0,
+    "max": 5,
+    "default": 0,
+    "values": [
+     "UP",
+     "DOWN",
+     "UPDN",
+     "RAND",
+     "PLAY",
+     "OFF"
+    ]
+   },
+   {
+    "key": "arpOct",
+    "name": "Oct",
+    "nrpn": [
+     1,
+     75
+    ],
+    "min": 0,
+    "max": 3,
+    "default": 0,
+    "values": [
+     "1",
+     "2",
+     "3",
+     "4"
+    ]
+   },
+   {
+    "key": "arpChd",
+    "name": "Chd",
+    "nrpn": [
+     1,
+     76
+    ],
+    "min": 0,
+    "max": 12,
+    "default": 0,
+    "values": [
+     "OFF",
+     "OCT",
+     "5TH",
+     "MIN",
+     "MI7",
+     "MI9",
+     "M11",
+     "SU2",
+     "SU4",
+     "MAJ",
+     "MA7",
+     "DRK",
+     "CLU"
+    ]
+   },
+   {
+    "key": "arpGat",
+    "name": "Gat",
+    "nrpn": [
+     1,
+     77
+    ],
+    "min": 0,
+    "max": 7,
+    "default": 7,
+    "values": [
+     "1/8",
+     "2/8",
+     "3/8",
+     "4/8",
+     "5/8",
+     "6/8",
+     "7/8",
+     "8/8"
+    ]
+   },
+   {
+    "key": "arpLat",
+    "name": "Lat",
+    "nrpn": [
+     1,
+     78
+    ],
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "values": [
+     "OFF",
+     "ON"
+    ]
+   }
+  ]
  }
 }

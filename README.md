@@ -275,7 +275,7 @@ trig.
 its chord and octaves, at the retrig rate, for the retrig length. Live: hold `RETRIG` (or turn A.On on) and hold
 notes in keyboard mode; they play one after another and stop when you let go, unless `Lat` is ON (then new notes
 replace the old ones; `Lat` OFF stops it). Settings save with the pattern, for each track; a project from a firmware
-without them plays the plain retrig.
+without them plays the plain retrig. The plug-in has them on each track's TRIG page (NRPN 1:74–1:78).
 
 **CPU monitor.** SETTINGS › Device › `CPU`: load and peak bars; turn `LEVEL/DATA` right for each track's share.
 
@@ -312,7 +312,7 @@ between them.
 
 Every parameter is reachable by MIDI (enable Receive CC/NRPN in SETTINGS › MIDI CONFIG › SYNC). Added: extras on CC
 20–23, filter on CC 74 / 71 / 24 / 25 / 26, insert effect on CC 27 / 28, and NRPNs on the FX channel for USB Out,
-the sidechain, LFO polarity, the master EQ, sample and project selection, and a "send me everything" request. The
+the sidechain, LFO polarity, the master EQ, the arpeggiator, sample and project selection, and a "send me everything" request. The
 complete list is [plugin/midi-map.json](plugin/midi-map.json); the stock Model:Cycles CCs are unchanged.
 
 **The MIDI machine** (26) turns a track into a sequencer track for another instrument: each trig sends its note on
