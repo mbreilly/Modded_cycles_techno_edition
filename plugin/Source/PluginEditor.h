@@ -15,13 +15,45 @@ public:
                            float startAngle, float endAngle, juce::Slider&) override;
     void drawButtonBackground (juce::Graphics&, juce::Button&, const juce::Colour&,
                                bool highlighted, bool down) override;
+    void drawButtonText (juce::Graphics&, juce::TextButton&, bool highlighted, bool down) override;
+    void drawComboBox (juce::Graphics&, int width, int height, bool down, int bx, int by, int bw, int bh, juce::ComboBox&) override;
+    void positionComboBoxText (juce::ComboBox&, juce::Label&) override;
+    juce::Font getComboBoxFont (juce::ComboBox&) override;
+    juce::Font getLabelFont (juce::Label&) override;
+    void drawLabel (juce::Graphics&, juce::Label&) override;
     juce::PopupMenu::Options getOptionsForComboBoxPopupMenu (juce::ComboBox&, juce::Label&) override;
 
-    /** A level meter (0..1 linear peak), green to amber to red. */
-    static void drawMeter (juce::Graphics&, juce::Rectangle<float>, float peak, bool vertical);
+    /** A level meter (0..1 linear peak). Hardware: green to amber to red; Overbridge and Sleek: segmented, in the
+        item's colour, red above -3 dB. */
+    static void drawMeter (juce::Graphics&, juce::Rectangle<float>, float peak, bool vertical,
+                           juce::Colour item = juce::Colours::transparentBlack);
+    /** A section box with its title (MACHINE, FILTER...), drawn the way the look wants it. */
+    static void drawSection (juce::Graphics&, const juce::Component&, juce::Rectangle<int> box, const juce::String& title);
+    /** Small caps text (letter-spaced in Sleek). */
+    static void drawCaps (juce::Graphics&, const juce::String&, juce::Rectangle<int>, float size, juce::Colour,
+                          juce::Justification = juce::Justification::centredLeft, bool bold = true);
 
-    // Colours: the "Steel blue" look picked in ui-designer/modelcycles-link-colors.html
-    static const juce::Colour bg, panel, raised, accent, text, dim, ok, warn, bad, knobTrack, knobBody, outline, comboEdge;
+    // ---- Looks (overbridge-sleek-gui-style): Overbridge (default), Sleek, Hardware (the Steel blue bakelite look)
+    enum class Look { overbridge, sleek, hardware };
+    static Look look;
+    static bool flat()  { return look != Look::hardware; }
+    static bool sleek() { return look == Look::sleek; }
+    static void applyLook (Look);            // fills the colours below
+    void refreshColours();                   // setColour() for the current look (call after applyLook)
+    static Look loadSavedLook();             // per user, not per project
+    static void saveLook (Look);
+    static const char* lookName (Look);
+
+    // Colours of the current look (the Hardware look is "Steel blue", ui-designer/modelcycles-link-colors.html)
+    static juce::Colour bg, panel, raised, accent, text, dim, ok, warn, bad, knobTrack, knobBody, outline, comboEdge;
+
+    // Colours by item: tracks 1-6, the FX channel, the mixer. Greys everywhere else.
+    enum Item { itemFx = 6, itemMixer = 7, numItems = 8 };
+    static juce::Colour items[numItems];
+    static void setItem (juce::Component&, int item);
+    /** The item colour of the first tagged component from c up (the plain accent on Hardware or when untagged). */
+    static juce::Colour accentFor (const juce::Component* c);
+    static juce::Colour itemColour (int item) { return flat() && item >= 0 && item < numItems ? items[item] : accent; }
 };
 
 //==============================================================================
@@ -117,6 +149,7 @@ class SetupView : public juce::Component, private juce::Timer
 public:
     explicit SetupView (CyclesProcessor&);
     void paint (juce::Graphics&) override;
+    std::function<void (CyclesLookAndFeel::Look)> onLook; // the Look menu (the editor rebuilds the pages)
     void resized() override;
 
 private:
@@ -129,7 +162,8 @@ private:
                 offsetLabel { {}, "Clock offset (ms)" }, trimLabel { {}, "Audio trim (ms)" };
     juce::ComboBox modeBox, inBox, outBox;
     juce::TextButton rescan { "Rescan" }, usb2 { "2CH" }, usb6 { "6CH" };
-    juce::Label usbLabel { {}, "Device USB audio" };
+    juce::Label usbLabel { {}, "Device USB audio" }, lookLabel { {}, "Look" };
+    juce::ComboBox lookBox;
     juce::Slider offset { juce::Slider::LinearHorizontal, juce::Slider::TextBoxRight },
                  trim { juce::Slider::LinearHorizontal, juce::Slider::TextBoxRight };
     juce::OwnedArray<juce::Label> chanLabels;
@@ -183,6 +217,7 @@ public:
     void resized() override;
 
     void showView (int index); // see TrackRail::onSelect
+    void setLook (CyclesLookAndFeel::Look); // switch the look, save it for this user and rebuild the page
 
 private:
     void timerCallback() override;

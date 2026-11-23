@@ -2,20 +2,6 @@
 
 using namespace cycles;
 
-const juce::Colour CyclesLookAndFeel::bg        { 0xff2e363f };
-const juce::Colour CyclesLookAndFeel::panel     { 0xff38424c };
-const juce::Colour CyclesLookAndFeel::raised    { 0xff434f5b };
-const juce::Colour CyclesLookAndFeel::accent    { 0xfff07b2c };
-const juce::Colour CyclesLookAndFeel::text      { 0xffe6ecf1 };
-const juce::Colour CyclesLookAndFeel::dim       { 0xff8c9aa6 };
-const juce::Colour CyclesLookAndFeel::ok        { 0xff4cd07d };
-const juce::Colour CyclesLookAndFeel::warn      { 0xffe8b33c };
-const juce::Colour CyclesLookAndFeel::bad       { 0xffe5534b };
-const juce::Colour CyclesLookAndFeel::knobTrack { 0xff161b21 };
-const juce::Colour CyclesLookAndFeel::knobBody  { 0xff12161a };
-const juce::Colour CyclesLookAndFeel::outline   { 0xff161b21 };
-const juce::Colour CyclesLookAndFeel::comboEdge { 0xff161b21 };
-
 using LF = CyclesLookAndFeel;
 
 static float paramValue (juce::AudioProcessorValueTreeState& s, const juce::String& id)
@@ -57,7 +43,95 @@ static bool isMuted (juce::AudioProcessorValueTreeState& s, int track)
 }
 
 //==============================================================================
+// ---- Looks: Overbridge (default), Sleek, Hardware. The colours are filled by applyLook().
+CyclesLookAndFeel::Look CyclesLookAndFeel::look = CyclesLookAndFeel::Look::overbridge;
+juce::Colour CyclesLookAndFeel::bg, CyclesLookAndFeel::panel, CyclesLookAndFeel::raised, CyclesLookAndFeel::accent,
+             CyclesLookAndFeel::text, CyclesLookAndFeel::dim, CyclesLookAndFeel::ok, CyclesLookAndFeel::warn,
+             CyclesLookAndFeel::bad, CyclesLookAndFeel::knobTrack, CyclesLookAndFeel::knobBody,
+             CyclesLookAndFeel::outline, CyclesLookAndFeel::comboEdge;
+// T1 amber, T2 purple, T3 pink, T4 blue, T5 green, T6 coral, FX teal, mixer yellow
+juce::Colour CyclesLookAndFeel::items[CyclesLookAndFeel::numItems] {
+    juce::Colour (0xfff5a623), juce::Colour (0xffa97cf8), juce::Colour (0xfff25cb4), juce::Colour (0xff4da3f0),
+    juce::Colour (0xff7ed957), juce::Colour (0xffff7a59), juce::Colour (0xff2fc9b0), juce::Colour (0xfff2d74a) };
+
+void CyclesLookAndFeel::applyLook (Look l)
+{
+    look = l;
+    //                                    bg          panel       raised      accent      text        dim
+    //                                    ok          warn        bad         knobTrack   knobBody    outline
+    static const juce::uint32 table[3][12] = {
+        { 0xff1b1b1b, 0xff232323, 0xff2d2d2d, 0xffededed, 0xffd9d9d9, 0xff7c7c7c,     // Overbridge
+          0xffa8a8a8, 0xffdadada, 0xffe0473c, 0xff3a3a3a, 0xff1b1b1b, 0xff3a3a3a },
+        { 0xff111213, 0xff17181a, 0xff1f2023, 0xfff2f2f2, 0xffe4e4e4, 0xff6b6d70,     // Sleek
+          0xff9a9a9a, 0xffcfcfcf, 0xffe5483d, 0xff2a2b2e, 0xff111213, 0xff26272a },
+        { 0xff2e363f, 0xff38424c, 0xff434f5b, 0xfff07b2c, 0xffe6ecf1, 0xff8c9aa6,     // Hardware (Steel blue)
+          0xff4cd07d, 0xffe8b33c, 0xffe5534b, 0xff161b21, 0xff12161a, 0xff161b21 } };
+    const auto& t = table[(int) l];
+    bg = juce::Colour (t[0]); panel = juce::Colour (t[1]); raised = juce::Colour (t[2]); accent = juce::Colour (t[3]);
+    text = juce::Colour (t[4]); dim = juce::Colour (t[5]); ok = juce::Colour (t[6]); warn = juce::Colour (t[7]);
+    bad = juce::Colour (t[8]); knobTrack = juce::Colour (t[9]); knobBody = juce::Colour (t[10]); outline = juce::Colour (t[11]);
+    comboEdge = outline;
+}
+
+const char* CyclesLookAndFeel::lookName (Look l)
+{
+    return l == Look::sleek ? "sleek" : l == Look::hardware ? "hardware" : "overbridge";
+}
+
+static juce::File lookFile()
+{
+    return juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory)
+               .getChildFile (JucePlugin_Name).getChildFile ("look.txt");
+}
+
+CyclesLookAndFeel::Look CyclesLookAndFeel::loadSavedLook()
+{
+    const auto s = lookFile().loadFileAsString().trim();
+    return s == "sleek" ? Look::sleek : s == "hardware" ? Look::hardware : Look::overbridge;
+}
+
+void CyclesLookAndFeel::saveLook (Look l)
+{
+    auto f = lookFile();
+    f.getParentDirectory().createDirectory();
+    f.replaceWithText (lookName (l));
+}
+
+void CyclesLookAndFeel::setItem (juce::Component& c, int item)
+{
+    c.getProperties().set ("mclItem", item);
+}
+
+juce::Colour CyclesLookAndFeel::accentFor (const juce::Component* c)
+{
+    if (! flat()) return accent;
+    for (; c != nullptr; c = c->getParentComponent())
+        if (const auto* v = c->getProperties().getVarPointer ("mclItem"))
+            return itemColour ((int) *v);
+    return accent;
+}
+
+static juce::FontOptions capsFont (float size, bool bold = true)
+{
+    return juce::FontOptions (size, bold ? juce::Font::bold : juce::Font::plain)
+               .withKerningFactor (CyclesLookAndFeel::sleek() ? 0.16f : 0.04f);
+}
+
+void CyclesLookAndFeel::drawCaps (juce::Graphics& g, const juce::String& s, juce::Rectangle<int> r, float size,
+                                  juce::Colour c, juce::Justification j, bool bold)
+{
+    g.setColour (c);
+    g.setFont (capsFont (size, bold));
+    g.drawFittedText (s.toUpperCase(), r, j, 1, 0.8f);
+}
+
 CyclesLookAndFeel::CyclesLookAndFeel()
+{
+    applyLook (loadSavedLook());
+    refreshColours();
+}
+
+void CyclesLookAndFeel::refreshColours()
 {
     setColour (juce::ResizableWindow::backgroundColourId, bg);
     setColour (juce::Label::textColourId, text);
@@ -67,31 +141,63 @@ CyclesLookAndFeel::CyclesLookAndFeel()
     setColour (juce::Slider::trackColourId, accent);
     setColour (juce::Slider::backgroundColourId, knobTrack);
     setColour (juce::Slider::thumbColourId, text);
-    setColour (juce::ComboBox::backgroundColourId, raised);
+    setColour (juce::ComboBox::backgroundColourId, flat() ? panel : raised);
     setColour (juce::ComboBox::outlineColourId, comboEdge);
     setColour (juce::ComboBox::textColourId, text);
-    setColour (juce::ComboBox::arrowColourId, accent);
+    setColour (juce::ComboBox::arrowColourId, flat() ? dim : accent);
     setColour (juce::PopupMenu::backgroundColourId, panel);
     setColour (juce::PopupMenu::highlightedBackgroundColourId, accent);
     setColour (juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
     setColour (juce::PopupMenu::textColourId, text);
-    setColour (juce::TextButton::buttonColourId, raised);
+    setColour (juce::TextButton::buttonColourId, flat() ? bg : raised);
     setColour (juce::TextButton::buttonOnColourId, accent);
-    setColour (juce::TextButton::textColourOffId, text);
-    setColour (juce::TextButton::textColourOnId, juce::Colours::black);
+    setColour (juce::TextButton::textColourOffId, flat() ? dim : text);
+    setColour (juce::TextButton::textColourOnId, flat() ? bg : juce::Colours::black);
     setColour (juce::TooltipWindow::backgroundColourId, raised);
     setColour (juce::TooltipWindow::textColourId, text);
+    setColour (juce::ListBox::backgroundColourId, knobBody);
 }
 
-// Bakelite knob with a printed scale
 void CyclesLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int w, int h, float pos,
-                                          float startAngle, float endAngle, juce::Slider&)
+                                          float startAngle, float endAngle, juce::Slider& slider)
 {
     const auto bounds = juce::Rectangle<int> (x, y, w, h).toFloat().reduced (3.0f);
     const float radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) * 0.5f;
     const auto c = bounds.getCentre();
     const float angle = startAngle + pos * (endAngle - startAngle);
 
+    if (flat())
+    {
+        // Flat ring, no scale or cap. Overbridge: 4 px ring, value inside; Sleek: thin ring, value under it (text box)
+        const bool sl = sleek();
+        const float r = juce::jmin (30.0f, radius), ra = r * (sl ? 0.66f : 0.82f);
+        const juce::PathStrokeType stroke (sl ? 2.5f : 4.0f, juce::PathStrokeType::curved,
+                                           sl ? juce::PathStrokeType::rounded : juce::PathStrokeType::butt);
+        juce::Path track;
+        track.addCentredArc (c.x, c.y, ra, ra, 0.0f, startAngle, endAngle, true);
+        g.setColour (knobTrack);
+        g.strokePath (track, stroke);
+        if (pos > 0.002f)
+        {
+            juce::Path arc;
+            arc.addCentredArc (c.x, c.y, ra, ra, 0.0f, startAngle, angle, true);
+            g.setColour (accentFor (&slider));
+            g.strokePath (arc, stroke);
+        }
+        g.setColour (text);
+        g.drawLine ({ c.getPointOnCircumference (r * (sl ? 0.45f : 0.72f), angle),
+                      c.getPointOnCircumference (r * (sl ? 0.80f : 1.12f) * (sl ? 1.0f : 0.82f / 0.82f), angle) }, 1.5f);
+        if (! sl && slider.getTextBoxPosition() == juce::Slider::NoTextBox)
+        {
+            g.setFont (juce::FontOptions (12.5f));
+            g.drawFittedText (slider.getTextFromValue (slider.getValue()),
+                              juce::Rectangle<float> (c.x - ra + 6.0f, c.y - 8.0f, 2.0f * ra - 12.0f, 16.0f).toNearestInt(),
+                              juce::Justification::centred, 1, 0.7f);
+        }
+        return;
+    }
+
+    // Hardware: bakelite knob with a printed scale
     g.setColour (dim);
     for (int i = 0; i <= 10; ++i)
     {
@@ -125,20 +231,170 @@ juce::PopupMenu::Options CyclesLookAndFeel::getOptionsForComboBoxPopupMenu (juce
     return LookAndFeel_V4::getOptionsForComboBoxPopupMenu (box, label).withMaximumNumColumns (1);
 }
 
-void CyclesLookAndFeel::drawMeter (juce::Graphics& g, juce::Rectangle<float> r, float peak, bool vertical)
+void CyclesLookAndFeel::drawComboBox (juce::Graphics& g, int width, int height, bool down, int bx, int by, int bw, int bh,
+                                      juce::ComboBox& box)
 {
-    g.setColour (knobTrack);
-    g.fillRoundedRectangle (r, 1.5f);
+    if (! flat())
+    {
+        LookAndFeel_V4::drawComboBox (g, width, height, down, bx, by, bw, bh, box);
+        return;
+    }
+    auto r = juce::Rectangle<int> (0, 0, width, height).toFloat();
+    if (sleek())
+    {
+        g.setColour (outline);
+        g.fillRect (r.removeFromBottom (1.0f));
+    }
+    else
+    {
+        g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
+        g.fillRect (r);
+        g.setColour (outline);
+        g.drawRect (r, 1.0f);
+    }
+    const float ax = (float) width - 16.0f, cy = (float) height * 0.5f;
+    juce::Path chevron;
+    chevron.startNewSubPath (ax, cy - 2.0f);
+    chevron.lineTo (ax + 4.0f, cy + 2.0f);
+    chevron.lineTo (ax + 8.0f, cy - 2.0f);
+    g.setColour ((sleek() ? accentFor (&box) : dim).withMultipliedAlpha (box.isEnabled() ? 1.0f : 0.4f));
+    g.strokePath (chevron, juce::PathStrokeType (1.5f));
+}
+
+void CyclesLookAndFeel::positionComboBoxText (juce::ComboBox& box, juce::Label& label)
+{
+    if (! flat())
+    {
+        LookAndFeel_V4::positionComboBoxText (box, label);
+        return;
+    }
+    label.setBounds (sleek() ? 0 : 3, 1, box.getWidth() - 22, box.getHeight() - 2);
+    label.setFont (getComboBoxFont (box));
+}
+
+juce::Font CyclesLookAndFeel::getComboBoxFont (juce::ComboBox& box)
+{
+    if (! flat()) return LookAndFeel_V4::getComboBoxFont (box);
+    return juce::Font (juce::FontOptions (juce::jmin (sleek() ? 13.0f : 14.5f, (float) box.getHeight() * 0.85f)));
+}
+
+juce::Font CyclesLookAndFeel::getLabelFont (juce::Label& label)
+{
+    // Sleek: a knob's value under the ring, small plain text
+    if (sleek() && dynamic_cast<juce::Slider*> (label.getParentComponent()) != nullptr)
+        return juce::Font (juce::FontOptions (12.0f));
+    return LookAndFeel_V4::getLabelFont (label);
+}
+
+void CyclesLookAndFeel::drawLabel (juce::Graphics& g, juce::Label& label)
+{
+    // Sleek: a knob's value is plain text under the ring, no box
+    if (sleek() && ! label.isBeingEdited() && dynamic_cast<juce::Slider*> (label.getParentComponent()) != nullptr)
+    {
+        g.setColour (text.withMultipliedAlpha (label.isEnabled() ? 1.0f : 0.5f));
+        g.setFont (getLabelFont (label));
+        g.drawFittedText (label.getText(), label.getLocalBounds(), juce::Justification::centred, 1, 0.7f);
+        return;
+    }
+    LookAndFeel_V4::drawLabel (g, label);
+}
+
+void CyclesLookAndFeel::drawMeter (juce::Graphics& g, juce::Rectangle<float> r, float peak, bool vertical, juce::Colour item)
+{
     const float db = juce::Decibels::gainToDecibels (peak, -60.0f);
     const float level = juce::jlimit (0.0f, 1.0f, (db + 60.0f) / 60.0f);
+    if (flat())
+    {
+        // Segmented: the item's colour, lighter from -12 dB, red above -3 dB
+        const float seg = sleek() ? 2.0f : 3.0f, len = vertical ? r.getHeight() : r.getWidth();
+        const int n = (int) ((len + 1.0f) / (seg + 1.0f)), lit = juce::roundToInt ((float) n * level);
+        const bool hasItem = ! item.isTransparent();
+        for (int i = 0; i < n; ++i)
+        {
+            const float sdb = -60.0f + 60.0f * (float) (i + 1) / (float) n;
+            g.setColour (i >= lit ? knobTrack
+                         : sdb > -3.0f ? bad
+                         : hasItem ? (sdb > -12.0f ? item.interpolatedWith (juce::Colours::white, 0.35f) : item)
+                         : (sdb > -12.0f ? warn : ok));
+            if (vertical) g.fillRect (r.getX(), r.getBottom() - (float) (i + 1) * (seg + 1.0f) + 1.0f, r.getWidth(), seg);
+            else          g.fillRect (r.getX() + (float) i * (seg + 1.0f), r.getY(), seg, r.getHeight());
+        }
+        return;
+    }
+    g.setColour (knobTrack);
+    g.fillRoundedRectangle (r, 1.5f);
     if (level <= 0.0f) return;
     g.setColour (db > -3.0f ? bad : db > -12.0f ? warn : ok);
     g.fillRoundedRectangle (vertical ? r.removeFromBottom (r.getHeight() * level) : r.removeFromLeft (r.getWidth() * level), 1.5f);
 }
 
+void CyclesLookAndFeel::drawSection (juce::Graphics& g, const juce::Component& c, juce::Rectangle<int> box, const juce::String& title)
+{
+    constexpr int titleH = 22;
+    const auto col = accentFor (&c);
+    if (sleek())
+    {
+        drawCaps (g, title, { box.getX() + 4, box.getY() + 2, box.getWidth() - 8, titleH - 6 }, 10.0f, col);
+        g.setColour (outline);
+        g.fillRect (box.getX() + 4, box.getY() + titleH - 4, box.getWidth() - 8, 1);
+    }
+    else if (flat())
+    {
+        g.setColour (panel);
+        g.fillRect (box);
+        g.setColour (outline);
+        g.drawRect (box, 1);
+        drawCaps (g, title, { box.getX() + 12, box.getY() + 3, box.getWidth() - 24, titleH - 6 }, 11.5f, col);
+        g.setColour (outline);
+        g.fillRect (box.getX() + 12, box.getY() + titleH - 2, box.getWidth() - 24, 1);
+    }
+    else
+    {
+        g.setColour (panel);
+        g.fillRoundedRectangle (box.toFloat(), 6.0f);
+        g.setColour (accent);
+        g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
+        g.drawText (title, box.getX() + 10, box.getY() + 4, box.getWidth() - 20, titleH - 6, juce::Justification::centredLeft);
+    }
+}
+
+// The colour a lit button shows: its own (Mute, KILL = red) or its item's
+static juce::Colour litColour (juce::Button& b)
+{
+    return b.isColourSpecified (juce::TextButton::buttonOnColourId) ? b.findColour (juce::TextButton::buttonOnColourId)
+                                                                    : CyclesLookAndFeel::accentFor (&b);
+}
+
 void CyclesLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& b, const juce::Colour& colour,
                                               bool highlighted, bool down)
 {
+    if (flat())
+    {
+        auto r = b.getLocalBounds().toFloat();
+        const bool on = b.getToggleState();
+        const auto lit = litColour (b);
+        if (sleek())
+        {
+            if (on)
+            {
+                g.setColour (lit.withAlpha (0.14f));
+                g.fillRect (r);
+                g.setColour (lit);
+                g.fillRect (r.removeFromBottom (2.0f));
+            }
+            else if (highlighted || down)
+            {
+                g.setColour (raised);
+                g.fillRect (r);
+            }
+            return;
+        }
+        g.setColour (on ? (down ? lit.darker (0.1f) : lit) : (highlighted || down) ? raised : bg);
+        g.fillRect (r);
+        g.setColour (on ? lit : outline);
+        g.drawRect (r, 1.0f);
+        return;
+    }
     auto r = b.getLocalBounds().toFloat().reduced (0.5f);
     auto c = colour;
     if (highlighted) c = c.brighter (0.1f);
@@ -147,6 +403,19 @@ void CyclesLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& b
     g.fillRoundedRectangle (r, 4.0f);
     g.setColour (b.getToggleState() ? accent : outline);
     g.drawRoundedRectangle (r, 4.0f, 1.0f);
+}
+
+void CyclesLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b, bool highlighted, bool down)
+{
+    if (! flat())
+    {
+        LookAndFeel_V4::drawButtonText (g, b, highlighted, down);
+        return;
+    }
+    const bool on = b.getToggleState();
+    const auto c = on ? (sleek() ? litColour (b) : bg) : (highlighted || down) ? text : dim;
+    drawCaps (g, b.getButtonText(), b.getLocalBounds().withTrimmedBottom (sleek() ? 1 : 0), sleek() ? 10.5f : 12.0f,
+              c.withMultipliedAlpha (b.isEnabled() ? 1.0f : 0.5f), juce::Justification::centred);
 }
 
 // "CC 74", or "NRPN 1:50" for the sidechain
@@ -162,8 +431,11 @@ ParamControl::ParamControl (juce::AudioProcessorValueTreeState& state, const Par
     setName (info.def->key);
     if (info.def->kind == Kind::Dial)
     {
-        slider = std::make_unique<juce::Slider> (juce::Slider::RotaryHorizontalVerticalDrag, juce::Slider::TextBoxBelow);
-        slider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 52, 16);
+        // Overbridge: the value inside the ring (drawn by the look), so no text box
+        const bool box = LF::look != LF::Look::overbridge;
+        slider = std::make_unique<juce::Slider> (juce::Slider::RotaryHorizontalVerticalDrag,
+                                                 box ? juce::Slider::TextBoxBelow : juce::Slider::NoTextBox);
+        if (box) slider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 52, 16);
         addAndMakeVisible (*slider);
         sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (state, info.id, *slider);
         slider->setDoubleClickReturnValue (true, info.defaultValue);
@@ -198,6 +470,13 @@ void ParamControl::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds().reduced (2);
     const auto name = nameFor (*info.def, machine());
+    if (LF::flat())
+    {
+        // Small caps label above the ring; the CC/NRPN number is in the tooltip
+        LF::drawCaps (g, name.isEmpty() ? juce::String ("-") : name, r.withTrimmedTop (compact ? 0 : 6).removeFromTop (13),
+                      LF::sleek() ? 10.0f : 11.5f, LF::dim, juce::Justification::centred);
+        return;
+    }
     g.setColour (LF::text);
     g.setFont (juce::FontOptions (compact ? 11.5f : 12.5f, juce::Font::bold));
     g.drawFittedText (name.isEmpty() ? juce::String ("-") : name, r.removeFromTop (compact ? 13 : 15),
@@ -212,8 +491,9 @@ void ParamControl::paint (juce::Graphics& g)
 
 void ParamControl::resized()
 {
-    auto r = getLocalBounds().reduced (4, 2).withTrimmedTop (compact ? 14 : 27);
-    if (slider != nullptr) slider->setBounds (r);
+    auto r = getLocalBounds().reduced (4, 2).withTrimmedTop (LF::flat() ? (compact ? 14 : 22) : (compact ? 14 : 27));
+    if (slider != nullptr)
+        slider->setBounds (slider->getTextBoxPosition() == juce::Slider::NoTextBox ? r.withTrimmedBottom (16) : r);
     if (combo != nullptr)
         combo->setBounds (compact ? r.withHeight (24) : r.withSizeKeepingCentre (r.getWidth(), 24).translated (0, -8));
 }
@@ -235,11 +515,7 @@ int Section::heightFor() const
 
 void Section::paint (juce::Graphics& g)
 {
-    g.setColour (LF::panel);
-    g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
-    g.setColour (LF::accent);
-    g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
-    g.drawText (title, 10, 4, getWidth() - 20, titleH - 6, juce::Justification::centredLeft);
+    LF::drawSection (g, *this, getLocalBounds(), title);
 }
 
 void Section::resized()
@@ -254,6 +530,7 @@ void Section::resized()
 //==============================================================================
 TrackView::TrackView (CyclesProcessor& p, int s) : proc (p), slot (s)
 {
+    LF::setItem (*this, slot); // the track's colour (FX: teal) on its titles, rings and lit buttons
     for (auto& info : allParams())
     {
         if (info.slot != slot) continue;
@@ -354,10 +631,15 @@ void TrackView::timerCallback()
 void TrackView::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds().removeFromTop (headerH).withTrimmedLeft (4);
-    g.setColour (LF::text);
-    g.setFont (juce::FontOptions (20.0f, juce::Font::bold));
     const auto title = slot == fxSlot ? juce::String ("FX") : "TRACK " + juce::String (slot + 1);
-    g.drawText (title, r.removeFromLeft (slot == fxSlot ? 50 : 110), juce::Justification::centredLeft);
+    if (LF::flat())
+        LF::drawCaps (g, title, r.removeFromLeft (slot == fxSlot ? 50 : 110), LF::sleek() ? 15.0f : 19.0f, LF::accentFor (this));
+    else
+    {
+        g.setColour (LF::text);
+        g.setFont (juce::FontOptions (20.0f, juce::Font::bold));
+        g.drawText (title, r.removeFromLeft (slot == fxSlot ? 50 : 110), juce::Justification::centredLeft);
+    }
 
     g.setFont (juce::FontOptions (14.0f, juce::Font::bold));
     if (slot == fxSlot)
@@ -367,7 +649,7 @@ void TrackView::paint (juce::Graphics& g)
                     r, juce::Justification::centredLeft);
         return;
     }
-    g.setColour (LF::accent);
+    g.setColour (LF::flat() ? LF::text : LF::accent);
     g.drawText (machineOf (proc.apvts, slot).toUpperCase(), r.removeFromLeft (90), juce::Justification::centredLeft);
     if (isMuted (proc.apvts, slot))
     {
@@ -430,6 +712,7 @@ void TrackView::resized()
 //==============================================================================
 MixerView::MixerView (CyclesProcessor& p) : proc (p)
 {
+    LF::setItem (*this, LF::itemMixer);
     static const juce::StringArray stripKeys { "machine", "mute", "level", "voldist", "pan", "delay", "reverb", "fxon", "fxtype" };
 
     for (int slot = 0; slot <= numTracks; ++slot)
@@ -447,7 +730,7 @@ MixerView::MixerView (CyclesProcessor& p) : proc (p)
         if (slot != fxSlot)
             std::stable_sort (strip.controls.begin(), strip.controls.end(), [] (const auto& a, const auto& b)
                               { return stripKeys.indexOf (a->getName()) < stripKeys.indexOf (b->getName()); });
-        for (auto& c : strip.controls) addAndMakeVisible (*c);
+        for (auto& c : strip.controls) { LF::setItem (*c, slot); addAndMakeVisible (*c); }
         strips.push_back (std::move (strip));
     }
     startTimerHz (20); // meters
@@ -459,20 +742,41 @@ void MixerView::paint (juce::Graphics& g)
     for (int i = 0; i < (int) strips.size(); ++i)
     {
         auto r = juce::Rectangle<int> (i * w, 0, w, getHeight()).reduced (3, 0);
-        g.setColour (i == fxSlot ? LF::raised : LF::panel);
-        g.fillRoundedRectangle (r.toFloat(), 6.0f);
-        g.setColour (i == fxSlot ? LF::accent : LF::text);
-        g.setFont (juce::FontOptions (15.0f, juce::Font::bold));
-        g.drawText (strips[(size_t) i].title, r.removeFromTop (26), juce::Justification::centred);
+        const auto item = LF::itemColour (i);
+        if (LF::sleek())
+        {
+            // no panels (the FX return keeps one), a thin cap in the strip's colour
+            if (i == fxSlot) { g.setColour (LF::panel); g.fillRect (r); }
+            g.setColour (item);
+            g.fillRect (r.reduced (8, 0).removeFromTop (2));
+            LF::drawCaps (g, strips[(size_t) i].title, r.removeFromTop (26).withTrimmedTop (3), 13.0f, item, juce::Justification::centred);
+        }
+        else if (LF::flat())
+        {
+            g.setColour (i == fxSlot ? LF::raised : LF::panel);
+            g.fillRect (r);
+            g.setColour (item);
+            g.fillRect (r.withHeight (3));
+            g.setFont (juce::FontOptions (15.0f, juce::Font::bold));
+            g.drawText (strips[(size_t) i].title, r.removeFromTop (26).withTrimmedTop (2), juce::Justification::centred);
+        }
+        else
+        {
+            g.setColour (i == fxSlot ? LF::raised : LF::panel);
+            g.fillRoundedRectangle (r.toFloat(), 6.0f);
+            g.setColour (i == fxSlot ? LF::accent : LF::text);
+            g.setFont (juce::FontOptions (15.0f, juce::Font::bold));
+            g.drawText (strips[(size_t) i].title, r.removeFromTop (26), juce::Justification::centred);
+        }
 
         // Audio meters: each track's stem, and the main output on the FX strip
         auto m = r.removeFromRight (10).withTrimmedBottom (6).toFloat();
         if (i < numTracks)
-            LF::drawMeter (g, m.withWidth (4.0f), proc.meters[(size_t) (2 + i)].load(), true);
+            LF::drawMeter (g, m.withWidth (4.0f), proc.meters[(size_t) (2 + i)].load(), true, LF::itemColour (i));
         else
         {
-            LF::drawMeter (g, m.withWidth (3.0f).translated (-2.0f, 0.0f), proc.meters[0].load(), true);
-            LF::drawMeter (g, m.withWidth (3.0f).translated (2.0f, 0.0f), proc.meters[1].load(), true);
+            LF::drawMeter (g, m.withWidth (3.0f).translated (-2.0f, 0.0f), proc.meters[0].load(), true, LF::itemColour (i));
+            LF::drawMeter (g, m.withWidth (3.0f).translated (2.0f, 0.0f), proc.meters[1].load(), true, LF::itemColour (i));
         }
     }
 }
@@ -535,8 +839,22 @@ SetupView::SetupView (CyclesProcessor& p) : proc (p)
         b->onClick = [this, b] { proc.requestUsbAudioMode (b == &usb6); };
     }
 
+    // The plug-in's look, saved for this user (all projects): Overbridge, Sleek or Hardware
+    lookBox.addItem ("Overbridge", 1);
+    lookBox.addItem ("Sleek", 2);
+    lookBox.addItem ("Hardware", 3);
+    lookBox.setSelectedId ((int) LF::look + 1, juce::dontSendNotification);
+    lookBox.setTooltip ("How the plug-in looks: Overbridge (flat, a colour per track), Sleek (the same, thinner), "
+                        "or Hardware (bakelite knobs). Saved for all your projects.");
+    lookBox.onChange = [this]
+    {
+        const auto l = (LF::Look) (lookBox.getSelectedId() - 1);
+        if (onLook != nullptr && l != LF::look) onLook (l);
+    };
+
     for (auto* c : std::initializer_list<juce::Component*> { &modeLabel, &inLabel, &outLabel, &offsetLabel, &trimLabel, &usbLabel,
-                                                             &modeBox, &inBox, &outBox, &rescan, &offset, &trim, &usb2, &usb6 })
+                                                             &modeBox, &inBox, &outBox, &rescan, &offset, &trim, &usb2, &usb6,
+                                                             &lookLabel, &lookBox })
         addAndMakeVisible (c);
 
     for (int slot = 0; slot <= numTracks; ++slot)
@@ -598,14 +916,33 @@ void SetupView::updateEnablement()
 void SetupView::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds();
-    g.setColour (LF::panel);
-    g.fillRoundedRectangle (r.toFloat(), 6.0f);
+    if (LF::sleek()) {}
+    else if (LF::flat())
+    {
+        g.setColour (LF::panel);
+        g.fillRect (r);
+        g.setColour (LF::outline);
+        g.drawRect (r, 1);
+    }
+    else
+    {
+        g.setColour (LF::panel);
+        g.fillRoundedRectangle (r.toFloat(), 6.0f);
+    }
 
-    g.setColour (LF::accent);
-    g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
-    g.drawText ("CONNECTION", 16, 10, 200, 16, juce::Justification::centredLeft);
-    g.drawText ("MIDI CHANNELS", 16, 214, 200, 16, juce::Justification::centredLeft);
-    g.drawText ("AUDIO STREAMING (USB)", 16, 474, 300, 16, juce::Justification::centredLeft);
+    struct Title { const char* t; int x, y; };
+    for (auto [t, x, y] : { Title { "CONNECTION", 16, 10 }, Title { "MIDI CHANNELS", 16, 214 }, Title { "AUDIO STREAMING (USB)", 16, 474 },
+                            Title { "PLUG-IN", 16, 640 }, Title { "ON THE MODEL:CYCLES", 420, 10 } })
+    {
+        if (LF::flat())
+            LF::drawCaps (g, t, { x, y, 300, 16 }, LF::sleek() ? 10.0f : 11.5f, LF::accent);
+        else
+        {
+            g.setColour (LF::accent);
+            g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
+            g.drawText (t, x, y, 300, 16, juce::Justification::centredLeft);
+        }
+    }
 
     g.setColour (proc.audio.getStatus() == AudioLink::Status::Streaming ? LF::text : LF::dim);
     g.setFont (juce::FontOptions (13.0f));
@@ -615,7 +952,6 @@ void SetupView::paint (juce::Graphics& g)
         g.setColour (LF::warn);
         g.drawText ("Switching... the device reconnects", 16, 604, 390, 18, juce::Justification::centredLeft);
     }
-    g.drawText ("ON THE MODEL:CYCLES", 420, 10, 300, 16, juce::Justification::centredLeft);
 
     g.setColour (LF::dim);
     g.setFont (juce::FontOptions (13.0f));
@@ -668,6 +1004,8 @@ void SetupView::resized()
     trimLabel.setBounds (r.removeFromLeft (130)); trim.setBounds (r);
     r = row (574);
     usbLabel.setBounds (r.removeFromLeft (130)); usb2.setBounds (r.removeFromLeft (64)); r.removeFromLeft (6); usb6.setBounds (r.removeFromLeft (64));
+    r = row (662);
+    lookLabel.setBounds (r.removeFromLeft (130)); lookBox.setBounds (r.removeFromLeft (160));
 
     for (int i = 0; i < chanLabels.size(); ++i)
     {
@@ -702,14 +1040,45 @@ void TrackRail::paint (juce::Graphics& g)
     {
         auto r = itemBounds (i);
         const bool sel = i == selected;
-        g.setColour (sel ? LF::raised : LF::panel);
-        g.fillRoundedRectangle (r.toFloat(), 5.0f);
-        if (sel)
+        // Overbridge / Sleek: each item in its colour (tracks, FX, mixer; SETUP has none)
+        const int itemIndex = i <= fxSlot ? i : i == fxSlot + 1 ? (int) LF::itemMixer : -1;
+        const bool hasItem = LF::flat() && itemIndex >= 0;
+        const auto item = hasItem ? LF::itemColour (itemIndex) : LF::accent;
+        if (LF::sleek())
         {
-            g.setColour (LF::accent);
-            g.fillRoundedRectangle (r.removeFromLeft (4).toFloat(), 2.0f);
+            if (sel)
+            {
+                g.setColour (item.withAlpha (0.10f));
+                g.fillRect (r);
+                g.setColour (item);
+                g.fillRect (r.withWidth (2));
+            }
+            r.removeFromLeft (4);
         }
-        else r.removeFromLeft (4);
+        else if (LF::flat())
+        {
+            g.setColour (sel ? LF::raised : LF::panel);
+            g.fillRect (r);
+            g.setColour (LF::outline);
+            g.drawRect (r, 1);
+            if (sel || hasItem)
+            {
+                g.setColour (item.withAlpha (sel ? 1.0f : 0.35f));
+                g.fillRect (r.withWidth (sel ? 4 : 2));
+            }
+            r.removeFromLeft (4);
+        }
+        else
+        {
+            g.setColour (sel ? LF::raised : LF::panel);
+            g.fillRoundedRectangle (r.toFloat(), 5.0f);
+            if (sel)
+            {
+                g.setColour (LF::accent);
+                g.fillRoundedRectangle (r.removeFromLeft (4).toFloat(), 2.0f);
+            }
+            else r.removeFromLeft (4);
+        }
 
         r.reduce (8, 0);
 
@@ -721,33 +1090,39 @@ void TrackRail::paint (juce::Graphics& g)
             const bool tx = now - proc.txTime[(size_t) i].load() < 150;
             g.setColour (rx ? LF::ok : LF::knobTrack);
             g.fillEllipse (juce::Rectangle<float> (6, 6).withCentre ({ (float) leds.getCentreX(), (float) r.getCentreY() - 6 }));
-            g.setColour (tx ? LF::accent : LF::knobTrack);
+            g.setColour (tx ? item : LF::knobTrack);
             g.fillEllipse (juce::Rectangle<float> (6, 6).withCentre ({ (float) leds.getCentreX(), (float) r.getCentreY() + 6 }));
         }
 
         if (i < numTracks)
         {
             const bool muted = isMuted (proc.apvts, i);
-            g.setColour (sel ? LF::text : LF::text.withAlpha (0.85f));
+            g.setColour (LF::flat() ? item.withAlpha (sel ? 1.0f : 0.8f) : sel ? LF::text : LF::text.withAlpha (0.85f));
             g.setFont (juce::FontOptions (16.0f, juce::Font::bold));
             g.drawText ("T" + juce::String (i + 1), r.removeFromTop (28).withTrimmedTop (6), juce::Justification::centredLeft);
             g.setFont (juce::FontOptions (11.5f, juce::Font::bold));
-            g.setColour (muted ? LF::bad : (sel ? LF::accent : LF::dim));
+            g.setColour (muted ? LF::bad : LF::flat() ? (sel ? LF::text : LF::dim) : (sel ? LF::accent : LF::dim));
             g.drawText (machineOf (proc.apvts, i).toUpperCase() + (muted ? "  MUTED" : ""), r.withTrimmedBottom (6),
                         juce::Justification::centredLeft);
         }
         else
         {
-            g.setColour (sel ? LF::accent : LF::text.withAlpha (0.85f));
-            g.setFont (juce::FontOptions (13.0f, juce::Font::bold));
-            g.drawText (extras[i - numTracks], r, juce::Justification::centredLeft);
+            if (LF::flat())
+                LF::drawCaps (g, extras[i - numTracks], r, LF::sleek() ? 11.0f : 13.0f,
+                              hasItem ? item.withAlpha (sel ? 1.0f : 0.8f) : sel ? LF::text : LF::dim);
+            else
+            {
+                g.setColour (sel ? LF::accent : LF::text.withAlpha (0.85f));
+                g.setFont (juce::FontOptions (13.0f, juce::Font::bold));
+                g.drawText (extras[i - numTracks], r, juce::Justification::centredLeft);
+            }
         }
 
         if (i < numTracks && proc.audio.getNumChannels() >= numTracks)
         {
             const auto b = itemBounds (i);
             LF::drawMeter (g, juce::Rectangle<float> (12.0f, (float) b.getBottom() - 6.0f, (float) b.getWidth() - 34.0f, 3.0f),
-                           proc.meters[(size_t) (2 + i)].load(), false);
+                           proc.meters[(size_t) (2 + i)].load(), false, LF::itemColour (i));
         }
     }
 }
@@ -892,10 +1267,31 @@ void CyclesEditor::showView (int index)
 
     if (index <= fxSlot)        view = std::make_unique<TrackView> (proc, index);
     else if (index == fxSlot + 1) view = std::make_unique<MixerView> (proc);
-    else                        view = std::make_unique<SetupView> (proc);
+    else
+    {
+        auto setup = std::make_unique<SetupView> (proc);
+        // Switched after the menu has closed: the page holding the menu is rebuilt
+        setup->onLook = [safe = juce::Component::SafePointer<CyclesEditor> (this)] (CyclesLookAndFeel::Look l)
+        {
+            juce::MessageManager::callAsync ([safe, l] { if (safe != nullptr) safe->setLook (l); });
+        };
+        view = std::move (setup);
+    }
 
     addAndMakeVisible (*view);
     resized();
+}
+
+void CyclesEditor::setLook (CyclesLookAndFeel::Look l)
+{
+    CyclesLookAndFeel::applyLook (l);
+    CyclesLookAndFeel::saveLook (l);
+    lnf.refreshColours();
+    const int v = viewIndex;
+    viewIndex = -1;
+    showView (v);
+    sendLookAndFeelChange();
+    repaint();
 }
 
 juce::String CyclesEditor::describe (juce::uint32 msg)
@@ -946,12 +1342,29 @@ void CyclesEditor::paint (juce::Graphics& g)
     g.fillAll (LF::bg);
 
     // Logo
-    g.setColour (LF::text);
-    g.setFont (juce::FontOptions (20.0f, juce::Font::bold));
-    g.drawText ("MODEL:CYCLES", 16, 10, 170, 24, juce::Justification::centredLeft);
-    g.setColour (LF::accent);
-    g.setFont (juce::FontOptions (8.5f, juce::Font::bold));
-    g.drawText ("MODDED CYCLES TECHNO EDITION", 16, 33, 170, 12, juce::Justification::centredLeft);
+    if (LF::sleek())
+    {
+        LF::drawCaps (g, "MODEL:CYCLES", { 16, 12, 170, 18 }, 13.0f, LF::text);
+        LF::drawCaps (g, "MODDED CYCLES TECHNO EDITION", { 16, 31, 170, 12 }, 8.0f, LF::dim);
+        g.setColour (LF::outline);
+        g.fillRect (0, 50, getWidth(), 1);
+    }
+    else if (LF::flat())
+    {
+        g.setColour (LF::text);
+        g.setFont (juce::FontOptions (19.0f, juce::Font::bold));
+        g.drawText ("MODEL:CYCLES", 16, 10, 170, 24, juce::Justification::centredLeft);
+        LF::drawCaps (g, "MODDED CYCLES TECHNO EDITION", { 16, 33, 170, 12 }, 8.5f, LF::dim);
+    }
+    else
+    {
+        g.setColour (LF::text);
+        g.setFont (juce::FontOptions (20.0f, juce::Font::bold));
+        g.drawText ("MODEL:CYCLES", 16, 10, 170, 24, juce::Justification::centredLeft);
+        g.setColour (LF::accent);
+        g.setFont (juce::FontOptions (8.5f, juce::Font::bold));
+        g.drawText ("MODDED CYCLES TECHNO EDITION", 16, 33, 170, 12, juce::Justification::centredLeft);
+    }
 
     // Connection pill
     juce::Colour led;
@@ -960,7 +1373,7 @@ void CyclesEditor::paint (juce::Graphics& g)
     switch (proc.link.getStatus())
     {
         case DeviceLink::Status::Connected:
-            led = LF::ok;
+            led = LF::flat() ? juce::Colour (0xff4cd07d) : LF::ok;   // the link light stays green in every look
             state = "CONNECTED  " + proc.link.getDeviceName();
             if (proc.link.isIdentityConfirmed()) state += "  (ID OK)";
             break;
@@ -978,18 +1391,40 @@ void CyclesEditor::paint (juce::Graphics& g)
             break;
     }
     auto pill = juce::Rectangle<int> (176, 12, 236, 32);
-    g.setColour (LF::panel);
-    g.fillRoundedRectangle (pill.toFloat(), 16.0f);
-    g.setColour (led);
-    g.fillEllipse (juce::Rectangle<float> (10, 10).withCentre ({ pill.getX() + 18.0f, (float) pill.getCentreY() }));
-    g.setColour (LF::text);
-    g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
-    g.drawFittedText (state, pill.withTrimmedLeft (32).withTrimmedRight (12), juce::Justification::centredLeft, 1);
+    if (LF::sleek())
+    {
+        // a small dot and the status in small caps, no pill
+        g.setColour (led);
+        g.fillEllipse (juce::Rectangle<float> (7, 7).withCentre ({ pill.getX() + 8.0f, (float) pill.getCentreY() }));
+        LF::drawCaps (g, state, pill.withTrimmedLeft (18), 10.0f, LF::dim, juce::Justification::centredLeft, false);
+    }
+    else
+    {
+        g.setColour (LF::panel);
+        if (LF::flat())
+        {
+            g.fillRect (pill);
+            g.setColour (LF::outline);
+            g.drawRect (pill, 1);
+        }
+        else
+            g.fillRoundedRectangle (pill.toFloat(), 16.0f);
+        g.setColour (led);
+        g.fillEllipse (juce::Rectangle<float> (10, 10).withCentre ({ pill.getX() + 18.0f, (float) pill.getCentreY() }));
+        g.setColour (LF::text);
+        g.setFont (juce::FontOptions (12.0f, juce::Font::bold));
+        g.drawFittedText (state, pill.withTrimmedLeft (32).withTrimmedRight (12), juce::Justification::centredLeft, 1);
+    }
 
     // Project picker label
-    g.setColour (LF::dim);
-    g.setFont (juce::FontOptions (11.0f, juce::Font::bold));
-    g.drawText ("PROJECT", projectArea.withHeight (18), juce::Justification::bottomLeft);
+    if (LF::flat())
+        LF::drawCaps (g, "PROJECT", projectArea.withHeight (18), 10.5f, LF::dim, juce::Justification::bottomLeft);
+    else
+    {
+        g.setColour (LF::dim);
+        g.setFont (juce::FontOptions (11.0f, juce::Font::bold));
+        g.drawText ("PROJECT", projectArea.withHeight (18), juce::Justification::bottomLeft);
+    }
 
     // Status bar
     auto status = getLocalBounds().removeFromBottom (24).reduced (16, 0);

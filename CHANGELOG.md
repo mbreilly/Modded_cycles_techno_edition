@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.12
+
+- **Plug-in: a new look, Overbridge style.** Flat dark grey with flat rings that show their value inside, square
+  buttons, and a colour for each track: T1 amber, T2 purple, T3 pink, T4 blue, T5 green, T6 coral, FX teal, mixer
+  yellow. Each track's colour shows on its rail button, page titles, rings, lit buttons and meters, and on its mixer strip.
+- Plug-in: SETUP › Plug-in › Look switches between **Overbridge** (the default), **Sleek** (the same colours,
+  thinner, no boxes) and **Hardware** (the earlier look). The choice is kept for all your projects.
+- In Overbridge and Sleek the CC / NRPN number of a control is in its tooltip (hover over it).
+- Manual: nineteenth edition (new plug-in screenshots, the Look menu).
+- The firmware is unchanged: a build from v1.11 stays as it is.
+
 ## v1.11
 
 - **LFO 2: a second LFO on every track.** Press `LFO` twice: a big "2" appears on the left and the LFO page now sets

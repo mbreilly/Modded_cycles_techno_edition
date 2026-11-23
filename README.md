@@ -346,6 +346,9 @@ on the knob layer (120–127 = OFF). Details in [docs/MACHINES.md](docs/MACHINES
 - **Linux** (`Modded-Cycles-Techno-Edition-plugin-Linux.zip`): copy `VST3/Modded Cycles Techno Edition.vst3` to `~/.vst3/`.
   Each zip also has the standalone app in `Standalone/`.
 
+**Look:** SETUP › Plug-in › Look picks **Overbridge** (default: flat, a colour per track), **Sleek** (thinner, no
+boxes) or **Hardware** (the earlier blue-grey look). The choice is kept for all your projects.
+
 **Set up the Cycles:** USB MODE (SETTINGS › Device › USB) = Audio + MIDI; SETTINGS › MIDI CONFIG › SYNC: receive
 CC/NRPN on, send CC/NRPN on; note the track channels and the FX channel and set the same ones on the plug-in's SETUP
 page.

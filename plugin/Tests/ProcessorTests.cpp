@@ -735,6 +735,31 @@ int main (int argc, char** argv)
         setParam (p, "t3_x3", 40);
     }
 
+    // Looks: every page builds and paints in each look (Overbridge, Sleek, Hardware); the choice is saved per user
+    {
+        using Look = CyclesLookAndFeel::Look;
+        std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+        auto* ce = dynamic_cast<CyclesEditor*> (ed.get());
+        const auto saved = CyclesLookAndFeel::loadSavedLook();
+        for (auto l : { Look::hardware, Look::sleek, Look::overbridge })
+        {
+            ce->setLook (l);
+            CHECK (CyclesLookAndFeel::look == l && CyclesLookAndFeel::loadSavedLook() == l);
+            CHECK (CyclesLookAndFeel::flat() == (l != Look::hardware));
+            for (int v = 0; v <= 8; ++v)
+            {
+                ce->showView (v);
+                auto img = ed->createComponentSnapshot (ed->getLocalBounds(), true, 1.0f);
+                CHECK (img.isValid());
+            }
+        }
+        // the item colours: a track page's controls take the track's colour; Hardware keeps the one accent
+        CHECK (CyclesLookAndFeel::itemColour (2) == juce::Colour (0xfff25cb4));
+        ce->setLook (Look::hardware);
+        CHECK (CyclesLookAndFeel::itemColour (2) == CyclesLookAndFeel::accent);
+        ce->setLook (saved);
+    }
+
     // Optional: render each view to PNG
     if (snapshotDir.isNotEmpty())
     {
