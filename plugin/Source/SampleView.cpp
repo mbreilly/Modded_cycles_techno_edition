@@ -49,10 +49,10 @@ SampleView::Marks SampleView::marks (Kind k, int n, int color, int shape, int sw
     if (n <= 0) return m;
     if (k == Kind::Sampler)
     {
-        m.mode = juce::jlimit (0, 4, sweep);
+        m.mode = juce::jlimit (0, 5, sweep);
         m.start = (int) (((juce::int64) n * color) >> 7);
         int hi;
-        if (m.mode == 4)    // SLIDE (firmware smp_region.h, notes/115): SHAPE = loop length, the window slides with Start
+        if (m.mode >= 4)    // SLIDE and SLIDE REV (firmware smp_region.h): SHAPE = loop length, the window slides with Start
         {
             const juce::int64 k = (juce::int64) (shape + 1) * (shape + 1);
             const int len = juce::jlimit (juce::jmin (2, n), n, (int) (((juce::int64) (n >> 14)) * k + ((((juce::int64) n & 0x3fff) * k) >> 14)));
@@ -67,6 +67,7 @@ SampleView::Marks SampleView::marks (Kind k, int n, int color, int shape, int sw
         m.end = hi;
         int lp = m.start + (int) (((juce::int64) (hi - m.start) * extra3) >> 7);
         if (lp > hi - 2) lp = hi - 2 < m.start ? m.start : hi - 2;
+        if (m.mode == 5 && lp > m.start) lp = hi - (lp - m.start);   // SLIDE REV: the backward loop restarts at the mirror
         m.loop = m.mode >= 2 && lp > m.start ? lp : -1;
     }
     else if (k == Kind::Granular)
@@ -95,10 +96,10 @@ int SampleView::valueFor (Handle h, int n, int pos, const Marks& m)
     switch (h)
     {
         case Handle::Start: return v ((double) pos * 128.0 / n);               // start = n * color >> 7
-        case Handle::End:   return m.mode == 4                                  // SLIDE: length = n * (shape + 1)^2 / 16384
+        case Handle::End:   return m.mode >= 4                                  // SLIDE (REV): length = n * (shape + 1)^2 / 16384
                                        ? v (std::sqrt (juce::jmax (0.0, (double) (pos - m.start)) * 16384.0 / n) - 1.0)
                                        : v ((double) pos * 128.0 / n - 1.0);   // end = n * (shape + 1) >> 7
-        case Handle::Loop:  return m.end - m.start > 0 ? v ((double) (pos - m.start) * 128.0 / (m.end - m.start)) : 0;
+        case Handle::Loop:  return m.end - m.start > 0 ? v ((double) ((m.mode == 5 ? m.end - pos : pos - m.start)) * 128.0 / (m.end - m.start)) : 0;
         case Handle::None:  break;
     }
     return 0;
@@ -283,8 +284,8 @@ void SampleView::paint (juce::Graphics& g)
     // values under the waveform, as the device's bottom line
     juce::String info;
     if (kind == Kind::Sampler)
-        info = "Start " + juce::String (knob ("color")) + (m.mode == 4 ? "   Length " : "   End ") + juce::String (knob ("shape")) + "   "
-             + juce::StringArray { "FWD", "REV", "LOOP", "PING", "SLIDE" }[m.mode]
+        info = "Start " + juce::String (knob ("color")) + (m.mode >= 4 ? "   Length " : "   End ") + juce::String (knob ("shape")) + "   "
+             + juce::StringArray { "FWD", "REV", "LOOP", "PING", "SLIDE", "SLIDE REV" }[m.mode]
              + (m.loop >= 0 ? "   Loop Start " + juce::String (knob ("x3")) : juce::String());
     else if (kind == Kind::Granular)
         info = "Position " + juce::String (knob ("color")) + "   Size " + juce::String (knob ("shape")) + "   Density "
