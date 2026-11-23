@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.10.1
+
+- **PUNCH now works on SAMPLER, GRANULAR, WAVETABLE, UBSAW, GROWL, VACF, XMOD and DX.** These machines use the
+  Cycles' own amp envelope, as the manual says, but they always set it up with punch off, so PUNCH did nothing (in
+  every SAMPLER mode, not only SLD). With PUNCH on, the start of the note is now louder, as on TONE. With PUNCH off
+  nothing changes. Projects saved with PUNCH on these machines will sound punchier.
+- **GRANULAR's Position follows the knob while a note plays.** Before, Position was only read on the trig. Now
+  the next grains come from the new position at once; with Scan on, Position offsets the moving position. If you
+  don't touch the knob, the sound is the same as before.
+- Not changed: switching PAGE › Mod from PTN to TRK shows each track's own scale (x1 unless you set it). The stock
+  Model:Cycles OS does the same: the pattern scale and the track scales are separate settings.
+- Manual: seventeenth edition.
+
+Tested in emulation; not yet played on hardware. Thanks to the user who reported it.
+
 ## v1.10
 
 - **Arpeggiator.** The retrig becomes an arpeggiator, on every track. `FUNC` + `RETRIG` gets five new rows: `Arp`
