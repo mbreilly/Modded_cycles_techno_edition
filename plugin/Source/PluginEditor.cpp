@@ -269,9 +269,10 @@ TrackView::TrackView (CyclesProcessor& p, int s) : proc (p), slot (s)
         auto& page = pages[info.def->section];
         if (page == nullptr)
         {
-            // MIX, FILTER, TRACK FX and LFO share the right column at the same width
+            // MIX, FILTER, TRACK FX, LFO and LFO 2 share the right column at the same width
             const bool wide = info.def->section == "FILTER" || info.def->section == "MIX" || info.def->section == "LFO"
-                           || info.def->section == "TRACK FX" || info.def->section == "SIDECHAIN";
+                           || info.def->section == "LFO 2" || info.def->section == "TRACK FX"
+                           || info.def->section == "SIDECHAIN";
             page = std::make_unique<Section> (info.def->section, info.def->section == "DUCKED TRACKS" ? 6 : wide ? 5 : 4);
             addAndMakeVisible (*page);
         }
@@ -296,7 +297,7 @@ TrackView::TrackView (CyclesProcessor& p, int s) : proc (p), slot (s)
         addChildComponent (*sampleView);
         sampleButton.setClickingTogglesState (true);
         sampleButton.setToggleState (true, juce::dontSendNotification);
-        sampleButton.setTooltip ("Show the track's sample (waveform and the +Drive's samples) in place of MIX, FILTER, TRACK FX and LFO");
+        sampleButton.setTooltip ("Show the track's sample (waveform and the +Drive's samples) in place of MIX, FILTER, TRACK FX and the LFOs");
         sampleButton.onClick = [this] { sampleShown = sampleButton.getToggleState(); updateSampleView(); };
         addChildComponent (sampleButton);
         timerCallback(); // the machine shown now, and the sample window if it is a sample machine
@@ -311,7 +312,7 @@ void TrackView::updateSampleView()
     sampleButton.setVisible (isSample);
     const bool show = isSample && sampleShown;
     sampleView->setVisible (show);
-    for (auto* name : { "MIX", "FILTER", "TRACK FX", "LFO" })
+    for (auto* name : { "MIX", "FILTER", "TRACK FX", "LFO", "LFO 2" })
         if (auto it = pages.find (name); it != pages.end()) it->second->setVisible (! show);
 }
 
@@ -421,6 +422,7 @@ void TrackView::resized()
     place (right, *pages["FILTER"]);
     place (right, *pages["TRACK FX"]);
     place (right, *pages["LFO"]);
+    place (right, *pages["LFO 2"]);
     if (sampleView != nullptr)
         sampleView->setBounds (right.getX(), r.getY(), right.getWidth(), getHeight() - r.getY() - 4);
 }
@@ -875,7 +877,7 @@ CyclesEditor::CyclesEditor (CyclesProcessor& p) : AudioProcessorEditor (p), proc
     addAndMakeVisible (projectBox);
 
     seenSerial = proc.incomingSerial.load();
-    setSize (1060, 840); // 840: room for the TRIG page's arpeggiator row
+    setSize (1060, 880); // 880: room for the LFO 2 page under LFO (the TRIG page's arpeggiator row needed 840)
     showView (0);
     startTimerHz (20);
 }

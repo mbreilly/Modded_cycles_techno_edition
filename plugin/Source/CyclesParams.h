@@ -159,6 +159,13 @@ inline const std::vector<Def>& trackDefs()
         { "lfomode", "Mode",         "LFO", 108, Kind::List,   0, { "Free", "Trig", "Hold", "One", "Half" } },
         { "lfopol",  "Polarity",     "LFO",  -1, Kind::List,   0, { "Bi", "Uni" }, modded::kLfoPolarityNrpnLsb },
         { "lfodep",  "Depth",        "LFO", 109, Kind::Dial,  64, {} },
+        // ---- LFO 2 ---- (modded firmware notes/120: press [LFO] twice on the device; CC 111-115 on the track's
+        // channel, both ways. Fade, Phase/Mutate, Mode and Polarity are LFO 1's, shared by both LFOs.)
+        { "lfo2spd",  "Speed",       "LFO 2", 111, Kind::Dial, 112, {} },
+        { "lfo2mul",  "Multiplier",  "LFO 2", 112, Kind::Dial,   4, {}, -1, 23 },
+        { "lfo2dest", "Destination", "LFO 2", 114, Kind::List,   0, lfoDestNames(), -1, 127, lfoDestCcs() },
+        { "lfo2wave", "Waveform",    "LFO 2", 113, Kind::List,   0, { "Triangle", "Sine", "Square", "Saw", "Exponential", "Ramp", "Random", "Turing 3", "Turing 4", "Turing 5", "Turing 6", "Turing 7", "Turing 8", "Turing 12", "Turing 16" } },
+        { "lfo2dep",  "Depth",       "LFO 2", 115, Kind::Dial,  64, {} },
     };
     return defs;
 }
@@ -250,7 +257,7 @@ inline const std::vector<ParamInfo>& allParams()
             {
                 // Default kit: EMPTY on all six tracks, like a new kit on the modded firmware
                 const int def = d.key == "machine" ? emptyMachine() : d.defaultValue;
-                const auto prefix = "T" + juce::String (t + 1) + (d.section == "LFO" ? " LFO " : " ");
+                const auto prefix = "T" + juce::String (t + 1) + (d.section == "LFO" ? " LFO " : d.section == "LFO 2" ? " LFO2 " : " ");
                 v.push_back ({ paramId (t, d), prefix + d.name, t, &d, def });
             }
         for (auto& d : fxDefs())
@@ -340,7 +347,7 @@ inline juce::String dialText (const Def& d, int value, int machine = 0)
 
 inline const juce::StringArray& trackPages()
 {
-    static const juce::StringArray p { "MACHINE", "EXTRAS", "FILTER", "MIX", "TRIG", "LFO" };
+    static const juce::StringArray p { "MACHINE", "EXTRAS", "FILTER", "MIX", "TRIG", "LFO", "LFO 2" };
     return p;
 }
 
