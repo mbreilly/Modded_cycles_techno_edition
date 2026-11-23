@@ -4,7 +4,7 @@
   @top-left { content: "MODDED CYCLES TECHNO EDITION · OWNER'S MANUAL"; font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; }
   @top-right { content: string(chapter); font: 600 7pt Inter; letter-spacing: .12em; color: #8a8f96; text-transform: uppercase; }
   @bottom-right { content: counter(page); font: 600 8pt Inter; color: #2e363f; }
-  @bottom-left { content: "Modded Cycles Techno Edition 1.10.1 · Model:Cycles OS 1.13 · Seventeenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
+  @bottom-left { content: "Modded Cycles Techno Edition 1.11 · Model:Cycles OS 1.13 · Eighteenth edition, November 2026"; font: 400 7pt Inter; color: #a0a5ab; }
 }
 @page cover { margin: 0; @top-left { content: none } @top-right { content: none } @bottom-right { content: none } @bottom-left { content: none } }
 @page toc { @top-right { content: "Contents"; } }
@@ -186,6 +186,7 @@ table.mlist { page-break-inside: avoid; }
     <li class="s"><a href="#c3-boot">Boot animation</a></li>
     <li class="s"><a href="#c3-lfo">LFO polarity</a></li>
     <li class="s"><a href="#c3-turing">Turing Machine LFO</a></li>
+    <li class="s"><a href="#c3-lfo2">LFO 2</a></li>
     <li class="s"><a href="#c3-arp">Arpeggiator</a></li>
     <li class="s"><a href="#c3-trk">Track buttons and drones</a></li>
     <li class="s"><a href="#c3-eq">Master EQ (GATE double tap)</a></li>
@@ -266,6 +267,7 @@ audio, a MIDI machine that plays your other gear from the sequencer, and a plug-
 <tr><td><b>Master EQ</b></td><td>A DJ-style LOW / MID / HIGH EQ with kills on the whole mix: double-tap GATE.</td><td>Ch. 3</td></tr>
 <tr><td><b>LFO polarity</b></td><td>FUNC + LFO › Pol: BI (stock) or UNI per track, so the LFO only moves one way.</td><td>Ch. 3</td></tr>
 <tr><td><b>Turing Machine LFO</b></td><td>WAVE T3 … T16: a random loop of 3 to 16 steps that repeats and mutates (Sph), for melodies made on the fly.</td><td>Ch. 3</td></tr>
+<tr><td><b>LFO 2</b></td><td>A second LFO on every track: press LFO twice. Its own speed, multiplier, wave, destination and depth.</td><td>Ch. 3</td></tr>
 <tr><td><b>Trk Trg</b></td><td>Track buttons can select a track without playing it.</td><td>Ch. 3, 8</td></tr>
 <tr><td><b>CPU management</b></td><td>A CPU charge per machine and a budget on the MACHINES list (CPU Lim); the send delay and reverb rest when nothing is sent to them; the machines that play run from fast internal memory; a CPU monitor with each track's share.</td><td>Ch. 8, 11</td></tr>
 <tr><td><b>Screens</b></td><td>A three-line sound browser with scrolling names, level and pan as numbers, and a boot animation.</td><td>Ch. 3</td></tr>
@@ -420,6 +422,7 @@ added machine.</p>
 <tr><td><span class="key">FUNC</span> + <span class="key">PITCH</span></td><td class="w">MACRO</td><td>Lo-fi: left = sample rate (46K…4K), right = bits (12B…2B), centre = off. On other machines it still steps the note in semitones.</td></tr>
 <tr><td><span class="key">PUNCH</span> held ½ s</td><td class="w">ACID</td><td>Off = saw, on = square.</td></tr>
 <tr><td><span class="key">FUNC</span> + <span class="key">LFO</span> › Pol</td><td class="w">Any track</td><td>LFO polarity: BI (stock) or UNI; press LEVEL/DATA to switch.</td></tr>
+<tr><td><span class="key">LFO</span> twice</td><td class="w">Any track</td><td>LFO 2 page (a big “2” on the left): the knobs and rows set LFO 2. Press LFO again to close.</td></tr>
 <tr><td><span class="key">FUNC</span> + <span class="key">RETRIG</span> › Arp … Lat</td><td class="w">Any track</td><td>Arpeggiator: direction, octaves, chord, gate, latch (saved with the pattern).</td></tr>
 <tr><td><span class="key">TRIG</span> + <span class="key">RETRIG</span></td><td class="w">Arp not OFF</td><td>That trig arpeggiates its note (and chord) at the retrig rate, for the retrig length.</td></tr>
 <tr><td><span class="key">GATE</span> twice, quickly</td><td class="w">Any track</td><td>Master EQ layer on or off: PITCH / DECAY / COLOR = LOW / MID / HIGH. The GATE LED blinks while it is on.</td></tr>
@@ -555,6 +558,27 @@ Phase/Mutate. A stock OS reads these waves as RND.</li>
 <li>The loop itself is not saved: after power-off, or after another wave, a new random loop starts. Changing the
 length keeps the loop going. A short loop can come out flat (every step the same): raise Sph for a moment.</li>
 <li>Cost: about 0.5 % of the CPU at worst with all six tracks on a Turing wave.</li>
+</ul>
+
+<h2 id="c3-lfo2">LFO 2</h2>
+<p>Every track has a second LFO. Press <span class="key">LFO</span> once for the usual LFO page (LFO 1). Press it
+<b>again</b>: a big <b>2</b> appears in the box on the left, and the page now sets <b>LFO 2</b>. Press LFO a third time
+to close the page.</p>
+<ul>
+<li>On the LFO 2 page, LFO SPEED and LFO DEPTH and the WAVE, MULT and DEST rows set LFO 2. They work like LFO 1's:
+the same speeds, the same waves (Turing T3 … T16 included) and the same list of destinations.</li>
+<li><b>Shared with LFO 1</b>: FADE, Sph (start phase, or the Turing mutation), MODE and Rst in LFO Setup
+(<span class="key">FUNC</span> + <span class="key">LFO</span>), and Pol (BI / UNI). They apply to both LFOs.</li>
+<li>Give LFO 2 its own destination, for example LFO 1 slow on COLOR and LFO 2 fast on Filter Cutoff. Both on the same
+destination add up.</li>
+<li>LFO 2 saves with the sound, the kit and the pattern, and takes p-locks: hold a trig and turn a knob on the LFO 2
+page. LFO 2 is stored next to LFO 1's MULT, WAVE, DEST and MODE, so a p-lock of an LFO 2 setting also keeps LFO 1's
+value of the same pair on that trig.</li>
+<li>Sounds made before (or on the stock OS) load with LFO 2 off: no destination, depth 0. The stock OS ignores LFO 2
+and forgets it the next time the sound is saved there.</li>
+<li>MIDI: CC 111 Speed, 112 Multiplier, 113 Wave, 114 Destination, 115 Depth on the track's channel, both ways; the
+plug-in has an LFO 2 page. While the LFO 2 page is open, LFO 1's CCs (102–109) set LFO 2.</li>
+<li>Cost: nothing while no track uses LFO 2; about 1.7 % of the CPU with LFO 2 on all six tracks.</li>
 </ul>
 
 <h2 id="c3-arp">Arpeggiator</h2>
@@ -1047,6 +1071,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td>Insert FX Type (0 OFF, 1 DRV, 2 CRS, 3 FLD, 4 RNG, 5 RES, 6 RAT)</td><td>27</td><td>1:48</td><td>Track</td></tr>
 <tr><td>Insert FX Amount</td><td>28</td><td>1:49</td><td>Track</td></tr>
 <tr><td>Attack</td><td>29</td><td>1:22</td><td>Track</td></tr>
+<tr><td>LFO 2 Speed / Multiplier (0–23) / Wave (0–6, Turing 7–14) / Destination (as CC 105) / Depth</td><td>111 – 115</td><td>—</td><td>Track</td></tr>
 <tr><td>USB Out (0 = 2CH, 1 = 6CH)</td><td>—</td><td>1:47</td><td>FX</td></tr>
 <tr><td>Arp / Oct / Chd / Gat / Lat, value on CC 6 only = track × 16 + value (Gat 0 = 1/8 … 7 = 8/8); sent back when they change; 1:79 = send all</td><td>—</td><td>1:74 – 1:78</td><td>FX</td></tr>
 <tr><td>SC Src (0 OFF, 1–6 = T1–T6)</td><td>—</td><td>1:50</td><td>FX</td></tr>
@@ -1082,7 +1107,7 @@ channel carries the send effects and the USB switch. Enable Receive CC/NRPN in S
 <tr><td></td><td></td><td>Reverb Size, Tone (FX)</td><td>87, 88</td></tr>
 </tbody></table>
 <p class="small">On the added machines CC 16–19 reach COLOR, SHAPE, SWEEP and CONTOUR just as on the stock ones. A stock
-Model:Cycles ignores CC 20–28. The Model:Cycles does not send p-locks and LFO moves as CCs.</p>
+Model:Cycles ignores CC 20–29 and 111–115. The Model:Cycles does not send p-locks and LFO moves as CCs.</p>
 
 <!-- 10 -->
 <h1 class="ch" id="ch10"><span class="chn">CHAPTER 10</span><span class="tt">The Modded Cycles Techno Edition plug-in</span></h1>
@@ -1095,7 +1120,7 @@ and loads samples, and lists and loads the Cycles' projects.</p>
 
 <figure class="shot"><img src="img/ui-track.png" alt="Track page">
 <figcaption>A track page: track rail on the left with the PROJECT picker under it, the toggles and GET along the top, MACHINE, EXTRAS and TRIG on the left
-half, MIX, FILTER, TRACK FX and LFO on the right. Knob and extra names follow the machine (here 909BD: BD Attack, BD Shape,
+half, MIX, FILTER, TRACK FX, LFO and LFO 2 on the right. Knob and extra names follow the machine (here 909BD: BD Attack, BD Shape,
 BD Sweep, Sweep Time; Accent, Tune Decay, Click, Tone).</figcaption></figure>
 
 <h2 id="c10-install">Installing</h2>
@@ -1150,6 +1175,7 @@ message from and to the device, the audio stream (channels, rate, delay) and the
 <tr><td><b>FILTER</b></td><td>Filter Type (Off / LP / HP / BP / LP24 / HP24), Cutoff, Reso, Env, Env Decay.</td><td>26, 74, 71, 24, 25</td></tr>
 <tr><td><b>TRACK FX</b></td><td>FX On, FX Type (Drive, Bitcrush, Fold, Ring, Resonator, RAT), FX Amount, Attack. On and Type share CC 27: switching FX On off sends 0 and keeps the type for next time.</td><td>27, 27, 28, 29</td></tr>
 <tr><td><b>LFO</b></td><td>Speed, Multiplier, Fade, <b>Destination</b> (a dropdown of the device's destinations: Pitch, Color … Filter Cutoff), <b>Waveform</b> (Triangle … Random, Turing 3 … Turing 16), <b>Polarity</b> (Bi / Uni, NRPN 1:56), Phase/Mutate (the start phase, or the Turing loops' mutation), Mode, Depth.</td><td>102–109</td></tr>
+<tr><td><b>LFO 2</b></td><td>The second LFO (LFO twice on the device): Speed, Multiplier, Destination, Waveform, Depth. Fade, Phase/Mutate, Mode and Polarity are LFO 1's.</td><td>111–115</td></tr>
 </tbody></table>
 <p class="small">The extras, filter and track FX exist only on this firmware; the stock OS ignores CC 20–28. They also
 answer NRPN 1:40–1:43 (extras), 1:20, 1:21, 1:44–1:46 (filter) and 1:48, 1:49 (track FX).</p>
@@ -1191,7 +1217,7 @@ Ableton Live; <i>Choose MIDI ports</i> for a DIN interface; <i>Host MIDI routing
 <figure class="shot"><img src="img/ui-sample.png" alt="Sample window">
 <figcaption>The SAMPLE window on a SAMPLER track: the waveform with the Start and End bars and Loop Start (dotted), the +Drive samples, LOAD and REFRESH. Under the rail, the PROJECT picker.</figcaption></figure>
 <p>On a track playing SAMPLER, GRANULAR or WAVETABLE, the <b>SAMPLE</b> button in the track header swaps the MIX, FILTER,
-TRACK FX and LFO sections for the track's sample:</p>
+TRACK FX and LFO sections (LFO 2 too) for the track's sample:</p>
 <ul>
 <li><b>The waveform</b>, with what the knobs do drawn on it, by the firmware's own formulas: the Start and End bars, the
 part that does not play dimmed and Loop Start (SAMPLER); the position, Spray's spread and the grains (GRANULAR); the frame
@@ -1362,6 +1388,7 @@ DX 10.5 %, ATMOS 16.5 %.</p>
 <tr><td>Master EQ</td><td>0 when all three bands are at 64; up to 3.9 % when in use</td></tr>
 <tr><td>LFO polarity, CPU monitor</td><td>0.09 %, 0.03 %</td></tr>
 <tr><td>Turing Machine LFO (six tracks)</td><td>0.2 %, 0.5 % at worst</td></tr>
+<tr><td>LFO 2</td><td>0 while no track uses it; 1.7 % with all six tracks</td></tr>
 <tr><td>The rest of the OS (sequencer, mixer, send delay and reverb, outputs)</td><td>about 31 % on the device; about 8–10 points less while the delay and reverb rest</td></tr>
 <tr><td>USB audio to the computer (2CH or 6CH alike)</td><td>about 8 % while the computer reads it</td></tr>
 </tbody></table>

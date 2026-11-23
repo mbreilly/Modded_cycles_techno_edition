@@ -74,7 +74,7 @@ int main (int argc, char** argv)
     auto pp = makeProcessor();
     auto& p = *pp;
 
-    CHECK (cycles::allParams().size() == 6 * 45 + 4 + 3 + 11); // 45 per track: 40 + the arpeggiator's 5; // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
+    CHECK (cycles::allParams().size() == 6 * 50 + 4 + 3 + 11); // 50 per track: 40 + the arpeggiator's 5 + LFO 2's 5; // + master EQ low, mid, high; sidechain: source, depth, attack, hold, release, duck T1-T6
     {   // list names: a knob's list is stepped, an extra's spans 0-127 (CLSTR Mode: value x 9 >> 7)
         const auto& defs = cycles::trackDefs();
         auto def = [&] (const char* key) -> const cycles::Def& { return *std::find_if (defs.begin(), defs.end(), [&] (auto& d) { return d.key == key; }); };
@@ -234,6 +234,32 @@ int main (int argc, char** argv)
         p.processBlock (a, din);
         pump();
         CHECK ((int) getParam (p, "t2_lfodest") == 6);
+        CHECK (runBlock (p).empty());
+        pump (500);
+    }
+
+    // 6f. LFO 2 (firmware notes/120): its own CCs 111-115 on the track's channel, both ways; Destination like LFO 1's
+    setParam (p, "t3_lfo2spd", 40);
+    out = runBlock (p);
+    CHECK (out.size() == 1 && out[0].ch == 3 && out[0].cc == 111 && out[0].val == 40);
+    setParam (p, "t3_lfo2dest", 8);
+    out = runBlock (p);
+    CHECK (out.size() == 1 && out[0].ch == 3 && out[0].cc == 114 && out[0].val == 28);
+    setParam (p, "t3_lfo2mul", 23);
+    out = runBlock (p);
+    CHECK (out.size() == 1 && out[0].cc == 112 && out[0].val == 23);
+    {
+        juce::MidiBuffer din;
+        din.addEvent (juce::MidiMessage::controllerEvent (4, 114, 13), 0);   // device: T4 LFO 2 -> Sweep
+        din.addEvent (juce::MidiMessage::controllerEvent (4, 113, 9), 0);    // T4 LFO 2 Waveform = Turing 5
+        din.addEvent (juce::MidiMessage::controllerEvent (4, 115, 100), 0);  // T4 LFO 2 Depth
+        juce::AudioBuffer<float> a (2, 64);
+        p.processBlock (a, din);
+        pump();
+        CHECK ((int) getParam (p, "t4_lfo2dest") == 6);
+        CHECK ((int) getParam (p, "t4_lfo2wave") == 9);
+        CHECK ((int) getParam (p, "t4_lfo2dep") == 100);
+        CHECK ((int) getParam (p, "t4_lfodest") == 0 && (int) getParam (p, "t4_lfodep") == 64);   // LFO 1 untouched
         CHECK (runBlock (p).empty());
         pump (500);
     }

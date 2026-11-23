@@ -3530,5 +3530,47 @@
     ]
    }
   ]
- }
+ },
+ "lfo2": [
+  {
+   "key": "lfo2spd",
+   "name": "LFO2 Speed",
+   "cc": 111,
+   "min": 0,
+   "max": 127,
+   "default": 112
+  },
+  {
+   "key": "lfo2mul",
+   "name": "LFO2 Multiplier",
+   "cc": 112,
+   "min": 0,
+   "max": 23,
+   "default": 4
+  },
+  {
+   "key": "lfo2wave",
+   "name": "LFO2 Waveform",
+   "cc": 113,
+   "min": 0,
+   "max": 14,
+   "default": 0
+  },
+  {
+   "key": "lfo2dest",
+   "name": "LFO2 Destination",
+   "cc": 114,
+   "min": 0,
+   "max": 32,
+   "default": 0
+  },
+  {
+   "key": "lfo2dep",
+   "name": "LFO2 Depth",
+   "cc": 115,
+   "min": 0,
+   "max": 127,
+   "default": 64
+  }
+ ]
 }

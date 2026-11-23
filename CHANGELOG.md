@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.11
+
+- **LFO 2: a second LFO on every track.** Press `LFO` twice: a big "2" appears on the left and the LFO page now sets
+  LFO 2, with its own speed, multiplier, wave (Turing waves included), destination and depth. Press `LFO` again to
+  close the page. FADE, Sph, MODE and Pol are shared with LFO 1. Give each LFO its own destination (say LFO 1 slow on
+  COLOR, LFO 2 fast on Filter Cutoff); on the same destination they add up. Saved with the sound, kit and pattern,
+  takes p-locks. Sounds made before load with LFO 2 off. Cost: nothing until a track uses it, about 1.7 % of the CPU
+  with all six tracks.
+- MIDI: LFO 2 on CC 111–115 of the track's channel, both ways, and in GET.
+- Plug-in: an LFO 2 page on every track, under LFO (the window is 40 px taller).
+- Manual: eighteenth edition (LFO 2 in chapter 3, MIDI tables, plug-in).
+
+Tested in emulation; not yet played on hardware.
+
 ## v1.10.1
 
 - **PUNCH now works on SAMPLER, GRANULAR, WAVETABLE, UBSAW, GROWL, VACF, XMOD and DX.** These machines use the
