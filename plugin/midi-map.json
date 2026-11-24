@@ -2214,13 +2214,14 @@
      "name": "Mode",
      "cc": 18,
      "default": 0,
-     "max": 4,
+     "max": 5,
      "values": [
       "FWD",
       "REV",
       "LOP",
       "PNG",
-      "SLD"
+      "SLD",
+      "SLR"
      ]
     },
     {

@@ -2,14 +2,20 @@
 
 ## v1.12
 
+- **SAMPLER: SLR, the sliding loop in reverse.** Turn SWEEP all the way up, past SLD: the loop of SLD mode now plays
+  backwards. SHAPE still sets the loop length and turning COLOR (Start) still slides the loop through the sample.
+  Loop Start (hold `LAYER` + COLOR) shortens the backward loop from its top. The screen shows "SL.REV". The other
+  modes and saved projects are unchanged. Costs the same CPU as REV.
+- Plug-in: the sample window draws SLR like SLD, with the Loop Start mark where the backward loop restarts.
 - **Plug-in: a new look, Overbridge style.** Flat dark grey with flat rings that show their value inside, square
   buttons, and a colour for each track: T1 amber, T2 purple, T3 pink, T4 blue, T5 green, T6 coral, FX teal, mixer
   yellow. Each track's colour shows on its rail button, page titles, rings, lit buttons and meters, and on its mixer strip.
 - Plug-in: SETUP › Plug-in › Look switches between **Overbridge** (the default), **Sleek** (the same colours,
   thinner, no boxes) and **Hardware** (the earlier look). The choice is kept for all your projects.
 - In Overbridge and Sleek the CC / NRPN number of a control is in its tooltip (hover over it).
-- Manual: nineteenth edition (new plug-in screenshots, the Look menu).
-- The firmware is unchanged: a build from v1.11 stays as it is.
+- Manual: nineteenth edition (SLR, new plug-in screenshots, the Look menu).
+
+SLR tested in emulation, the new plug-in look built and tested on Linux; neither played on hardware yet. Thanks to the user who asked for SLR.
 
 ## v1.11
 
