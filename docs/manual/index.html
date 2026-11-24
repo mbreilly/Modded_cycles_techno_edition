@@ -1208,7 +1208,9 @@ level meter; the FX strip holds the delay and reverb. A whole kit can be set up 
 <li><b>Audio streaming</b>: channels, sample rate and delay, and <b>Audio trim</b> to line the device up with the grid.</li>
 <li>On the right, a reminder of the settings to make on the Model:Cycles.</li>
 <li><b>Device USB audio 2CH / 6CH</b>: switches the device's USB Out setting (NRPN 1:47); the lit button shows what the stream reports.</li>
+<li><b>Plug-in › Look</b>: how the plug-in looks, kept for all your projects. <i>Overbridge</i> (the default): flat dark grey, flat rings with the value inside, and a colour for each track (T1 amber, T2 purple, T3 pink, T4 blue, T5 green, T6 coral, FX teal, mixer yellow) on its rail button, page titles, rings, lit buttons and meters. <i>Sleek</i>: the same colours, thinner rings with the value under them, no boxes. <i>Hardware</i>: the earlier blue-grey look with black knobs.</li>
 </ul>
+<p>In the Overbridge and Sleek looks the CC or NRPN number of a control is not printed under its name: hover over the control to see it.</p>
 <p><b>Connection modes</b>: <i>Auto-detect Model:Cycles (USB)</i>, the default, which works in every DAW including
 Ableton Live; <i>Choose MIDI ports</i> for a DIN interface; <i>Host MIDI routing</i> for DAWs that route plug-in MIDI
 (Bitwig, Reaper, Logic, Cubase, FL Studio). If auto-detect finds nothing it falls back to the host's MIDI output.</p>
@@ -1220,9 +1222,9 @@ Ableton Live; <i>Choose MIDI ports</i> for a DIN interface; <i>Host MIDI routing
 TRACK FX and LFO sections (LFO 2 too) for the track's sample:</p>
 <ul>
 <li><b>The waveform</b>, with what the knobs do drawn on it, by the firmware's own formulas: the Start and End bars, the
-part that does not play dimmed and Loop Start (SAMPLER); the position, Spray's spread and the grains (GRANULAR); the frame
+part that does not play dimmed and Loop Start (SAMPLER; in SLD and SLR the End bar is the loop length, and in SLR Loop Start is drawn where the backward loop restarts); the position, Spray's spread and the grains (GRANULAR); the frame
 that plays and the strip of frames (WAVETABLE).</li>
-<li><b>Drag the bars</b> on a SAMPLER track: Start and End (and Loop Start in LOP / PNG). The knob moves with them, the
+<li><b>Drag the bars</b> on a SAMPLER track: Start and End (and Loop Start in LOP, PNG, SLD and SLR). The knob moves with them, the
 Cycles follows, and the DAW records it as automation.</li>
 <li><b>The +Drive samples</b> (sent with Elektron Transfer, Chapter 7): double-click one, or select it and press LOAD,
 to put it on the track. REFRESH reads the list again. A sample picked on the Cycles shows here too.</li>

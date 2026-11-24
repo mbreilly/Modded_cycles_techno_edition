@@ -208,7 +208,7 @@ void SampleView::paintListBoxItem (int row, juce::Graphics& g, int w, int h, boo
     const auto& s = rows[(size_t) row];
     const bool onTrack = s.hash == proc.getTrackSample (track);
     if (selected) g.fillAll (LF::raised);
-    g.setColour (onTrack ? LF::accent : LF::text);
+    g.setColour (onTrack ? LF::accentFor (this) : LF::text);
     g.setFont (juce::FontOptions (14.0f, onTrack ? juce::Font::bold : juce::Font::plain));
     g.drawText (s.path.trimCharactersAtStart ("/"), 8, 0, w - 90, h, juce::Justification::centredLeft, true);
     g.setColour (LF::dim);
@@ -246,7 +246,8 @@ void SampleView::resized()
 void SampleView::paint (juce::Graphics& g)
 {
     g.setColour (LF::panel);
-    g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
+    if (LF::flat()) g.fillRect (getLocalBounds());
+    else            g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
 
     const int machine = knob ("machine");
     const auto kind = kindOf (machine);
@@ -259,7 +260,7 @@ void SampleView::paint (juce::Graphics& g)
     g.setFont (juce::FontOptions (15.0f, juce::Font::bold));
     g.setColour (LF::text);
     g.drawText ("SAMPLE", title.removeFromLeft (80), juce::Justification::centredLeft);
-    g.setColour (LF::accent);
+    g.setColour (LF::accentFor (this));
     g.drawText (h == 0 ? juce::String ("none on this track") : listed ? s.path.trimCharactersAtStart ("/") : "SMP" + juce::String::toHexString ((juce::int64) h).toUpperCase(),
                 title, juce::Justification::centredLeft, true);
 
@@ -324,14 +325,14 @@ void SampleView::drawWave (juce::Graphics& g, juce::Rectangle<float> r, const Sa
             const float y = cy - half * 0.9f * (float) fr[at] / (float) pk;
             if (c == 0) p.startNewSubPath (r.getX(), y); else p.lineTo (r.getX() + (float) c, y);
         }
-        g.setColour (LF::accent);
+        g.setColour (LF::accentFor (this));
         g.strokePath (p, juce::PathStrokeType (1.6f));
         // the frames as a strip at the bottom, the current one lit, Env as an arrow
         auto strip = r.removeFromBottom (10.0f).translated (0, 8.0f);
         const float fw = strip.getWidth() / (float) m.frames;
         for (int i = 0; i < m.frames; ++i)
         {
-            g.setColour (i == (m.pos >> 8) ? LF::accent : LF::raised);
+            g.setColour (i == (m.pos >> 8) ? LF::accentFor (this) : LF::raised);
             g.fillRect (strip.getX() + fw * (float) i + 0.5f, strip.getY(), juce::jmax (1.0f, fw - 1.0f), strip.getHeight());
         }
         if (m.scan > 0)
@@ -352,7 +353,7 @@ void SampleView::drawWave (juce::Graphics& g, juce::Rectangle<float> r, const Sa
     {
         const int s0 = (int) ((juce::int64) n * c / juce::jmax (1, cols));
         const bool plays = kind != Kind::Sampler || (s0 >= m.start && s0 < m.end);
-        g.setColour (plays ? LF::accent : LF::dim.withAlpha (0.45f));
+        g.setColour (plays ? LF::accentFor (this) : LF::dim.withAlpha (0.45f));
         const float y0 = cy - half * (float) w.hi[(size_t) c] / (float) pk, y1 = cy - half * (float) w.lo[(size_t) c] / (float) pk;
         g.fillRect (r.getX() + colW * (float) c, y0, juce::jmax (1.0f, colW), juce::jmax (1.0f, y1 - y0));
     }
