@@ -6,7 +6,7 @@
 /**
     The sample window of a SAMPLER / GRANULAR / WAVETABLE track (firmware notes/91 and 93): the track's sample as
     a waveform with what the knobs do drawn over it, as the Cycles' own screen draws it but larger:
-      SAMPLER    Start and End (Length in SLIDE) bars, the part that doesn't play dimmed, Loop Start in LOOP, PING, SLIDE
+      SAMPLER    Start and End (Length in SLIDE) bars, the part that doesn't play dimmed, Loop Start in LOOP, PING, SLIDE (mirrored in SLIDE REV)
       GRANULAR   the position, Spray's spread, one mark per grain (Density), Scan as an arrow
       WAVETABLE  the frame that plays as Warp reads it, the strip of frames with the current one, Env as an arrow
     and under it the samples on the +Drive (sent with the Transfer app): double-click one, or LOAD, to put it on
@@ -27,7 +27,7 @@ public:
     struct Marks
     {
         int start = 0, end = 0, loop = -1;  // SAMPLER: played part [start, end), loop start (LOOP, PING) or -1
-        int mode = 0;                       // SAMPLER: 0 FWD, 1 REV, 2 LOOP, 3 PING
+        int mode = 0;                       // SAMPLER: 0 FWD, 1 REV, 2 LOOP, 3 PING, 4 SLIDE, 5 SLIDE REV
         int pos = 0, spray = 0, grains = 1; // GRANULAR: position, half spread, grain marks; WAVETABLE: pos = frame << 8
         int scan = 0;                       // GRANULAR Scan / WAVETABLE Env (0-127)
         int frames = 1, warp = 256;         // WAVETABLE: frames, read speed (256 = once per period)

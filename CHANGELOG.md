@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.12
+
+- **SAMPLER: SLR, the sliding loop in reverse.** Turn SWEEP all the way up, past SLD: the loop of SLD mode now plays
+  backwards. SHAPE still sets the loop length and turning COLOR (Start) still slides the loop through the sample.
+  Loop Start (hold `LAYER` + COLOR) shortens the backward loop from its top. The screen shows "SL.REV". The other
+  modes and saved projects are unchanged. Costs the same CPU as REV.
+- Plug-in: the sample window draws SLR like SLD, with the Loop Start mark where the backward loop restarts.
+- Manual: nineteenth edition.
+
+Tested in emulation; not yet played on hardware. Thanks to the user who asked for it.
+
 ## v1.11
 
 - **LFO 2: a second LFO on every track.** Press `LFO` twice: a big "2" appears on the left and the LFO page now sets

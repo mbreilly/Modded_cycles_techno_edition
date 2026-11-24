@@ -723,6 +723,12 @@ int main (int argc, char** argv)
             const auto ml = SampleView::marks (SampleView::Kind::Sampler, 48000, 0, 127, 2, 0, 64);
             CHECK (SampleView::valueFor (H::Loop, 48000, ml.loop, ml) == 64);
             CHECK (SampleView::valueFor (H::Start, 48000, -500, ml) == 0 && SampleView::valueFor (H::End, 48000, 99999, ml) == 127);
+            // SLIDE REV: SLIDE's window, the Loop Start mark mirrored (hi - (lp - lo)), dragged back the same way
+            const auto ms = SampleView::marks (SampleView::Kind::Sampler, 48000, 32, 100, 4, 0, 32);
+            const auto mr = SampleView::marks (SampleView::Kind::Sampler, 48000, 32, 100, 5, 0, 32);
+            CHECK (mr.mode == 5 && mr.start == ms.start && mr.end == ms.end && mr.loop == mr.end - (ms.loop - ms.start));
+            CHECK (SampleView::valueFor (H::Loop, 48000, mr.loop, mr) == 32 && SampleView::valueFor (H::End, 48000, mr.end, mr) == 100);
+            CHECK (SampleView::marks (SampleView::Kind::Sampler, 48000, 32, 100, 127, 0, 0).mode == 5);
         }
 
         // the window: a fake sample on T3 for the snapshot
